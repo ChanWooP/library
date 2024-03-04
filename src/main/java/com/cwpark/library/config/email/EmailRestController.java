@@ -1,4 +1,4 @@
-package com.cwpark.library.controller.restcontroller;
+package com.cwpark.library.config.email;
 
 import com.cwpark.library.service.EmailService;
 import lombok.RequiredArgsConstructor;

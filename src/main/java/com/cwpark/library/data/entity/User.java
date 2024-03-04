@@ -1,5 +1,6 @@
 package com.cwpark.library.data.entity;
 
+import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +33,10 @@ public class User extends BaseEntity {
 
     @Column(name = "USER_BIRTH")
     private String userBirth;
+
+    @Column(name = "USER_AUTHORITY")
+    @Enumerated(EnumType.STRING)
+    private UserAuthority userAuthority;
 
     @Column(name = "USER_LOGIN_FAIL_CNT")
     private int userLoginFailCnt;

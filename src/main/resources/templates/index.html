@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>index</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
 </head>
 <body>
-
+<th:block sec:authorize="isAuthenticated()">
+    <button type="button" class="btn btn-outline-light me-2" id="logout">로그아웃</button>
+</th:block>
 </body>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $('#logout').click(function(){
+        location.href = "/logout";
+      });
+   });
+</script>
 </html>

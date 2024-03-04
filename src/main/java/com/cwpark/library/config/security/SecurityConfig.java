@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .formLogin((formLogin) ->
                         formLogin
                                 .loginPage("/login")
+                                .loginProcessingUrl("/loginProcess")
                                 .usernameParameter("username")
                                 .passwordParameter("password")
                                 .defaultSuccessUrl("/")
@@ -47,7 +48,12 @@ public class SecurityConfig {
                 .logout((logout) ->
                         logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/"));
+                                .logoutSuccessUrl("/"))
+                .sessionManagement((sessionManagement) ->
+                                sessionManagement
+                                 .maximumSessions(1)
+                                .maxSessionsPreventsLogin(false)
+                                .expiredUrl("/login?expire=true"));
         return http.build();
     }
 }

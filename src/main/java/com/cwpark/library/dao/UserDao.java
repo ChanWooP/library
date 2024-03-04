@@ -3,6 +3,7 @@ package com.cwpark.library.dao;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserUpdateDto;
 import com.cwpark.library.data.entity.User;
+import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +23,7 @@ public class UserDao {
                 .userName(user.getUserName())
                 .userSex(user.getUserSex())
                 .userBirth(user.getUserBirth())
+                .userAuthority(UserAuthority.USER)
                 .userLoginFailCnt(0)
                 .userOauthType(UserOauthType.EMALE)
                 .build()
@@ -41,6 +43,7 @@ public class UserDao {
                 .userName(findUser.getUserName())
                 .userSex(findUser.getUserSex())
                 .userBirth(findUser.getUserBirth())
+                .userAuthority(findUser.getUserAuthority())
                 .userLoginFailCnt(findUser.getUserLoginFailCnt())
                 .userOauthType(findUser.getUserOauthType())
                 .build();
