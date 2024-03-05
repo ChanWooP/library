@@ -34,7 +34,7 @@ public class AccountService implements UserDetailsService {
         List<String> authorityList = new ArrayList<>();
         authorityList.add(user.getUserAuthority().toString());
 
-        return new Account(user.getUserId(), user.getUserPassword(), authorityList);
+        return new Account(user.getUserId(), user.getUserPassword(), authorityList, user.getUserLoginFailCnt());
     }
 
 }

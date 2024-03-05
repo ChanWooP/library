@@ -12,6 +12,7 @@
     <link type="text/css" rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
     <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <style>
@@ -129,6 +130,10 @@
       <form action="/loginProcess" method="post">
         <img class="mb-4" src="/img/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">로그인</h1>
+
+        <th:block th:if="${error}">
+          <span class="exception" th:text="${exception}"></span>
+        </th:block>
 
         <div class="form-floating">
           <input type="email" class="form-control" id="floatingInput" name="username" placeholder="name@example.com">

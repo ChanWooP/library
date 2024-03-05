@@ -18,6 +18,7 @@ public class Account implements UserDetails {
     private String id;
     private String password;
     private List<String> authority;
+    private int loginFailCnt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -41,7 +42,11 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        if(loginFailCnt >= 5) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override

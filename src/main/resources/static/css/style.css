@@ -47,3 +47,9 @@
   color : blue;
   font-weight : bold;
 }
+
+.exception {
+    margin-bottom : 2px;
+    color : #848484;
+    font-weight: bold;
+}

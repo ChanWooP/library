@@ -1,6 +1,7 @@
 package com.cwpark.library.config.security;
 
 import jakarta.servlet.http.HttpServlet;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final FailHandler failHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +48,8 @@ public class SecurityConfig {
                                 .usernameParameter("username")
                                 .passwordParameter("password")
                                 .defaultSuccessUrl("/")
-                                .failureUrl("/login"))
+                                .failureUrl("/login")
+                                .failureHandler(failHandler))
                 .logout((logout) ->
                         logout
                                 .logoutUrl("/logout")
