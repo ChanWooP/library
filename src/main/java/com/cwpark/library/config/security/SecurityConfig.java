@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final FailHandler failHandler;
+    private final SuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,7 +34,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setMatchingRequestParameterName(null);
+
         http.csrf(AbstractHttpConfigurer::disable)
+                .requestCache(request ->
+                        request
+                                .requestCache(requestCache))
                 .authorizeRequests((authorizeRequests) ->
                         authorizeRequests
                                 .requestMatchers(
@@ -49,7 +57,8 @@ public class SecurityConfig {
                                 .passwordParameter("password")
                                 .defaultSuccessUrl("/")
                                 .failureUrl("/login")
-                                .failureHandler(failHandler))
+                                .failureHandler(failHandler)
+                                .successHandler(successHandler))
                 .logout((logout) ->
                         logout
                                 .logoutUrl("/logout")
