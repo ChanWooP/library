@@ -64,8 +64,9 @@ public class SecurityConfig {
                                 .logoutUrl("/logout")
                                 .logoutSuccessUrl("/"))
                 .sessionManagement((sessionManagement) ->
-                                sessionManagement
-                                 .maximumSessions(1)
+                        sessionManagement
+                                .sessionFixation().changeSessionId()
+                                .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)
                                 .expiredUrl("/login?expire=true"));
         return http.build();

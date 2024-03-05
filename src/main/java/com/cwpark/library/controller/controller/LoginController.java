@@ -17,11 +17,13 @@ public class LoginController {
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error
                         ,@RequestParam(value = "exception", required = false) String exception
+                        ,@RequestParam(value = "expire", required = false) String expire
                         , Model model
                         , HttpServletRequest request) {
 
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
+        model.addAttribute("expire", expire);
 
         return "sign-in/login";
     }

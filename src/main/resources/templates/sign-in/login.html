@@ -135,6 +135,10 @@
           <span class="exception" th:text="${exception}"></span>
         </th:block>
 
+        <th:block th:if="${expire}">
+          <span class="exception">다른 곳에서 로그인 되었습니다</span>
+        </th:block>
+
         <div class="form-floating">
           <input type="email" class="form-control" id="floatingInput" name="username" placeholder="name@example.com">
           <label for="floatingInput">이메일</label>
