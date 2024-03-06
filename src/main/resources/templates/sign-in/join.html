@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
+<head th:replace="fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>회원가입</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link>
     <style>
         body {
           min-height: 100vh;
@@ -30,11 +25,175 @@
           box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
         }
     </style>
+    <script>
+        $(document).ready(function(){
+          // 이메일 중복 체크
+          $('#userIdCheck').click(function(){
+            let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+            let email = $('#userId').val()
+
+            if(!email) {
+                alert("이메일을 입력해주세요");
+                return false;
+            }
+
+            if(!email_regex.test(email)){
+                alert("이메일 형식이 맞지 않습니다");
+                return false;
+            }
+
+            $.ajax({
+                type: "GET"
+              , url : "/api/user/join/" + $('#userId').val()
+              , dataType: "json"
+              , success : function(data) {
+                if(data.success == 'Y') {
+                    $('#userIdCheckYn').val(data.success);
+                    $('#userId').prop('readonly', true);
+                    $('#userIdCheck').attr('disabled',true);
+                    $('#emailCertification').removeClass('display-none');
+
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('이메일 중복체크가 실패했습니다');
+              }
+            });
+          });
+
+          // 이메일 인증
+          $('#emailCertification').click(function() {
+              $.ajax({
+                  type: "GET"
+                , url : "/email/check/" + $('#userId').val()
+                , dataType: "json"
+                , success : function(data) {
+                   if(data.check) {
+                    $('#email-number').val(data.check);
+                    $('#emailCheckDiv').removeClass('display-none');
+                    fn_timer();
+                   } else {
+                    alert('인증이 실패했습니다');
+                   }
+                }
+                , beforeSend:function(){
+                    $('.wrap-loading').removeClass('display-none');
+                }
+                , complete:function(){
+                    $('.wrap-loading').addClass('display-none');
+                }
+                , error : function(e) {
+                  alert('인증이 실패했습니다');
+                }
+              });
+          });
+
+          // 이메일 인증 확인
+          $('#email-confirm').click(function() {
+            let check = $('#email-check').val();
+
+            if(check) {
+                if(check == $('#email-number').val()) {
+                    alert('인증이 완료되었습니다');
+                    $('#email-number').val('success');
+                    $('#emailCheckDiv').addClass('display-none');
+                    $('#emailCertification').attr('disabled',true);
+                } else if(check == 'timeout') {
+                    alert('시간이 초과하였습니다');
+                } else {
+                    alert('인증 번호가 맞지 않습니다');
+                }
+            } else {
+                alert('인증번호를 입력해주세요');
+            }
+          });
+
+          // 가입 완료
+          $('#confirm').click(function(){
+            if(!$('#userId').val()) {
+                alert("이메일을 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userIdCheckYn').val()) {
+                alert("이메일 중복 체크를 진행해주세요");
+                return false;
+            }
+
+            if($('#email-number').val() != 'success') {
+                alert("이메일 인증을 진행해주세요");
+                return false;
+            }
+
+            if(!$('#userPassword').val() || !$('#userPasswordCheck').val()) {
+                alert("비밀번호를 입력해주세요");
+                return false;
+            }
+
+            if($('#userPassword').val() != $('#userPasswordCheck').val()) {
+                alert("비밀번호를 확인해주세요");
+                return false;
+            }
+
+            if(!$('#userName').val()) {
+                alert("이름을 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userBirth').val()) {
+                alert("생년월일을 입력해주세요");
+                return false;
+            }
+
+            if($('#userBirth').val().length != 6) {
+                alert("생년월일은 6자리로 입력해주세요");
+                return false;
+            }
+
+            $('#joinForm').submit();
+          });
+       });
+
+       // 이메일 인증 타이머
+       function fn_timer() {
+         let time = 300;
+         let min = "";
+         let sec = "";
+         let timer = document.getElementById('timer');
+         let emailNumber = document.getElementById('email-number');
+
+         let x = setInterval(function() {
+           min = String(parseInt(time/60)).padStart(2, "0");
+           sec = String(time%60).padStart(2, "0");
+
+           timer.innerHTML = min + ':' + sec;
+           time--;
+
+           if(time < 0) {
+             clearInterval(x);
+             timer.innerHTML = '시간초과';
+             emailNumber.value = 'timeout';
+           } else if(emailNumber.value == 'success') {
+             clearInterval(x);
+           }
+         }, 1000);
+       }
+    </script>
 </head>
 <body>
 <div class="container">
     <div class="input-form-backgroud row">
         <div class="input-form col-md-12 mx-auto">
+            <img class="mb-4" src="/img/main.png" alt="" width="72" height="57">
             <h4 class="mb-3">회원가입</h4>
             <form class="validation-form" id="joinForm" action="/user/join" method="post" novalidate>
                 <div class="mb-3">
@@ -106,174 +265,14 @@
                 <div class="mb-4"></div>
                 <button class="btn btn-primary btn-lg btn-block" id="confirm">가입 완료</button>
             </form>
+            <footer th:replace="fragments/CommonFooter :: commonFooter"></footer>
         </div>
+
     </div>
+
 </div>
 <div class="wrap-loading display-none">
     <div><img src="/img/loading.gif"></div>
 </div>
 </body>
-<script>
-    $(document).ready(function(){
-      // 이메일 중복 체크
-      $('#userIdCheck').click(function(){
-        let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-        let email = $('#userId').val()
-
-        if(!email) {
-            alert("이메일을 입력해주세요");
-            return false;
-        }
-
-        if(!email_regex.test(email)){
-            alert("이메일 형식이 맞지 않습니다");
-            return false;
-        }
-
-        $.ajax({
-            type: "GET"
-          , url : "/api/user/join/" + $('#userId').val()
-          , dataType: "json"
-          , success : function(data) {
-            if(data.success == 'Y') {
-                $('#userIdCheckYn').val(data.success);
-                $('#userId').prop('readonly', true);
-                $('#userIdCheck').attr('disabled',true);
-                $('#emailCertification').removeClass('display-none');
-
-                alert(data.message);
-            } else {
-                alert(data.message);
-            }
-          }
-          , beforeSend:function(){
-              $('.wrap-loading').removeClass('display-none');
-          }
-          , complete:function(){
-              $('.wrap-loading').addClass('display-none');
-          }
-          , error : function(e) {
-            alert('이메일 중복체크가 실패했습니다');
-          }
-        });
-      });
-
-      // 이메일 인증
-      $('#emailCertification').click(function() {
-          $.ajax({
-              type: "GET"
-            , url : "/email/check/" + $('#userId').val()
-            , dataType: "json"
-            , success : function(data) {
-               if(data.check) {
-                $('#email-number').val(data.check);
-                $('#emailCheckDiv').removeClass('display-none');
-                fn_timer();
-               } else {
-                alert('인증이 실패했습니다');
-               }
-            }
-            , beforeSend:function(){
-                $('.wrap-loading').removeClass('display-none');
-            }
-            , complete:function(){
-                $('.wrap-loading').addClass('display-none');
-            }
-            , error : function(e) {
-              alert('인증이 실패했습니다');
-            }
-          });
-      });
-
-      // 이메일 인증 확인
-      $('#email-confirm').click(function() {
-        let check = $('#email-check').val();
-
-        if(check) {
-            if(check == $('#email-number').val()) {
-                alert('인증이 완료되었습니다');
-                $('#email-number').val('success');
-                $('#emailCheckDiv').addClass('display-none');
-                $('#emailCertification').attr('disabled',true);
-            } else if(check == 'timeout') {
-                alert('시간이 초과하였습니다');
-            } else {
-                alert('인증 번호가 맞지 않습니다');
-            }
-        } else {
-            alert('인증번호를 입력해주세요');
-        }
-      });
-
-      // 가입 완료
-      $('#confirm').click(function(){
-        if(!$('#userId').val()) {
-            alert("이메일을 입력해주세요");
-            return false;
-        }
-
-        if(!$('#userIdCheckYn').val()) {
-            alert("이메일 중복 체크를 진행해주세요");
-            return false;
-        }
-
-        if($('#email-number').val() != 'success') {
-            alert("이메일 인증을 진행해주세요");
-            return false;
-        }
-
-        if(!$('#userPassword').val() || !$('#userPasswordCheck').val()) {
-            alert("비밀번호를 입력해주세요");
-            return false;
-        }
-
-        if($('#userPassword').val() != $('#userPasswordCheck').val()) {
-            alert("비밀번호를 확인해주세요");
-            return false;
-        }
-
-        if(!$('#userName').val()) {
-            alert("이름을 입력해주세요");
-            return false;
-        }
-
-        if(!$('#userBirth').val()) {
-            alert("생년월일을 입력해주세요");
-            return false;
-        }
-
-        if($('#userBirth').val().length != 6) {
-            alert("생년월일은 6자리로 입력해주세요");
-            return false;
-        }
-
-        $('#joinForm').submit();
-      });
-   });
-
-   // 이메일 인증 타이머
-   function fn_timer() {
-     let time = 300;
-     let min = "";
-     let sec = "";
-     let timer = document.getElementById('timer');
-     let emailNumber = document.getElementById('email-number');
-
-     let x = setInterval(function() {
-       min = String(parseInt(time/60)).padStart(2, "0");
-       sec = String(time%60).padStart(2, "0");
-
-       timer.innerHTML = min + ':' + sec;
-       time--;
-
-       if(time < 0) {
-         clearInterval(x);
-         timer.innerHTML = '시간초과';
-         emailNumber.value = 'timeout';
-       } else if(emailNumber.value == 'success') {
-         clearInterval(x);
-       }
-     }, 1000);
-   }
-</script>
 </html>

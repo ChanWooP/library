@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="commonHead(metas, scripts, links, styles)">
+        <title>퍼블릭도서관</title>
+
+        <!-- 공통 -->
+        <meta charset="UTF-8">
+        <th:block th:replace="${metas}" />
+
+        <!-- 공통 -->
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.png">
+        <th:block th:replace="${links}" />
+
+        <!-- 공통 -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <th:block th:replace="${scripts}" />
+
+        <!-- 공통 -->
+        <th:block th:replace="${styles}" />
+    </head>
+</html>

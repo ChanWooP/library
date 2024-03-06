@@ -2,19 +2,14 @@
 <html lang="en"
       data-bs-theme="auto"
       xmlns:th="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8">
+  <head th:replace="fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.122.0">
-    <title>로그인</title>
     <link type="text/css" rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
     <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js" ></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
+    <link href="/css/sign-in.css" rel="stylesheet">
     <style>
       ul {
         margin-left: 0 px;
@@ -104,10 +99,22 @@
         display: block !important;
       }
     </style>
+    <script type="text/javascript">
+      $(document).ready(function(){
 
-    
-    <!-- Custom styles for this template -->
-    <link href="/css/sign-in.css" rel="stylesheet">
+        $('.join').click(function(){
+          location.href = "/user/join";
+        });
+
+        $('.findId').click(function(){
+
+        });
+
+        $('.findPw').click(function(){
+
+        });
+     });
+    </script>
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -128,7 +135,7 @@
 
     <main class="form-signin w-100 m-auto">
       <form action="/loginProcess" method="post">
-        <img class="mb-4" src="/img/bootstrap-logo.svg" alt="" width="72" height="57">
+        <img class="mb-4" src="/img/main.png" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">로그인</h1>
 
         <th:block th:if="${error}">
@@ -160,24 +167,8 @@
           <li class="findId">ID 찾기 | </li>
           <li class="findPw">PW 찾기</li>
         </ul>
-        <p class="mt-5 mb-3 text-body-secondary">&copy; cwpark</p>
       </form>
+      <footer th:replace="fragments/CommonFooter :: commonFooter"></footer>
     </main>
   </body>
-  <script type="text/javascript">
-    $(document).ready(function(){
-
-      $('.join').click(function(){
-        location.href = "/user/join";
-      });
-
-      $('.findId').click(function(){
-
-      });
-
-      $('.findPw').click(function(){
-
-      });
-   });
-  </script>
 </html>
