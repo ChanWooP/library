@@ -2,7 +2,7 @@
 <html lang="en"
       data-bs-theme="auto"
       xmlns:th="http://www.w3.org/1999/xhtml">
-  <head th:replace="fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})">
+  <head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
@@ -168,7 +168,7 @@
           <li class="findPw">PW 찾기</li>
         </ul>
       </form>
-      <footer th:replace="fragments/CommonFooter :: commonFooter"></footer>
+      <footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
     </main>
   </body>
 </html>

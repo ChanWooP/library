@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link>
     <style>
@@ -268,7 +268,7 @@
         </div>
     </div>
 </div>
-<footer th:replace="fragments/CommonFooter :: commonFooter"></footer>
-<div th:replace="fragments/CommonLoading :: commonLoading"></div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
 </body>
 </html>
