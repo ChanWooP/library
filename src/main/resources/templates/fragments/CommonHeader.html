@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <header class="p-3" th:fragment="CommonHeader">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <img class="mian-img" src="/img/main.png" onclick="home()" width="52" height="37">
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="#" class="nav-link px-2 text-white">내서재</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">전자도서</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">희망도서신청</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">공지사항</a></li>
+                    <li><a href="#" class="nav-link px-2 text-white">질문하기</a></li>
+                </ul>
+
+                <div class="text-end">
+                    <th:block sec:authorize="isAuthenticated()">
+                        <button type="button" class="btn btn-outline-light" onclick="logout()">로그아웃</button>
+                        <button type="button" class="btn btn-outline-light" onclick="myPage()">내정보</button>
+                    </th:block>
+                    <th:block sec:authorize="isAnonymous()">
+                        <button type="button" class="btn btn-outline-light" onclick="login()">로그인</button>
+                        <button type="button" class="btn btn-outline-light" onclick="join()">회원가입</button>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </header>
+</html>

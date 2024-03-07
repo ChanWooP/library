@@ -57,3 +57,8 @@
 .mian-img {
     cursor: pointer;
 }
+
+header {
+    background: #0287fc;
+    font-weight: bold;
+}
