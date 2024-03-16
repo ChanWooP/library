@@ -1,6 +1,7 @@
 package com.cwpark.library.data.dto;
 
 import com.cwpark.library.data.enums.UserAuthority;
+import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -25,6 +26,8 @@ public class UserInsertDto {
 
     @NotBlank(message = "생년월일은 필수 입력 사항 입니다")
     private String userBirth;
+
+    private UserOauthType userOauthType;
 
     private UserAuthority userAuthority;
 

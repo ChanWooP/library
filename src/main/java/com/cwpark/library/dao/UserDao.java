@@ -25,7 +25,7 @@ public class UserDao {
                 .userBirth(user.getUserBirth())
                 .userAuthority(UserAuthority.USER)
                 .userLoginFailCnt(0)
-                .userOauthType(UserOauthType.EMALE)
+                .userOauthType(user.getUserOauthType() == null ? UserOauthType.EMALE : user.getUserOauthType())
                 .build()
         );
     }

@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
@@ -33,6 +36,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public DelegatingSecurityContextRepository delegatingSecurityContextRepository() {
+        return new DelegatingSecurityContextRepository(
+                new RequestAttributeSecurityContextRepository(),
+                new HttpSessionSecurityContextRepository()
+        );
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName(null);
@@ -45,7 +56,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers(
                                         "/", "/css/**", "/js/**", "/img/**",
-                                        "/login", "/user/join", "/api/user/join/**",
+                                        "/login", "/user/join", "/api/user/join/**", "/kakao/callback",
                                         "/email/check/**"
                                 ).permitAll()
                                 .anyRequest().authenticated())
