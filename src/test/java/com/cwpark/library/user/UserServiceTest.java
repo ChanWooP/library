@@ -3,6 +3,7 @@ package com.cwpark.library.user;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserUpdateDto;
 import com.cwpark.library.data.enums.UserAuthority;
+import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
@@ -23,7 +24,7 @@ public class UserServiceTest {
     @DisplayName("회원 가입 테스트")
     void joinTest() {
         UserInsertDto user = new UserInsertDto(
-                "id", "password", "name", "M", "941212", UserAuthority.USER);
+                "id", "password", "name", "M", "941212", UserOauthType.EMALE,UserAuthority.USER);
 
         // 저장
         userService.insertUser(user);
@@ -46,7 +47,7 @@ public class UserServiceTest {
     @DisplayName("아이디 중복 체크")
     void existsByUserIdTest() {
         UserInsertDto user = new UserInsertDto(
-                "id", "password", "name", "M", "941212", UserAuthority.USER);
+                "id", "password", "name", "M", "941212", UserOauthType.EMALE,UserAuthority.USER);
 
         userService.insertUser(user);
 
