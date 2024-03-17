@@ -31,11 +31,8 @@ public class UserDao {
     }
 
     public UserUpdateDto findUserId(String userId) throws EntityNotFoundException{
-        User findUser = userRepository.findByUserId(userId);
-
-        if(findUser == null) {
-            throw new EntityNotFoundException("아이디가 존재하지 않습니다.");
-        }
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다."));
 
         return UserUpdateDto.builder()
                 .userId(findUser.getUserId())

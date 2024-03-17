@@ -28,18 +28,16 @@ public class FailHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String errorMessage = null;
         String username = request.getParameter("username");
-        User user = null;
 
         if (exception instanceof BadCredentialsException) {
             errorMessage = "아이디 또는 비밀번호가 맞지 않습니다";
 
-            user = userRepository.findByUserId(username);
-
             // 로그인 실패 시 로그인 횟수 추가 (최대 5회 후 계정 잠김)
-            if(user != null) {
-                user.setUserLoginFailCnt(user.getUserLoginFailCnt() + 1);
-                userRepository.save(user);
-            }
+            userRepository.findByUserId(username).ifPresent((u) -> {
+                u.setUserLoginFailCnt(u.getUserLoginFailCnt() + 1);
+                userRepository.save(u);
+            });
+
         } else if (exception instanceof InternalAuthenticationServiceException) {
             errorMessage = "내부 시스템 문제입니다 관리자에게 문의해주세요";
         } else if (exception instanceof AuthenticationCredentialsNotFoundException) {

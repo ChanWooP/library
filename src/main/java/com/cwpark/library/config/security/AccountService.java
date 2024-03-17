@@ -25,11 +25,8 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserId(username);
-
-        if(user == null) {
-            throw new UsernameNotFoundException("사용자가 존재하지 않습니다");
-        }
+        User user = userRepository.findByUserId(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다"));
 
         List<String> authorityList = new ArrayList<>();
         authorityList.add(user.getUserAuthority().toString());

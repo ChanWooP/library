@@ -2,6 +2,7 @@ package com.cwpark.library.config.security;
 
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,13 +40,13 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private void loginFailCntInit(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         Account account = (Account) principal;
-        User user = userRepository.findByUserId(account.getId());
 
-        if(user.getUserLoginFailCnt() != 0) {
-            user.setUserLoginFailCnt(0);
-            userRepository.save(user);
-        }
-
+        userRepository.findByUserId(account.getId()).ifPresent((u) -> {
+            if(u.getUserLoginFailCnt() != 0) {
+                u.setUserLoginFailCnt(0);
+                userRepository.save(u);
+            }
+        });
     }
 
     private void resultRedirectStrategy(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
