@@ -1,5 +1,6 @@
 package com.cwpark.library.data.dto;
 
+import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,7 @@ import lombok.*;
 public class UserUpdateDto {
 
     @NotBlank(message = "아이디는 필수 입력 사항 입니다")
-    private String id;
+    private Long id;
 
     @NotBlank(message = "아이디는 필수 입력 사항 입니다")
     private String userId;
@@ -38,5 +39,18 @@ public class UserUpdateDto {
 
     @NotBlank(message = "가입 경로는 필수 입력 사항 입니다")
     private UserOauthType userOauthType;
+
+    public static UserUpdateDto toDto(User user) {
+        return UserUpdateDto.builder()
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .userName(user.getUserName())
+                .userSex(user.getUserSex())
+                .userBirth(user.getUserBirth())
+                .userAuthority(user.getUserAuthority())
+                .userLoginFailCnt(user.getUserLoginFailCnt())
+                .userOauthType(user.getUserOauthType())
+                .build();
+    }
 
 }

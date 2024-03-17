@@ -31,4 +31,13 @@ public class UserInsertDto {
 
     private UserAuthority userAuthority;
 
+    public static UserInsertDto kakaoToDto(UserKakaoDto user) {
+        return UserInsertDto.builder()
+                .userId(user.getEmail())
+                .userName(user.getNickName())
+                .userPassword(user.getPassword())
+                .userOauthType(user.getUserOauthType())
+                .build();
+    }
+
 }

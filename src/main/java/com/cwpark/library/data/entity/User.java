@@ -1,5 +1,7 @@
 package com.cwpark.library.data.entity;
 
+import com.cwpark.library.data.dto.UserInsertDto;
+import com.cwpark.library.data.dto.UserUpdateDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.persistence.*;
@@ -12,6 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
@@ -69,4 +72,33 @@ public class User extends BaseEntity {
     public int hashCode() {
         return Objects.hash(getId(), getUserId(), getUserPassword(), getUserName(), getUserSex(), getUserBirth(), getUserLoginFailCnt(), getUserOauthType());
     }
+
+    public static User insertToEntity(UserInsertDto user) {
+        return User.builder()
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .userName(user.getUserName())
+                .userSex(user.getUserSex())
+                .userBirth(user.getUserBirth())
+                .userAuthority(UserAuthority.USER)
+                .userLoginFailCnt(0)
+                .userOauthType(user.getUserOauthType() == null ? UserOauthType.EMALE : user.getUserOauthType())
+                .build();
+    }
+
+    public static User updateToEntity(UserUpdateDto user) {
+        return User.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .userPassword(user.getUserPassword())
+                .userName(user.getUserName())
+                .userSex(user.getUserSex())
+                .userBirth(user.getUserBirth())
+                .userAuthority(user.getUserAuthority())
+                .userLoginFailCnt(user.getUserLoginFailCnt())
+                .userOauthType(user.getUserOauthType())
+                .build();
+    }
+
+
 }

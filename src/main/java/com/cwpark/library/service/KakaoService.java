@@ -1,6 +1,7 @@
 package com.cwpark.library.service;
 
 import com.cwpark.library.data.dto.UserInsertDto;
+import com.cwpark.library.data.dto.UserKakaoDto;
 import com.cwpark.library.data.enums.UserOauthType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -93,11 +94,6 @@ public class KakaoService {
         String nickName = (String) profile.get("nickname");
         String email = (String) account.get("email");
 
-        return UserInsertDto.builder()
-                .userId(email)
-                .userName(nickName)
-                .userPassword(KAKAO_PASSWORD)
-                .userOauthType(UserOauthType.KAKAO)
-                .build();
+        return UserInsertDto.kakaoToDto(UserKakaoDto.toDto(email, nickName, KAKAO_PASSWORD, UserOauthType.KAKAO));
     }
 }
