@@ -1,5 +1,6 @@
 package com.cwpark.library.config.security;
 
+import com.cwpark.library.service.RememberMeTokenService;
 import jakarta.servlet.http.HttpServlet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,8 @@ public class SecurityConfig {
 
     private final FailHandler failHandler;
     private final SuccessHandler successHandler;
+    private final AccountService accountService;
+    private final RememberMeTokenService rememberMeTokenService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,6 +73,14 @@ public class SecurityConfig {
                                 .failureUrl("/login")
                                 .failureHandler(failHandler)
                                 .successHandler(successHandler))
+                .rememberMe((rememberMe) ->
+                        rememberMe
+                                .key("remember")
+                                .rememberMeParameter("remember")
+                                .alwaysRemember(false)
+                                .tokenValiditySeconds(86400*30)
+                                .tokenRepository(rememberMeTokenService)
+                                .userDetailsService(accountService))
                 .logout((logout) ->
                         logout
                                 .logoutUrl("/logout")

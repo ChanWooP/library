@@ -36,7 +36,6 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         resultRedirectStrategy(request, response);
     }
 
-    @Transactional
     private void loginFailCntInit(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         Account account = (Account) principal;

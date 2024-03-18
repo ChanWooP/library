@@ -6,17 +6,20 @@ import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "USERS")
 @Getter
 @Setter
-@Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@DynamicUpdate
+@DynamicInsert
+@Table(name = "USERS")
 public class User extends BaseEntity {
 
     @Id
