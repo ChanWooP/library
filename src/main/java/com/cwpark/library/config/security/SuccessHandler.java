@@ -40,7 +40,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Object principal = authentication.getPrincipal();
         Account account = (Account) principal;
 
-        userRepository.findByUserId(account.getId()).ifPresent((u) -> {
+        userRepository.findById(account.getId()).ifPresent((u) -> {
             if(u.getUserLoginFailCnt() != 0) {
                 u.setUserLoginFailCnt(0);
                 userRepository.save(u);

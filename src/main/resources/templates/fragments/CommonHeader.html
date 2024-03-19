@@ -18,7 +18,7 @@
                 <div class="text-end">
                     <th:block sec:authorize="isAuthenticated()">
                         <button type="button" class="btn btn-outline-light" onclick="logout()">로그아웃</button>
-                        <button type="button" class="btn btn-outline-light" onclick="myPage()">내정보</button>
+                        <button type="button" class="btn btn-outline-light" th:onclick="myPage([[${#authentication.name}]])">내정보</button>
                     </th:block>
                     <th:block sec:authorize="isAnonymous()">
                         <button type="button" class="btn btn-outline-light" onclick="login()">로그인</button>

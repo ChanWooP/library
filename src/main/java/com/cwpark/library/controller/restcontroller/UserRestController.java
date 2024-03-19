@@ -19,7 +19,7 @@ public class UserRestController {
     public ResponseEntity<Map<String, Object>> existsByUserId(@PathVariable(name = "userId") String userId) {
         Map<String, Object> result = new HashMap<>();
 
-        if(userService.existsByUserId(userId)) {
+        if(userService.existsById(userId)) {
             result.put("success", "N");
             result.put("message", "아이디가 중복되었습니다.");
         } else {

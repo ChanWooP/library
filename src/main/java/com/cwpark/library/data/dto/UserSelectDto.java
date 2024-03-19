@@ -11,10 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateDto {
-
-    @NotBlank(message = "아이디는 필수 입력 사항 입니다")
-    private Long id;
+public class UserSelectDto {
 
     @NotBlank(message = "아이디는 필수 입력 사항 입니다")
     private String userId;
@@ -40,8 +37,8 @@ public class UserUpdateDto {
     @NotBlank(message = "가입 경로는 필수 입력 사항 입니다")
     private UserOauthType userOauthType;
 
-    public static UserUpdateDto toDto(User user) {
-        return UserUpdateDto.builder()
+    public static UserSelectDto toDto(User user) {
+        return UserSelectDto.builder()
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .userName(user.getUserName())

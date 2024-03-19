@@ -10,8 +10,8 @@ function logout() {
     location.href = '/logout';
 }
 
-function myPage() {
-    location.href = '/user/mypage';
+function myPage(userId) {
+    location.href = '/user/mypage/' + userId;
 }
 
 function join() {

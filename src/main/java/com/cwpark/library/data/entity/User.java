@@ -1,7 +1,7 @@
 package com.cwpark.library.data.entity;
 
 import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserUpdateDto;
+import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.persistence.*;
@@ -23,10 +23,7 @@ import java.util.Objects;
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "USER_ID", unique = true)
+    @Column(name = "USER_ID")
     private String userId;
 
     @Column(name = "USER_PASSWORD")
@@ -68,12 +65,12 @@ public class User extends BaseEntity {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         User user = (User) object;
-        return getUserLoginFailCnt() == user.getUserLoginFailCnt() && Objects.equals(getId(), user.getId()) && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getUserPassword(), user.getUserPassword()) && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getUserSex(), user.getUserSex()) && Objects.equals(getUserBirth(), user.getUserBirth()) && getUserOauthType() == user.getUserOauthType();
+        return getUserLoginFailCnt() == user.getUserLoginFailCnt() && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getUserPassword(), user.getUserPassword()) && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getUserSex(), user.getUserSex()) && Objects.equals(getUserBirth(), user.getUserBirth()) && getUserOauthType() == user.getUserOauthType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUserId(), getUserPassword(), getUserName(), getUserSex(), getUserBirth(), getUserLoginFailCnt(), getUserOauthType());
+        return Objects.hash(getUserId(), getUserPassword(), getUserName(), getUserSex(), getUserBirth(), getUserLoginFailCnt(), getUserOauthType());
     }
 
     public static User insertToEntity(UserInsertDto user) {
@@ -89,9 +86,8 @@ public class User extends BaseEntity {
                 .build();
     }
 
-    public static User updateToEntity(UserUpdateDto user) {
+    public static User selectToEntity(UserSelectDto user) {
         return User.builder()
-                .id(user.getId())
                 .userId(user.getUserId())
                 .userPassword(user.getUserPassword())
                 .userName(user.getUserName())
@@ -102,6 +98,5 @@ public class User extends BaseEntity {
                 .userOauthType(user.getUserOauthType())
                 .build();
     }
-
 
 }

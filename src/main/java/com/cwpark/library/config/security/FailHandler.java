@@ -33,7 +33,7 @@ public class FailHandler extends SimpleUrlAuthenticationFailureHandler {
             errorMessage = "아이디 또는 비밀번호가 맞지 않습니다";
 
             // 로그인 실패 시 로그인 횟수 추가 (최대 5회 후 계정 잠김)
-            userRepository.findByUserId(username).ifPresent((u) -> {
+            userRepository.findById(username).ifPresent((u) -> {
                 u.setUserLoginFailCnt(u.getUserLoginFailCnt() + 1);
                 userRepository.save(u);
             });

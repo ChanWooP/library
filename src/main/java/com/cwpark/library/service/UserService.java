@@ -2,9 +2,12 @@ package com.cwpark.library.service;
 
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserUpdateDto;
+import com.cwpark.library.data.dto.UserMyPageDto;
+import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.exception.ErrorException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +23,22 @@ public class UserService {
         userDao.insertUser(user);
     }
 
-    public UserUpdateDto findUserId(String userId) throws EntityNotFoundException {
-        return userDao.findUserId(userId);
+    public void updateUser(UserMyPageDto user) {
+
+        userDao.updateUser(user);
     }
 
-    public Boolean existsByUserId(String userId) {
-        return userDao.existsByUserId(userId);
+    public UserSelectDto findById(String userId) throws EntityNotFoundException {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!loginId.equals(userId)) {
+            return null;
+        }
+
+        return userDao.findById(userId);
+    }
+
+    public Boolean existsById(String userId) {
+        return userDao.existsById(userId);
     }
 
 }

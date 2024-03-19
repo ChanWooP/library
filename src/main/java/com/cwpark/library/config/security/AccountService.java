@@ -40,7 +40,7 @@ public class AccountService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String uuid = UUID.randomUUID().toString();
 
-        User user = userRepository.findByUserId(username)
+        User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다"));
 
         log.info("[{}] 로그인 시도 IP=[{}], TIME=[{}], ID=[{}]", uuid, customRequest.getUserIp(), LocalDateTime.now(), username);

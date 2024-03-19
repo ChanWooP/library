@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link>
+    <style>
+        body {
+          min-height: 100vh;
+        }
+
+        .input-form {
+          max-width: 680px;
+
+          margin-top: 80px;
+          margin-bottom: 80px;
+          padding: 32px;
+
+          background: #fff;
+          -webkit-border-radius: 10px;
+          -moz-border-radius: 10px;
+          border-radius: 10px;
+          -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+          -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+          box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+    </style>
+    <script>
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-3">내 정보</h4>
+            <form class="validation-form" id="joinForm" action="/user/mypage" method="post" novalidate>
+
+                <input type="hidden" id="userId" name="userId" th:value="${#authentication.name}">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="userName">이름</label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해주세요" th:value="${user.userName}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="userBirth">생년월일</label>
+                        <input type="text" class="form-control" id="userBirth" name="userBirth" placeholder="예) 980102" th:value="${user.userBirth}"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="userSex">성별</label>
+                        <select class="form-select" id="userSex" name="userSex" th:value="${user.userSex}">
+                            <option th:selected="${user.userSex}=='M'" value="M">남</option>
+                            <option th:selected="${user.userSex}=='W'" value="W">여</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+
+                <div class="mb-4"></div>
+                <button class="btn btn-primary btn-lg btn-block" id="confirm">수정하기</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>

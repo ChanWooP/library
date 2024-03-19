@@ -1,8 +1,7 @@
 package com.cwpark.library.controller.restcontroller;
 
 import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserUpdateDto;
-import com.cwpark.library.data.entity.User;
+import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.service.KakaoService;
 import com.cwpark.library.service.UserService;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,9 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,12 +38,12 @@ public class KakaoRestController {
     public String callback(@RequestParam("code") String code, Model model, HttpServletRequest request, HttpServletResponse response) throws ParseException {
         String accessToken = kakaoService.getAccessToken(code);
         UserInsertDto userInsertDto = kakaoService.getUserInfo(accessToken);
-        UserUpdateDto kakaoUser = null;
+        UserSelectDto kakaoUser = null;
 
-        if(!userService.existsByUserId(userInsertDto.getUserId())) {
+        if(!userService.existsById(userInsertDto.getUserId())) {
             userService.insertUser(userInsertDto);
         } else {
-            kakaoUser = userService.findUserId(userInsertDto.getUserId());
+            kakaoUser = userService.findById(userInsertDto.getUserId());
 
             if(!kakaoUser.getUserOauthType().equals(UserOauthType.KAKAO)) {
                 model.addAttribute("error", "OAuth");
