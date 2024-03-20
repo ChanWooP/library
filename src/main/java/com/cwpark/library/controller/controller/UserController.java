@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/join")
     public String insertUser(@Valid @ModelAttribute UserInsertDto user) {
         userService.insertUser(user);
-        return "redirect:/sign-in/login";
+        return "redirect:/login";
     }
 
     @PostMapping("/mypage")

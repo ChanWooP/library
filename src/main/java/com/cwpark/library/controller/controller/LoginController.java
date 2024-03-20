@@ -31,7 +31,7 @@ public class LoginController {
         model.addAttribute("expire", expire);
         model.addAttribute("kakao", kakaoService.getKakaoLogin());
 
-        return "sign-in/login";
+        return "/sign-in/login";
     }
 
 }
