@@ -4,6 +4,7 @@ import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.entity.User;
+import com.cwpark.library.exception.RuntimeEntityNotFoundException;
 import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,15 @@ public class UserDao {
         });
     }
 
-    public UserSelectDto findById(String userId) throws EntityNotFoundException{
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다."));
+    public UserSelectDto findById(String userId){
+        try {
+            User findUser = userRepository.findById(userId)
+                    .orElseThrow(EntityNotFoundException::new);
 
-        return UserSelectDto.toDto(findUser);
+            return UserSelectDto.toDto(findUser);
+        } catch (EntityNotFoundException e) {
+            throw new RuntimeEntityNotFoundException("아이디가 존재하지 않습니다.");
+        }
     }
 
     public Boolean existsById(String userId) {

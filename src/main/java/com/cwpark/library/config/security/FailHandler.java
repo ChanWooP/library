@@ -37,7 +37,6 @@ public class FailHandler extends SimpleUrlAuthenticationFailureHandler {
                 u.setUserLoginFailCnt(u.getUserLoginFailCnt() + 1);
                 userRepository.save(u);
             });
-
         } else if (exception instanceof InternalAuthenticationServiceException) {
             errorMessage = "내부 시스템 문제입니다 관리자에게 문의해주세요";
         } else if (exception instanceof AuthenticationCredentialsNotFoundException) {

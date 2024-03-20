@@ -5,18 +5,24 @@ import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.repository.UserRepository;
+import com.cwpark.library.exception.RuntimeUserNotSameException;
 import com.cwpark.library.service.UserService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Persistence;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -25,9 +31,14 @@ public class UserServiceTest {
 
     @Autowired
     UserService userService;
-
     @Autowired
-    UserRepository userRepository;
+    AuthenticationManager authenticationManager;
+    @Autowired
+    SecurityContextRepository securityContextRepository;
+    @Autowired
+    HttpServletRequest request;
+    @Autowired
+    HttpServletResponse response;
 
     @BeforeEach
     void init() {
@@ -73,5 +84,27 @@ public class UserServiceTest {
         // 조회
         Assertions.assertThat(findUser.getUserBirth()).isEqualTo("971019");
     }
+
+    @Test
+    @DisplayName("회원정보 가져올 때 예외 처리")
+    void userInfoTest() {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                "id", "password"
+        );
+
+
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+
+
+        SecurityContextHolder.setContext(securityContext);
+        securityContextRepository.saveContext(securityContext, request, response);
+
+        Assertions.assertThatThrownBy(() -> userService.findById("ids"))
+                .isInstanceOf(RuntimeUserNotSameException.class);
+    }
+
+
 
 }

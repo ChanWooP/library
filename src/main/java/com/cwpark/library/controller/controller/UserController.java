@@ -34,7 +34,7 @@ public class UserController {
 
         model.addAttribute("user", user);
 
-        return "user/mypage";
+        return "/user/mypage";
     }
 
     @PostMapping("/join")

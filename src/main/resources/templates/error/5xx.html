@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>에러</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<script th:inline="javascript">
+    $(document).ready(function(){
+        alert([[${message}]]);
+
+        location.href = '/';
+    });
+</script>
+<body>
+
+</body>
+</html>
