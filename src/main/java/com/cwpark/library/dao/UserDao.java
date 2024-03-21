@@ -46,4 +46,15 @@ public class UserDao {
         return userRepository.existsById(userId);
     }
 
+    public void deleteUser(String userId) {
+        try {
+            User findUser = userRepository.findById(userId)
+                    .orElseThrow(EntityNotFoundException::new);
+
+            userRepository.delete(findUser);
+        } catch (EntityNotFoundException e) {
+            throw new RuntimeEntityNotFoundException("아이디가 존재하지 않습니다.");
+        }
+    }
+
 }

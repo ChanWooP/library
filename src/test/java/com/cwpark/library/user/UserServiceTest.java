@@ -105,6 +105,12 @@ public class UserServiceTest {
                 .isInstanceOf(RuntimeUserNotSameException.class);
     }
 
+    @Test
+    @DisplayName("회원 탈퇴")
+    void userDeleteTest() {
+        userService.deleteUser("id");
+    }
+
 
 
 }

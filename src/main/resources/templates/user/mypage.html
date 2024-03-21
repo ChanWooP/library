@@ -26,6 +26,53 @@
         }
     </style>
     <script>
+        $(document).ready(function(){
+            // 수정하기
+            $('#confirm').click(function(){
+                if(!$('#userName').val()) {
+                    alert("이름을 입력해주세요");
+                    return false;
+                }
+
+                if(!$('#userBirth').val()) {
+                    alert("생년월일을 입력해주세요");
+                    return false;
+                }
+
+                if($('#userBirth').val().length != 6) {
+                    alert("생년월일은 6자리로 입력해주세요");
+                    return false;
+                }
+
+                $('#joinForm').submit();
+            });
+
+            // 회원탈퇴
+            $('#delete-user').click(function(){
+                $.ajax({
+                    type: "DELETE"
+                  , url : "/api/user/mypage/" + $('#userId').val()
+                  , dataType: "json"
+                  , success : function(data) {
+                    if(data.success == 'Y') {
+                        alert('회원탈퇴가 완료되었습니다');
+                        location.href = '/logout';
+                    } else {
+                        alert('회원탈퇴가 실패하였습니다');
+                    }
+                  }
+                  , beforeSend:function(){
+                    $('.wrap-loading').removeClass('display-none');
+                  }
+                  , complete:function(){
+                    $('.wrap-loading').addClass('display-none');
+                  }
+                  , error : function(e) {
+                    alert('회원탈퇴가 실패하였습니다');
+                  }
+                });
+            });
+        });
     </script>
 </head>
 <body>
@@ -58,11 +105,13 @@
                             <option th:selected="${user.userSex}=='W'" value="W">여</option>
                         </select>
                     </div>
+                    <a href="#" id="delete-user">회원탈퇴</a>
                 </div>
 
                 <hr class="mb-4">
 
                 <div class="mb-4"></div>
+
                 <button class="btn btn-primary btn-lg btn-block" id="confirm">수정하기</button>
             </form>
         </div>

@@ -58,4 +58,8 @@ public class UserService {
         return userDao.existsById(userId);
     }
 
+    public void deleteUser(String userId) {
+        userDao.deleteUser(userId);
+    }
+
 }

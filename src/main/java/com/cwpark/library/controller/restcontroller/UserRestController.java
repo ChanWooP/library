@@ -3,6 +3,8 @@ package com.cwpark.library.controller.restcontroller;
 import com.cwpark.library.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,6 +28,18 @@ public class UserRestController {
             result.put("success", "Y");
             result.put("message", "사용 가능한 아이디 입니다.");
         }
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @DeleteMapping("/mypage/{userId}")
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        userService.deleteUser(userId);
+
+        result.put("success", "Y");
 
         return ResponseEntity.ok()
                 .body(result);

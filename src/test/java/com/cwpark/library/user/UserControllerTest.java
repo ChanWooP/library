@@ -85,7 +85,6 @@ public class UserControllerTest {
                 "test", "password"
         );
 
-
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
@@ -97,6 +96,33 @@ public class UserControllerTest {
         mvc.perform(get("/user/mypage/{userId}", "test"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/user/mypage"))
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴")
+    void userDeleteTest() throws Exception {
+        UserInsertDto user = new UserInsertDto(
+                "test", "password", "name", "M", "941212", UserOauthType.EMALE,UserAuthority.USER);
+        // 저장
+        userService.insertUser(user);
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                "test", "password"
+        );
+
+
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+
+
+        SecurityContextHolder.setContext(securityContext);
+        securityContextRepository.saveContext(securityContext, request, response);
+
+        mvc.perform(delete("/user/mypage/{userId}", "test"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
                 .andReturn();
     }
 }

@@ -60,6 +60,11 @@ public class User extends BaseEntity {
         this.userOauthType = userOauthType;
     }
 
+    public User(String id, String password2) {
+        this.userId = id;
+        this.userPassword = password2;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
