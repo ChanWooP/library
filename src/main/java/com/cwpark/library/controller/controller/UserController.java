@@ -27,11 +27,6 @@ public class UserController {
     public String myPage(@PathVariable("userId") String userId, Model model) {
         UserSelectDto user = userService.findById(userId);
 
-        if(user == null) {
-            model.addAttribute("error", "wrongApproach");
-            return "error/error";
-        }
-
         model.addAttribute("user", user);
 
         return "/user/mypage";

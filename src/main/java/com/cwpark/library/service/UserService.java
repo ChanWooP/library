@@ -5,8 +5,10 @@ import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.exception.RuntimeEntityNotFoundException;
 import com.cwpark.library.exception.RuntimeUserNotSameException;
+import com.cwpark.library.exception.RuntimeoAuthException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,17 @@ public class UserService {
 
     public void updateUser(UserMyPageDto user) {
         userDao.updateUser(user);
+    }
+
+    public UserSelectDto findByIdToKakao(String userId) {
+
+        UserSelectDto user = userDao.findById(userId);
+
+        if(!user.getUserOauthType().equals(UserOauthType.KAKAO)) {
+            throw new RuntimeoAuthException("다른 경로로 회원가입이 되어있습니다");
+        }
+
+        return user;
     }
 
     public UserSelectDto findById(String userId) {

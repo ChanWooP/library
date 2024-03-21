@@ -1,8 +1,8 @@
-package com.cwpark.library.controller.restcontroller;
+package com.cwpark.library.controller.controller;
 
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserSelectDto;
-import com.cwpark.library.data.enums.UserOauthType;
+import com.cwpark.library.exception.RuntimeoAuthException;
 import com.cwpark.library.service.KakaoService;
 import com.cwpark.library.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/kakao")
-public class KakaoRestController {
+public class KakaoController {
     private final KakaoService kakaoService;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -33,6 +34,12 @@ public class KakaoRestController {
 
     @Value("${kakao.default.password}")
     private String KAKAO_PASSWORD;
+
+    @ExceptionHandler(RuntimeoAuthException.class)
+    public String oAuthExHandle(RuntimeoAuthException e, Model model) {
+        model.addAttribute("message", e.getMessage());
+        return "/error/5xx";
+    }
 
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code, Model model, HttpServletRequest request, HttpServletResponse response) throws ParseException {
@@ -43,12 +50,7 @@ public class KakaoRestController {
         if(!userService.existsById(userInsertDto.getUserId())) {
             userService.insertUser(userInsertDto);
         } else {
-            kakaoUser = userService.findById(userInsertDto.getUserId());
-
-            if(!kakaoUser.getUserOauthType().equals(UserOauthType.KAKAO)) {
-                model.addAttribute("error", "OAuth");
-                return "/error/oAuth";
-            }
+            kakaoUser = userService.findByIdToKakao(userInsertDto.getUserId());
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
