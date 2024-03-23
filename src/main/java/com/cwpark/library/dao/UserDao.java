@@ -18,17 +18,12 @@ public class UserDao {
 
     private final UserRepository userRepository;
 
-    public void insertUser(UserInsertDto user) {
-        userRepository.save(User.insertToEntity(user));
+    public Boolean existsById(String userId) {
+        return userRepository.existsById(userId);
     }
 
-    public void updateUser(UserMyPageDto user) {
-        userRepository.findById(user.getUserId()).ifPresent((u) -> {
-            u.setUserName(user.getUserName());
-            u.setUserBirth(user.getUserBirth());
-            u.setUserSex(user.getUserSex());
-            userRepository.save(u);
-        });
+    public void insertUser(UserInsertDto user) {
+        userRepository.save(User.insertToEntity(user));
     }
 
     public UserSelectDto findById(String userId){
@@ -42,19 +37,20 @@ public class UserDao {
         }
     }
 
-    public Boolean existsById(String userId) {
-        return userRepository.existsById(userId);
+    public void updateUser(UserMyPageDto user) {
+        userRepository.findById(user.getUserId()).ifPresent((u) -> {
+            u.setUserName(user.getUserName());
+            u.setUserBirth(user.getUserBirth());
+            u.setUserSex(user.getUserSex());
+            userRepository.save(u);
+        });
     }
 
     public void deleteUser(String userId) {
-        try {
-            User findUser = userRepository.findById(userId)
-                    .orElseThrow(EntityNotFoundException::new);
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
 
-            userRepository.delete(findUser);
-        } catch (EntityNotFoundException e) {
-            throw new RuntimeEntityNotFoundException("아이디가 존재하지 않습니다.");
-        }
+        userRepository.delete(findUser);
     }
 
 }

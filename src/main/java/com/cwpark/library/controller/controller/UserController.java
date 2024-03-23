@@ -1,12 +1,15 @@
 package com.cwpark.library.controller.controller;
 
+import com.cwpark.library.config.security.Account;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.exception.RuntimeUserNotSameException;
 import com.cwpark.library.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +24,7 @@ public class UserController {
 
     @GetMapping("/join")
     public String join() {
-        return "sign-in/join";
+        return "/sign-in/join";
     }
 
     @GetMapping("/mypage/{userId}")

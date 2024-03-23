@@ -23,9 +23,24 @@ public class UserService {
     private final UserDao userDao;
     private final PasswordEncoder pwEncoder;
 
+    public Boolean existsById(String userId) {
+        return userDao.existsById(userId);
+    }
+
     public void insertUser(UserInsertDto user) {
         user.setUserPassword(pwEncoder.encode(user.getUserPassword()));
         userDao.insertUser(user);
+    }
+
+    public UserSelectDto findById(String userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+
+        if(!account.getAuthority().get(0).equals("ADMIN") && !account.getId().equals(userId)) {
+            throw new RuntimeUserNotSameException("접근이 불가능합니다.");
+        }
+
+        return userDao.findById(userId);
     }
 
     public void updateUser(UserMyPageDto user) {
@@ -41,21 +56,6 @@ public class UserService {
         }
 
         return user;
-    }
-
-    public UserSelectDto findById(String userId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-
-        if(!account.getAuthority().get(0).equals("ADMIN") && !account.getId().equals(userId)) {
-            throw new RuntimeUserNotSameException("접근이 불가능합니다.");
-        }
-
-        return userDao.findById(userId);
-    }
-
-    public Boolean existsById(String userId) {
-        return userDao.existsById(userId);
     }
 
     public void deleteUser(String userId) {
