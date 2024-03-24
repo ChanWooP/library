@@ -1,9 +1,8 @@
-package com.cwpark.library.controller.controller;
+package com.cwpark.library.config.oauth;
 
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserSelectDto;
-import com.cwpark.library.exception.RuntimeoAuthException;
-import com.cwpark.library.service.KakaoService;
+import com.cwpark.library.config.exception.RuntimeoAuthException;
 import com.cwpark.library.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

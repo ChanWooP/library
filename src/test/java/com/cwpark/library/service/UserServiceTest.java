@@ -1,42 +1,24 @@
 package com.cwpark.library.service;
 
-import com.cwpark.library.annotation.WithMockCustomUser;
+import com.cwpark.library.config.email.EmailService;
+import com.cwpark.library.test.annotation.WithMockCustomUser;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
-import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.exception.RuntimeUserNotSameException;
-import com.cwpark.library.exception.RuntimeoAuthException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.cwpark.library.config.exception.RuntimeUserNotSameException;
+import com.cwpark.library.config.exception.RuntimeoAuthException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -46,6 +28,8 @@ class UserServiceTest {
     UserService userService;
     @Mock
     UserDao userDao;
+    @Mock
+    EmailService emailService;
     @Mock
     PasswordEncoder pwEncoder;
 
@@ -155,4 +139,41 @@ class UserServiceTest {
 
         verify(userDao).findById("id");
     }
+
+    @Test
+    @DisplayName("비밀번호 변경 성공")
+    void updatePasswordSuccess() throws Exception {
+        when(userDao.existsById("id")).thenReturn(true);
+        when(emailService.sendSimplePassword("id")).thenReturn("12345678");
+        when(pwEncoder.encode("12345678")).thenReturn("!@#");
+
+        Assertions.assertTrue(userService.updateFindPassword("id"));
+
+        verify(userDao).existsById("id");
+        verify(emailService).sendSimplePassword("id");
+        verify(pwEncoder).encode("12345678");
+        verify(userDao).updatePassword("id", "!@#");
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 실패")
+    void updatePasswordFail() throws Exception {
+        when(userDao.existsById("id")).thenReturn(false);
+
+        Assertions.assertFalse(userService.updateFindPassword("id"));
+
+        verify(userDao).existsById("id");
+    }
+
+    @Test
+    @DisplayName("비밀번호 로그인 변경")
+    void updateChangePassword() {
+        when(pwEncoder.encode("password")).thenReturn("!@#");
+
+        userService.updateChangePassword("id", "password");
+
+        verify(userDao).updatePassword("id", "!@#");
+    }
+
+
 }

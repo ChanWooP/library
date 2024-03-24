@@ -1,7 +1,6 @@
-package com.cwpark.library.config.email;
+package com.cwpark.library.controller.controller;
 
-import com.cwpark.library.annotation.WithMockCustomUser;
-import com.cwpark.library.service.EmailService;
+import com.cwpark.library.test.annotation.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,30 +9,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(EmailRestController.class)
+@WebMvcTest(IndexController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-class EmailRestControllerTest {
-
-    @MockBean
-    EmailService emailService;
+class IndexControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @Test
-    @DisplayName("이메일 전송 테스트")
+    @DisplayName("인덱스 페이지")
     @WithMockCustomUser
-    void emailConfirm() throws Exception {
-        given(emailService.sendSimpleMessage("1@1.com")).willReturn("12345678");
-
-        mockMvc.perform(get("/email/check/{userEmail}", "1@1.com"))
+    void index() throws Exception {
+        mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.check").value("12345678"));
-
+                .andExpect(view().name("/index"))
+                .andReturn();
     }
 }

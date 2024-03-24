@@ -1,15 +1,14 @@
 package com.cwpark.library.service;
 
+import com.cwpark.library.config.email.EmailService;
 import com.cwpark.library.config.security.Account;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.exception.RuntimeEntityNotFoundException;
-import com.cwpark.library.exception.RuntimeUserNotSameException;
-import com.cwpark.library.exception.RuntimeoAuthException;
-import jakarta.persistence.EntityNotFoundException;
+import com.cwpark.library.config.exception.RuntimeUserNotSameException;
+import com.cwpark.library.config.exception.RuntimeoAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +21,7 @@ public class UserService {
 
     private final UserDao userDao;
     private final PasswordEncoder pwEncoder;
+    private final EmailService emailService;
 
     public Boolean existsById(String userId) {
         return userDao.existsById(userId);
@@ -60,6 +60,20 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public Boolean updateFindPassword(String userId) throws Exception {
+        if(userDao.existsById(userId)) {
+            String ePw = emailService.sendSimplePassword(userId);
+            userDao.updatePassword(userId, pwEncoder.encode(ePw));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void updateChangePassword(String userId, String password) {
+        userDao.updatePassword(userId, pwEncoder.encode(password));
     }
 
 }

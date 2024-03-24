@@ -1,4 +1,4 @@
-package com.cwpark.library.exception;
+package com.cwpark.library.config.exception;
 
 public class RuntimeUserNotSameException extends RuntimeException {
     public RuntimeUserNotSameException() {

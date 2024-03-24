@@ -1,12 +1,10 @@
-package com.cwpark.library.service;
+package com.cwpark.library.config.security;
 
 import com.cwpark.library.data.entity.RememberMeToken;
-import com.cwpark.library.repository.RememberMeTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;

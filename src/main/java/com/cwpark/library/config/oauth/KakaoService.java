@@ -1,4 +1,4 @@
-package com.cwpark.library.service;
+package com.cwpark.library.config.oauth;
 
 import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserKakaoDto;

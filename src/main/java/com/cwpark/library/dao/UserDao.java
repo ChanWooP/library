@@ -4,13 +4,11 @@ import com.cwpark.library.data.dto.UserInsertDto;
 import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.entity.User;
-import com.cwpark.library.exception.RuntimeEntityNotFoundException;
+import com.cwpark.library.config.exception.RuntimeEntityNotFoundException;
 import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +49,13 @@ public class UserDao {
                 .orElseThrow(EntityNotFoundException::new);
 
         userRepository.delete(findUser);
+    }
+
+    public void updatePassword(String userId, String password) {
+        userRepository.findById(userId).ifPresent((u) -> {
+            u.setUserPassword(password);
+            userRepository.save(u);
+        });
     }
 
 }

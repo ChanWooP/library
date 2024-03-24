@@ -3,7 +3,7 @@ function home() {
 }
 
 function login() {
-    location.href = '/login';
+    location.href = '/sign-in/login';
 }
 
 function logout() {
@@ -15,5 +15,5 @@ function myPage(userId) {
 }
 
 function join() {
-    location.href = '/user/join';
+    location.href = '/sign-in/join';
 }

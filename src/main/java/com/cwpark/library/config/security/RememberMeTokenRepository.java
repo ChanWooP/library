@@ -1,4 +1,4 @@
-package com.cwpark.library.repository;
+package com.cwpark.library.config.security;
 
 import com.cwpark.library.data.entity.RememberMeToken;
 import org.springframework.data.jpa.repository.JpaRepository;

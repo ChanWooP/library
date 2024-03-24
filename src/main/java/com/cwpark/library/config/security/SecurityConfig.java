@@ -1,7 +1,5 @@
 package com.cwpark.library.config.security;
 
-import com.cwpark.library.service.RememberMeTokenService;
-import jakarta.servlet.http.HttpServlet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,13 +57,13 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers(
                                         "/", "/css/**", "/js/**", "/img/**",
-                                        "/login", "/user/join", "/api/user/join/**", "/kakao/callback",
-                                        "/email/check/**"
+                                        "/email/check/**", "/kakao/callback",
+                                        "/sign-in/**", "/api/v1/sign-in/**"
                                 ).permitAll()
                                 .anyRequest().authenticated())
                 .formLogin((formLogin) ->
                         formLogin
-                                .loginPage("/login")
+                                .loginPage("/sign-in/login")
                                 .loginProcessingUrl("/loginProcess")
                                 .usernameParameter("username")
                                 .passwordParameter("password")
@@ -90,7 +88,7 @@ public class SecurityConfig {
                                 .sessionFixation().changeSessionId()
                                 .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)
-                                .expiredUrl("/login?expire=true"));
+                                .expiredUrl("/sign-in/login?expire=true"));
         return http.build();
     }
 }

@@ -1,4 +1,4 @@
-package com.cwpark.library.exception;
+package com.cwpark.library.config.exception;
 
 public class RuntimeoAuthException extends RuntimeException {
     public RuntimeoAuthException() {
