@@ -47,6 +47,10 @@ public class UserService {
         userDao.updateUser(user);
     }
 
+    public void deleteUser(String userId) {
+        userDao.deleteUser(userId);
+    }
+
     public UserSelectDto findByIdToKakao(String userId) {
 
         UserSelectDto user = userDao.findById(userId);
@@ -56,10 +60,6 @@ public class UserService {
         }
 
         return user;
-    }
-
-    public void deleteUser(String userId) {
-        userDao.deleteUser(userId);
     }
 
 }

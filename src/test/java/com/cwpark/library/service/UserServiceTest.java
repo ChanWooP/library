@@ -9,6 +9,7 @@ import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.exception.RuntimeUserNotSameException;
+import com.cwpark.library.exception.RuntimeoAuthException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -127,5 +128,31 @@ class UserServiceTest {
         userService.deleteUser("id");
 
         verify(userDao).deleteUser("id");
+    }
+
+    @Test
+    @DisplayName("카카오 회원가입 여부 성공")
+    void findByIdToKakaoSuccess() {
+        UserSelectDto userSelectDto = new UserSelectDto(
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0, UserOauthType.KAKAO);
+        when(userDao.findById("id")).thenReturn(userSelectDto);
+
+        userService.findByIdToKakao("id");
+
+        verify(userDao).findById("id");
+    }
+
+    @Test
+    @DisplayName("카카오 회원가입 여부 실패")
+    void findByIdToKakaoFail() {
+        UserSelectDto userSelectDto = new UserSelectDto(
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0, UserOauthType.EMALE);
+        when(userDao.findById("id")).thenReturn(userSelectDto);
+
+        Assertions.assertThrows(RuntimeoAuthException.class, () -> {
+            userService.findByIdToKakao("id");
+        });
+
+        verify(userDao).findById("id");
     }
 }
