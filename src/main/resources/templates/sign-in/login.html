@@ -109,6 +109,10 @@
         $('.findPw').click(function(){
           location.href = '/sign-in/find/password';
         });
+
+        $('#loginForm').submit(function() {
+           $('.wrap-loading').removeClass('display-none');
+        });
      });
     </script>
   </head>
@@ -130,7 +134,7 @@
     </svg>
 
     <main class="form-signin w-100 m-auto">
-      <form action="/loginProcess" method="post">
+      <form id="loginForm" action="/loginProcess" method="post">
         <img class="mb-4 pointer" src="/img/main.png" onclick="home()" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">로그인</h1>
 
@@ -169,5 +173,6 @@
       </form>
       <footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
     </main>
+    <div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
   </body>
 </html>
