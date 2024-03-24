@@ -6,6 +6,8 @@ import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +27,16 @@ public class UserMyPageDto {
     @NotBlank(message = "성별은 필수 입력 사항 입니다")
     private String userSex;
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        UserMyPageDto myPageDto = (UserMyPageDto) object;
+        return Objects.equals(getUserId(), myPageDto.getUserId()) && Objects.equals(getUserName(), myPageDto.getUserName()) && Objects.equals(getUserBirth(), myPageDto.getUserBirth()) && Objects.equals(getUserSex(), myPageDto.getUserSex());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId(), getUserName(), getUserBirth(), getUserSex());
+    }
 }

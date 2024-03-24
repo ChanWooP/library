@@ -5,6 +5,8 @@ import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,4 +42,16 @@ public class UserInsertDto {
                 .build();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        UserInsertDto that = (UserInsertDto) object;
+        return Objects.equals(getUserId(), that.getUserId()) && Objects.equals(getUserPassword(), that.getUserPassword()) && Objects.equals(getUserName(), that.getUserName()) && Objects.equals(getUserSex(), that.getUserSex()) && Objects.equals(getUserBirth(), that.getUserBirth()) && getUserOauthType() == that.getUserOauthType() && getUserAuthority() == that.getUserAuthority();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId(), getUserPassword(), getUserName(), getUserSex(), getUserBirth(), getUserOauthType(), getUserAuthority());
+    }
 }

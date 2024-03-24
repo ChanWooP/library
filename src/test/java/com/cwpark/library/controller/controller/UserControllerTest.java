@@ -3,6 +3,8 @@ package com.cwpark.library.controller.controller;
 import com.cwpark.library.TestController;
 import com.cwpark.library.annotation.WithMockCustomUser;
 import com.cwpark.library.config.security.SecurityConfig;
+import com.cwpark.library.data.dto.UserInsertDto;
+import com.cwpark.library.data.dto.UserMyPageDto;
 import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
@@ -29,6 +31,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.BDDMockito.given;
@@ -74,5 +78,45 @@ class UserControllerTest {
                 .andReturn();
 
         verify(userService).findById("user");
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    @WithMockCustomUser
+    void insertUser() throws Exception {
+        UserInsertDto insertDto = new UserInsertDto(
+                "userId", "userPassword", "userName", "userSex", "userBirth", null, null);
+        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+        param.add("userId", "userId");
+        param.add("userPassword", "userPassword");
+        param.add("userName", "userName");
+        param.add("userSex", "userSex");
+        param.add("userBirth", "userBirth");
+
+        mockMvc.perform(post("/user/join").params(param).with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/login"))
+                .andReturn();
+
+        verify(userService).insertUser(insertDto);
+    }
+
+    @Test
+    @DisplayName("마이페이지 수정")
+    @WithMockCustomUser
+    void updateUser() throws Exception {
+        UserMyPageDto myPageDto = new UserMyPageDto("userId", "userName", "userBirth", "userSex");
+        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+        param.add("userId", "userId");
+        param.add("userName", "userName");
+        param.add("userBirth", "userBirth");
+        param.add("userSex", "userSex");
+
+        mockMvc.perform(post("/user/mypage").params(param).with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/user/mypage/" + "userId"))
+                .andReturn();
+
+        verify(userService).updateUser(myPageDto);
     }
 }

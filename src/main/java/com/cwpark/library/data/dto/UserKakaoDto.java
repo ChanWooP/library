@@ -4,6 +4,8 @@ import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +31,18 @@ public class UserKakaoDto {
                 .password(password)
                 .userOauthType(userOauthType)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        UserKakaoDto that = (UserKakaoDto) object;
+        return Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getNickName(), that.getNickName()) && Objects.equals(getPassword(), that.getPassword()) && getUserOauthType() == that.getUserOauthType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEmail(), getNickName(), getPassword(), getUserOauthType());
     }
 }
