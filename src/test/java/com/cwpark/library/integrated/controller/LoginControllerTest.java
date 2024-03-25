@@ -1,42 +1,27 @@
-package com.cwpark.library.controller.controller;
+package com.cwpark.library.integrated.controller;
 
 import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.test.annotation.WithMockCustomUser;
-import com.cwpark.library.config.oauth.KakaoService;
+import com.cwpark.library.integrated.IntegratedController;
 import com.cwpark.library.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
-@WebMvcTest(LoginController.class)
-@MockBean(JpaMetamodelMappingContext.class)
-class LoginControllerTest {
+class LoginControllerTest  extends IntegratedController {
 
     @Autowired
-    MockMvc mockMvc;
-    @MockBean
-    KakaoService kakaoService;
-    @MockBean
     UserService userService;
 
     @Test
     @DisplayName("로그인 페이지")
-    @WithMockCustomUser
     void loginView() throws Exception {
-        given(kakaoService.getKakaoLogin()).willReturn("kakao");
-
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
         param.add("error", "error");
         param.add("exception", "exception");
@@ -48,15 +33,12 @@ class LoginControllerTest {
                 .andExpect(model().attribute("error", "error"))
                 .andExpect(model().attribute("exception", "exception"))
                 .andExpect(model().attribute("expire", "expire"))
-                .andExpect(model().attribute("kakao", "kakao"))
+                .andExpect(model().attribute("kakao", "https://kauth.kakao.com/oauth/authorize?client_id=ae16e6c70c9981eca7262397d6d492b6&redirect_uri=http://localhost:8080/kakao/callback&response_type=code"))
                 .andReturn();
-
-        verify(kakaoService).getKakaoLogin();
     }
 
     @Test
     @DisplayName("회원가입 페이지")
-    @WithMockCustomUser
     void joinView() throws Exception {
         mockMvc.perform(get("/sign-in/join"))
                 .andExpect(status().isOk())
@@ -66,7 +48,6 @@ class LoginControllerTest {
 
     @Test
     @DisplayName("회원가입")
-    @WithMockCustomUser
     void join() throws Exception {
         UserInsertDto insertDto = new UserInsertDto(
                 "userId", "userPassword", "userName", "userSex", "userBirth", null, null);
@@ -81,13 +62,10 @@ class LoginControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/sign-in/login"))
                 .andReturn();
-
-        verify(userService).insertUser(insertDto);
     }
 
     @Test
     @DisplayName("비밀번호 찾기 페이지")
-    @WithMockCustomUser
     void findPasswordView() throws Exception {
         mockMvc.perform(get("/sign-in/find/password"))
                 .andExpect(status().isOk())
@@ -97,38 +75,32 @@ class LoginControllerTest {
 
     @Test
     @DisplayName("비밀번호 찾기 성공")
-    @WithMockCustomUser
     void findPasswordSuccess() throws Exception {
-        String userId = "userId";
+        UserInsertDto insertDto = new UserInsertDto(
+                "userId@cwaprk.com", "userPassword", "userName", "M", "951111", null, null);
+        userService.insertUser(insertDto);
+
+        String userId = "userId@cwaprk.com";
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
         param.add("userId", userId);
-
-        given(userService.updateFindPassword(userId)).willReturn(true);
 
         mockMvc.perform(post("/sign-in/find/password").params(param).with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/sign-in/login"))
                 .andReturn();
-
-        verify(userService).updateFindPassword(userId);
     }
 
     @Test
     @DisplayName("비밀번호 찾기 실패")
-    @WithMockCustomUser
     void findPasswordFail() throws Exception {
         String userId = "userId";
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
         param.add("userId", userId);
-
-        given(userService.updateFindPassword(userId)).willReturn(false);
 
         mockMvc.perform(post("/sign-in/find/password").params(param).with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/sign-in/find/password"))
                 .andExpect(model().attribute("error", "아이디가 존재하지 않습니다"))
                 .andReturn();
-
-        verify(userService).updateFindPassword(userId);
     }
 }
