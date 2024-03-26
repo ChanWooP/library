@@ -15,20 +15,42 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class UserRestControllerTest extends IntegratedController {
 
     @Test
     @DisplayName("회원 삭제")
-    @WithMockCustomUser
+    @WithMockCustomUser(userName = "1@1.com")
     void deleteUser() throws Exception {
         String userId = "1@1.com";
 
         mockMvc.perform(delete("/api/v1/user/{userId}", userId).with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value("Y"))
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("회원 삭제 실패")
+    @WithMockCustomUser
+    void deleteUserFail() throws Exception {
+        String userId = "1@1.com";
+
+        mockMvc.perform(delete("/api/v1/user/{userId}", userId).with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error/message?type=NotSameUser"))
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("회원 삭제 성공 ADMIN")
+    @WithMockCustomUser(userRole = "ADMIN")
+    void deleteUserAdminSuccess() throws Exception {
+        String userId = "1@1.com";
+
+        mockMvc.perform(delete("/api/v1/user/{userId}", userId).with(csrf()))
+                .andExpect(status().isOk())
                 .andReturn();
     }
 }

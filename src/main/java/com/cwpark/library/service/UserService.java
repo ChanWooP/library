@@ -33,13 +33,6 @@ public class UserService {
     }
 
     public UserSelectDto findById(String userId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-
-        if(!account.getAuthority().get(0).equals("ADMIN") && !account.getId().equals(userId)) {
-            throw new RuntimeUserNotSameException("접근이 불가능합니다.");
-        }
-
         return userDao.findById(userId);
     }
 
