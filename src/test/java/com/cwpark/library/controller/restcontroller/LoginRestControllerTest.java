@@ -1,6 +1,10 @@
 package com.cwpark.library.controller.restcontroller;
 
 import com.cwpark.library.controller.controller.UserController;
+import com.cwpark.library.data.dto.UserInsertDto;
+import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.enums.UserAuthority;
+import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.service.UserService;
 import com.cwpark.library.test.annotation.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +14,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -56,5 +65,28 @@ class LoginRestControllerTest {
                 .andReturn();
 
         verify(userService).existsById(userId);
+    }
+
+    @Test
+    @DisplayName("아이디 찾기")
+    @WithMockCustomUser
+    void findById() throws Exception {
+        UserSelectDto userSelectDto = new UserSelectDto(
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0, UserOauthType.KAKAO);
+        List<UserSelectDto> list = new ArrayList<>();
+        list.add(userSelectDto);
+
+        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+        param.add("userName", "name");
+        param.add("userBirth", "941212");
+
+        given(userService.findById("name", "941212")).willReturn(list);
+
+        mockMvc.perform(get("/api/v1/sign-in/find/id").params(param))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userList[0]").value("id"))
+                .andReturn();
+
+        verify(userService).findById("name", "941212");
     }
 }

@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -120,5 +122,23 @@ class UserDaoTest {
 
         verify(userRepository).findById("id");
         verify(userRepository).delete(user);
+    }
+
+    @Test
+    @DisplayName("회원 찾기 List")
+    void findByIdList() {
+        User user = new User(
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
+
+        List<User> list = new ArrayList<>();
+        list.add(user);
+
+        when(userRepository.findByUserNameAndUserBirth("name", "941212")).thenReturn(list);
+
+        List<UserSelectDto> findUserDto = userDao.findById("name", "941212");
+
+        Assertions.assertEquals(user.getUserId(), findUserDto.get(0).getUserId());
+
+        verify(userRepository).findByUserNameAndUserBirth("name", "941212");
     }
 }

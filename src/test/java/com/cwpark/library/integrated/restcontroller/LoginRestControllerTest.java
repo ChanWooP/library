@@ -17,7 +17,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +55,22 @@ class LoginRestControllerTest extends IntegratedController {
         ResponseEntity<Map> entity = restTemplate.getForEntity("/api/v1/sign-in/join/{userId}", Map.class, userId);
         Assertions.assertEquals(entity.getBody().get("success"), "Y");
         Assertions.assertEquals(entity.getBody().get("message"), "사용 가능한 아이디 입니다.");
+    }
+
+    @Test
+    @DisplayName("아이디 찾기")
+    void findByIdList() throws Exception {
+        URI uri = UriComponentsBuilder
+                .fromUriString(restTemplate.getRootUri())
+                .path("/api/v1/sign-in/find/id")
+                .queryParam("userName", "1@1.com")
+                .queryParam("userBirth", "111111")
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<Map> entity = restTemplate.getForEntity(uri, Map.class);
+
+        Assertions.assertNotNull(entity.getBody().get("userList"));
     }
 }

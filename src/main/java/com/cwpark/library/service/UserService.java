@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -34,6 +36,10 @@ public class UserService {
 
     public UserSelectDto findById(String userId) {
         return userDao.findById(userId);
+    }
+
+    public List<UserSelectDto> findById(String userName, String userBirth) {
+        return userDao.findById(userName, userBirth);
     }
 
     public void updateUser(UserMyPageDto user) {

@@ -10,6 +10,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserDao {
@@ -33,6 +36,11 @@ public class UserDao {
         } catch (EntityNotFoundException e) {
             throw new RuntimeEntityNotFoundException("아이디가 존재하지 않습니다.");
         }
+    }
+
+    public List<UserSelectDto> findById(String userName, String userBirth){
+        return userRepository.findByUserNameAndUserBirth(userName, userBirth)
+                .stream().map(UserSelectDto::toDto).collect(Collectors.toList());
     }
 
     public void updateUser(UserMyPageDto user) {

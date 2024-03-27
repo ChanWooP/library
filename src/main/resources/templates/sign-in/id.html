@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link>
+    <style>
+        body {
+          min-height: 100vh;
+        }
+
+        .input-form {
+          max-width: 680px;
+
+          margin-top: 80px;
+          margin-bottom: 80px;
+          padding: 32px;
+
+          background: #fff;
+          -webkit-border-radius: 10px;
+          -moz-border-radius: 10px;
+          border-radius: 10px;
+          -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+          -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+          box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+          // 아이디 찾기
+          $('#confirm').click(function(){
+            if(!$('#userName').val()) {
+                alert("이름을 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userBirth').val()) {
+                alert("생년월일을 입력해주세요");
+                return false;
+            }
+
+            if($('#userBirth').val().length != 6) {
+                alert("생년월일은 6자리로 입력해주세요");
+                return false;
+            }
+
+            $.ajax({
+                  type: "GET"
+                , url : "/api/v1/sign-in/find/id"
+                , data : {
+                    userName : $('#userName').val()
+                    , userBirth : $('#userBirth').val()
+                }
+                , dataType: "json"
+                , success : function(data) {
+                   let str = '';
+
+                   if(data.userList) {
+                    if(data.userList.length == 0) {
+                        alert('아이디가 존재하지 않습니다');
+                        return false;
+                    }
+
+                    str += '<ul> ';
+                    for(let i=0; i<data.userList.length; i++) {
+                        str += '<li>' + data.userList[i] +' </li> ';
+                    }
+                    str += '</ul> ';
+
+                    $('.hide').addClass('display-none');
+                    $('#login').removeClass('display-none');
+
+                    $('#userList').html(str);
+                   } else {
+                    alert('아이디 찾기가 실패하였습니다');
+                   }
+                }
+                , beforeSend:function(){
+                    $('.wrap-loading').removeClass('display-none');
+                }
+                , complete:function(){
+                    $('.wrap-loading').addClass('display-none');
+                }
+                , error : function(e) {
+                  alert('아이디 찾기가 실패하였습니다');
+                }
+              });
+          });
+       });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <img class="mb-4 pointer" src="/img/main.png" onclick="home()" width="72" height="57">
+            <h4 class="mb-3">아이디 찾기</h4>
+            <div class="col-md-6 mb-3 hide">
+                <label for="userName">이름</label>
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해주세요" required>
+            </div>
+
+            <div class="col-md-4 mb-3 hide">
+                <label for="userBirth">생년월일</label>
+                <input type="text" class="form-control" id="userBirth" name="userBirth" placeholder="예) 980102"
+                       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+            </div>
+
+            <div class="col-md-4 mb-3" id="userList">
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="mb-4"></div>
+            <button class="btn btn-primary btn-lg btn-block hide" id="confirm">찾기</button>
+            <button class="btn btn-primary btn-lg btn-block display-none" id="login" onclick="login()">로그인 하러가기</button>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>

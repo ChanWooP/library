@@ -1,12 +1,15 @@
 package com.cwpark.library.controller.restcontroller;
 
+import com.cwpark.library.data.dto.UserSelectDto;
 import com.cwpark.library.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +29,18 @@ public class LoginRestController {
             result.put("success", "Y");
             result.put("message", "사용 가능한 아이디 입니다.");
         }
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @GetMapping("/find/id")
+    public ResponseEntity<Map<String, Object>> findById(@RequestParam("userName") String userName, @RequestParam("userBirth") String userBirth) {
+        Map<String, Object> result = new HashMap<>();
+
+        List<String> list = userService.findById(userName, userBirth)
+                .stream().map(UserSelectDto::getUserId).toList();
+        result.put("userList", list);
 
         return ResponseEntity.ok()
                 .body(result);

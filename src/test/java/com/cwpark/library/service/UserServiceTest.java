@@ -19,6 +19,9 @@ import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -157,6 +160,25 @@ class UserServiceTest {
         userService.updateChangePassword("id", "password");
 
         verify(userDao).updatePassword("id", "!@#", "N");
+    }
+
+    @Test
+    @DisplayName("회원 List 찾기")
+    @WithMockCustomUser
+    void findByIdList() {
+        UserSelectDto userSelectDto = new UserSelectDto(
+                "user", "password", "name", "M", "941212", UserAuthority.USER, 0, UserOauthType.EMALE);
+
+        List<UserSelectDto> list = new ArrayList<>();
+        list.add(userSelectDto);
+
+        when(userDao.findById("name", "941212")).thenReturn(list);
+
+        List<UserSelectDto> user = userService.findById("name", "941212");
+
+        Assertions.assertEquals(user.get(0).getUserId(), userSelectDto.getUserId());
+
+        verify(userDao).findById("name", "941212");
     }
 
 
