@@ -53,7 +53,7 @@ class UserDaoTest {
     @DisplayName("회원 저장")
     void insertUser() {
         User user = new User(
-                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE);
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
         UserInsertDto insertDto = new UserInsertDto(
                 "id", "password", "name", "M", "941212", UserOauthType.EMALE, UserAuthority.USER);
 
@@ -68,7 +68,7 @@ class UserDaoTest {
     @DisplayName("회원 찾기 성공")
     void findByIdSuccess() {
         User user = new User(
-                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE);
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
 
         when(userRepository.findById("id")).thenReturn(Optional.of(user));
 
@@ -95,9 +95,9 @@ class UserDaoTest {
     @DisplayName("회원 수정")
     void updateUser() {
         User user = new User(
-                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE);
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
         User compUser = new User(
-                "id", "password", "name", "W", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE);
+                "id", "password", "name", "W", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
         UserMyPageDto myPageDto = new UserMyPageDto("id", "name", "941212", "W");
 
         when(userRepository.findById("id")).thenReturn(Optional.of(user));
@@ -112,7 +112,7 @@ class UserDaoTest {
     @DisplayName("회원 삭제")
     void deleteUser() {
         User user = new User(
-                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE);
+                "id", "password", "name", "M", "941212", UserAuthority.USER, 0 ,UserOauthType.EMALE, "N");
 
         when(userRepository.findById("id")).thenReturn(Optional.of(user));
 

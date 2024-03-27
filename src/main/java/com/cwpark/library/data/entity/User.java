@@ -49,6 +49,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserOauthType userOauthType;
 
+    @Column(name = "USER_FIND_PASSWORD_YN")
+    private String userFindPasswordYn;
+
     public User(String userId, String userPassword, String userName, String userSex,
                 String userBirth, int userLoginFailCnt, UserOauthType userOauthType) {
         this.userId = userId;
@@ -88,6 +91,7 @@ public class User extends BaseEntity {
                 .userAuthority(UserAuthority.USER)
                 .userLoginFailCnt(0)
                 .userOauthType(user.getUserOauthType() == null ? UserOauthType.EMALE : user.getUserOauthType())
+                .userFindPasswordYn("N")
                 .build();
     }
 

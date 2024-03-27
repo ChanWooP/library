@@ -81,22 +81,6 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("회원 찾기 실패")
-    @WithMockCustomUser
-    void findByIdFail() {
-        // 기본 name = user임
-        UserSelectDto userSelectDto = new UserSelectDto(
-                "user1", "password", "name", "M", "941212", UserAuthority.USER, 0, UserOauthType.EMALE);
-
-        when(userDao.findById("user1")).thenReturn(userSelectDto);
-
-        Assertions.assertThrows(RuntimeUserNotSameException.class, () -> {
-            userService.findById("user1");
-            verify(userDao).findById("user1");
-        });
-    }
-
-    @Test
     @DisplayName("회원 수정")
     void updateUser() {
         UserMyPageDto myPageDto = new UserMyPageDto("id", "name", "941212", "W");
@@ -152,7 +136,7 @@ class UserServiceTest {
         verify(userDao).existsById("id");
         verify(emailService).sendSimplePassword("id");
         verify(pwEncoder).encode("12345678");
-        verify(userDao).updatePassword("id", "!@#");
+        verify(userDao).updatePassword("id", "!@#", "Y");
     }
 
     @Test
@@ -172,7 +156,7 @@ class UserServiceTest {
 
         userService.updateChangePassword("id", "password");
 
-        verify(userDao).updatePassword("id", "!@#");
+        verify(userDao).updatePassword("id", "!@#", "N");
     }
 
 

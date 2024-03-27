@@ -58,7 +58,7 @@ public class UserService {
     public Boolean updateFindPassword(String userId) throws Exception {
         if(userDao.existsById(userId)) {
             String ePw = emailService.sendSimplePassword(userId);
-            userDao.updatePassword(userId, pwEncoder.encode(ePw));
+            userDao.updatePassword(userId, pwEncoder.encode(ePw), "Y");
             return true;
         } else {
             return false;
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     public void updateChangePassword(String userId, String password) {
-        userDao.updatePassword(userId, pwEncoder.encode(password));
+        userDao.updatePassword(userId, pwEncoder.encode(password), "N");
     }
 
 }

@@ -51,7 +51,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("마이페이지 수정")
-    @WithMockCustomUser
+    @WithMockCustomUser(userName = "userId")
     void updateUser() throws Exception {
         UserMyPageDto myPageDto = new UserMyPageDto("userId", "userName", "userBirth", "userSex");
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
@@ -62,7 +62,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/user/mypage").params(param).with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/user/mypage/" + "userId"))
+                .andExpect(redirectedUrl("/user/mypage/" + "userId"))
                 .andReturn();
 
         verify(userService).updateUser(myPageDto);

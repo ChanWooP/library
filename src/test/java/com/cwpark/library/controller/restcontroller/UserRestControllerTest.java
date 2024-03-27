@@ -28,7 +28,7 @@ class UserRestControllerTest {
 
     @Test
     @DisplayName("회원 삭제")
-    @WithMockCustomUser
+    @WithMockCustomUser(userName = "userId")
     void deleteUser() throws Exception {
         String userId = "userId";
 

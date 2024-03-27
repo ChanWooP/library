@@ -65,7 +65,7 @@ class UserControllerTest extends IntegratedController {
 
         mockMvc.perform(post("/user/mypage").params(param).with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/user/mypage/" + "user"))
+                .andExpect(redirectedUrl("/user/mypage/" + "user"))
                 .andReturn();
     }
 

@@ -51,9 +51,10 @@ public class UserDao {
         userRepository.delete(findUser);
     }
 
-    public void updatePassword(String userId, String password) {
+    public void updatePassword(String userId, String password, String yN) {
         userRepository.findById(userId).ifPresent((u) -> {
             u.setUserPassword(password);
+            u.setUserFindPasswordYn(yN);
             userRepository.save(u);
         });
     }
