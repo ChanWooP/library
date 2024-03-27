@@ -31,4 +31,15 @@ public class UserController {
         return "redirect:/user/mypage/" + user.getUserId();
     }
 
+    @GetMapping("/change/password")
+    public String changePasswordGet() {
+        return "/user/password";
+    }
+
+    @PostMapping("/change/password")
+    public String changePasswordPost(@RequestParam("userId") String userId, @RequestParam("userPassword") String userPassword) {
+        userService.updateChangePassword(userId, userPassword);
+        return "redirect:/";
+    }
+
 }

@@ -33,7 +33,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         request.getSession().setMaxInactiveInterval(3600);
         loginFailCntInit(authentication);
-        resultRedirectStrategy(request, response);
+        resultRedirectStrategy(request, response, authentication);
     }
 
     private void loginFailCntInit(Authentication authentication) {
@@ -48,16 +48,29 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         });
     }
 
-    private void resultRedirectStrategy(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+    private void resultRedirectStrategy(HttpServletRequest request,HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SavedRequest savedRequest =requestCache.getRequest(request, response);
 
-        if(savedRequest != null) {
-            String targetUrl = savedRequest.getRedirectUrl();
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        } else {
-            String defaultUrl = "/";
-            redirectStrategy.sendRedirect(request, response, defaultUrl);
-        }
+        Object principal = authentication.getPrincipal();
+        Account account = (Account) principal;
+
+            userRepository.findById(account.getId()).ifPresent((u) -> {
+                try {
+                    if(u.getUserFindPasswordYn().equals("Y")) {
+                        redirectStrategy.sendRedirect(request, response, "/user/change/password");
+                    } else {
+                        if(savedRequest != null) {
+                            String targetUrl = savedRequest.getRedirectUrl();
+                            redirectStrategy.sendRedirect(request, response, targetUrl);
+                        } else {
+                            String defaultUrl = "/";
+                            redirectStrategy.sendRedirect(request, response, defaultUrl);
+                        }
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+        });
     }
 
 }
