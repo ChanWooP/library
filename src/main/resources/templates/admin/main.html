@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <link href="/css/sidebars.css" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sidebars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <style>
+        .bd-placeholder-img {
+          font-size: 1.125rem;
+          text-anchor: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+
+        @media (min-width: 768px) {
+          .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+          }
+        }
+
+        .b-example-divider {
+          width: 100%;
+          height: 3rem;
+          background-color: rgba(0, 0, 0, .1);
+          border: solid rgba(0, 0, 0, .15);
+          border-width: 1px 0;
+          box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+          flex-shrink: 0;
+          width: 1.5rem;
+          height: 100vh;
+        }
+
+        .bi {
+          vertical-align: -.125em;
+          fill: currentColor;
+        }
+
+        .nav-scroller {
+          position: relative;
+          z-index: 2;
+          height: 2.75rem;
+          overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+          display: flex;
+          flex-wrap: nowrap;
+          padding-bottom: 1rem;
+          margin-top: -1px;
+          overflow-x: auto;
+          text-align: center;
+          white-space: nowrap;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+          --bd-violet-bg: #712cf9;
+          --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+          --bs-btn-font-weight: 600;
+          --bs-btn-color: var(--bs-white);
+          --bs-btn-bg: var(--bd-violet-bg);
+          --bs-btn-border-color: var(--bd-violet-bg);
+          --bs-btn-hover-color: var(--bs-white);
+          --bs-btn-hover-bg: #6528e0;
+          --bs-btn-hover-border-color: #6528e0;
+          --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+          --bs-btn-active-color: var(--bs-btn-hover-color);
+          --bs-btn-active-bg: #5a23c8;
+          --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+          z-index: 1500;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+          display: block !important;
+        }
+
+        h4, h5 {
+            font-weight:bold;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+           $('.link-body-emphasis').click(function(){
+            $('#menuTitle').html('<h5>' + $(this).html() + '</h5> <hr>');
+           });
+        });
+    </script>
+</head>
+<body>
+    <main class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 20%;">
+            <img class="pointer " src="/img/main.png" onclick="home()" width="72" height="57">
+            <h4>관리자 페이지</h4>
+            <hr>
+            <div class="list-group list-group-flush border-bottom scrollarea">
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#user-collapse" aria-expanded="false">
+                            회원 관리
+                        </button>
+                        <div class="collapse" id="user-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 정보 관리</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 대출 관리</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 예약 관리</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#book-collapse" aria-expanded="false">
+                            책 관리
+                        </button>
+                        <div class="collapse" id="book-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 카테고리 관리</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 정보 관리</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 대출 관리</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 예약 관리</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#hope-collapse" aria-expanded="false">
+                            희망 도서 신청 관리
+                        </button>
+                        <div class="collapse" id="hope-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">희망 도서 신청 확인</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#order-collapse" aria-expanded="false">
+                            안내 관리
+                        </button>
+                        <div class="collapse" id="order-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지 사항</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">QnA</a></li>
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용방법</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#set-collapse" aria-expanded="false">
+                            설정 관리
+                        </button>
+                        <div class="collapse" id="set-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">설정</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <img class="pointer" src="/img/home.png" onclick="home()" width="30" height="30">
+        </div>
+        <div class="b-example-divider b-example-vr" style="width:2%"></div>
+        <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 78%;">
+            <div id="menuTitle" style="height:10%;">
+            </div>
+            <div id="menuHtml" style="height:90%;">
+            </div>
+        </div>
+    </main>
+    <div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>

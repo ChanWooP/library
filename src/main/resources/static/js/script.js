@@ -17,3 +17,7 @@ function myPage(userId) {
 function join() {
     location.href = '/sign-in/join';
 }
+
+function admin() {
+    location.href = '/admin/main';
+}

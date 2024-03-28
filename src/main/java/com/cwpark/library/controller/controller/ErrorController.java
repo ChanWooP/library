@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ErrorController {
     @GetMapping("/error/message")
     public String message(HttpServletRequest request, Model model) {
-        if(request.getParameter("type").equals("NotSameUser")) {
+        if(request.getParameter("type").equals("NotSameUser")
+        || request.getParameter("type").equals("NotAdmin")) {
             model.addAttribute("message", "접근이 불가능합니다");
         }
 
