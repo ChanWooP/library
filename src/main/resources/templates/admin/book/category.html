@@ -1,0 +1,48 @@
+<script>
+    $(document).ready(function(){
+        $('#add').click(function(){
+            alert('s');
+        });
+
+        $('#upd').click(function(){
+            alert('s');
+        });
+
+        $('#del').click(function(){
+            alert('s');
+        });
+
+        $('table tbody tr').click(function(){
+            $('.hover').removeClass('hover');
+            $(this).addClass('hover');
+        });
+    });
+</script>
+<div style="float:left;">
+    <button type="button" class="btn btn-primary" id="add">추가</button>
+    <button type="button" class="btn btn-primary" id="upd">수정</button>
+    <button type="button" class="btn btn-primary" id="del">삭제</button>
+</div>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col" width="5%">No</th>
+        <th scope="col" width="95%">카테고리 명</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover">
+        <th scope="row">1</th>
+        <td>Mark</td>
+    </tr>
+    <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+    </tr>
+    <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+    </tr>
+    </tbody>
+</table>

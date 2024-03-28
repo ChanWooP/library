@@ -66,3 +66,7 @@ header {
     background: #0287fc;
     font-weight: bold;
 }
+
+.hover {
+    background-color: #ECECEC;
+}

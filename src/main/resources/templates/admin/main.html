@@ -95,6 +95,28 @@
         $(document).ready(function(){
            $('.link-body-emphasis').click(function(){
             $('#menuTitle').html('<h5>' + $(this).html() + '</h5> <hr>');
+
+            $.ajax({
+                type: "GET"
+              , url : "/admin" + $(this).data('path')
+              , dataType: "html"
+              , success : function(data) {
+                if(data != null) {
+                    $('#menuHtml').html(data);
+                } else {
+                    alert('화면 불러오기에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('화면 불러오기에 실패하였습니다');
+              }
+            });
            });
         });
     </script>
@@ -113,9 +135,9 @@
                         </button>
                         <div class="collapse" id="user-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 정보 관리</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 대출 관리</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회원 예약 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">회원 정보 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">회원 대출 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">회원 예약 관리</a></li>
                             </ul>
                         </div>
                     </li>
@@ -125,10 +147,10 @@
                         </button>
                         <div class="collapse" id="book-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 카테고리 관리</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 정보 관리</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 대출 관리</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">책 예약 관리</a></li>
+                                <li><a data-path="/book/category" class="pointer link-body-emphasis d-inline-flex text-decoration-none rounded">책 카테고리 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 정보 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 대출 관리</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 예약 관리</a></li>
                             </ul>
                         </div>
                     </li>
@@ -138,7 +160,7 @@
                         </button>
                         <div class="collapse" id="hope-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">희망 도서 신청 확인</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">희망 도서 신청 확인</a></li>
                             </ul>
                         </div>
                     </li>
@@ -148,9 +170,9 @@
                         </button>
                         <div class="collapse" id="order-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지 사항</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">QnA</a></li>
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이용방법</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">공지 사항</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">QnA</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">이용방법</a></li>
                             </ul>
                         </div>
                     </li>
@@ -160,7 +182,7 @@
                         </button>
                         <div class="collapse" id="set-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">설정</a></li>
+                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">설정</a></li>
                             </ul>
                         </div>
                     </li>
