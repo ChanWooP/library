@@ -2,8 +2,8 @@
     // 현재 행
     let choice = null;
 
-    // 행 추가
     $(document).ready(function(){
+        // 행 추가
         $('#add').click(function(){
             if(choiceCheck()) {
                 let str = '';
@@ -19,6 +19,11 @@
             }
         });
 
+        // 조회
+        $('#searchPage').click(function(){
+            searchPage(0);
+        });
+
         // 행 삭제
         $('#del').click(function(){
             // 추가 행 삭제
@@ -30,12 +35,43 @@
             }
         });
 
-        // 행 선택
-        $('table tbody tr').click(function(){
-            if(choice != $(this) && choiceCheck()) {
-                choiceChange($(this), 'update');
-                choiceHover($(this));
+        // 행 저장
+        $('#save').click(function() {
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
             }
+
+            if(!$('#categoryName').val()) {
+                alert('카테고리 명을 입력해주세요');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST"
+              , url : "/api/v1/admin/category/save"
+              , data : {
+                    categoryId : $('#categoryId').val()
+                    , categoryName : $('#categoryName').val()
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    alert('성공');
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
         });
     });
 
@@ -64,9 +100,116 @@
         $('#categoryName').val(choice.find('td:eq(0)').text());
         $('#categoryId').val(choice.data('id'));
     }
+
+    // 조회
+    function searchPage(pages) {
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/category/searchPage"
+          , data : {
+                page : pages
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                console.log(data);
+                let str = '';
+                let str2 = '';
+
+                for(let i=0; i<data.result.content.length; i++) {
+                    str += '<tr data-id=' + data.result.content[i].categoryId + '> ';
+
+                    str += '    <th scope="col"> ';
+                    str += i + 1 + (10 * data.result.number)
+                    str += '    </th> ';
+
+                    str += '    <td> ';
+                    str += data.result.content[i].categoryName;
+                    str += '    </td> ';
+
+                    str += '</tr> ';
+                }
+
+                str2 += '<div class="page_wrap"> ';
+                str2 += '  <div class="page_nation"> ';
+                str2 += '    <a class="arrow pprev">First</a> ';
+                str2 += '    <a class="arrow prev">&lt;</a> ';
+<!--
+                for(let i=(Math.floor(pages / 10) * 10);i<?;i++) {
+                  if(i == pages) {
+                    str2 += '<a class="active">' + (i+1) + '</a>';
+                  } else {
+                    str2 += '<a class="pageNum" data-num=' + i + '>' + (i+1) + '</a>';
+                  }
+                }
+-->
+                str2 += '    <a class="arrow next">&gt;</a> ';
+                str2 += '    <a class="arrow nnext">Last</a> ';
+                str2 += '  </div> ';
+                str2 += '</div> ';
+
+                $('table > tbody').html(str);
+                $('#page').html(str2);
+
+                // 숫자 페이지
+                $('.pageNum').click(function(){
+                    searchPage($(this).data('num'));
+                });
+
+                // 이전 10 페이지
+                $('.prev').click(function(){
+                    if(pages == 0) {
+                        alert('처음 페이지 입니다');
+                    } else {
+                        searchPage(pages-1);
+                    }
+                });
+
+                // 이후 10 페이지
+                $('.next').click(function(){
+                    if(pages == data.result.totalPages-1) {
+                        alert('마지막 페이지 입니다');
+                    } else {
+                         searchPage(pages+1);
+                    }
+                });
+
+                // 맨 처음
+                $('.pprev').click(function(){
+                    searchPage(0);
+                });
+
+                // 맨 끝
+                $('.nnext').click(function(){
+                    searchPage(data.result.totalPages-1);
+                });
+
+                // 행 선택
+                $('table > tbody > tr').click(function(){
+                    if(choice != $(this) && choiceCheck()) {
+                        choiceChange($(this), 'update');
+                        choiceHover($(this));
+                    }
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
 </script>
 <div class="inline-block" style="width:49%; float:left;">
     <div style="float:left;">
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
         <button type="button" class="btn btn-primary" id="add">추가</button>
         <button type="button" class="btn btn-primary" id="del">삭제</button>
     </div>
@@ -80,16 +223,15 @@
         <tbody>
         </tbody>
     </table>
+    <div id="page"></div>
 </div>
 <div class="inline-block" style="width:49%; float:right;">
-    <form>
-        <div class="col-md-6 mb-3">
-            <input type="hidden" id="categoryId" name="categoryId">
+    <div class="col-md-6 mb-3">
+        <input type="hidden" id="categoryId" name="categoryId">
 
-            <label for="categoryName">카테고리 명</label>
-            <input type="text" class="form-control" id="categoryName" name="categoryName" required>
-        </div>
-        <button type="submit" class="btn btn-primary">저장</button>
-    </form>
+        <label for="categoryName">카테고리 명</label>
+        <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+    </div>
+    <button type="button" class="btn btn-primary" id="save">저장</button>
 </div>
 
