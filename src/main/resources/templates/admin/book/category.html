@@ -1,48 +1,95 @@
 <script>
+    // 현재 행
+    let choice = null;
+
+    // 행 추가
     $(document).ready(function(){
         $('#add').click(function(){
-            alert('s');
+            if(choiceCheck()) {
+                let str = '';
+                str += '<tr> ';
+                str += '<th>New</th> ';
+                str += '<td></td> ';
+                str += '</tr> ';
+
+                $('table > tbody').append(str);
+
+                choiceChange($('table > tbody > tr:last-child'), 'insert');
+                choiceHover($('table > tbody > tr:last-child'));
+            }
         });
 
-        $('#upd').click(function(){
-            alert('s');
-        });
-
+        // 행 삭제
         $('#del').click(function(){
-            alert('s');
+            // 추가 행 삭제
+            if(choice.data('type') == 'insert') {
+                choice.remove();
+            // 기존 행 삭제
+            } else {
+
+            }
         });
 
+        // 행 선택
         $('table tbody tr').click(function(){
-            $('.hover').removeClass('hover');
-            $(this).addClass('hover');
+            if(choice != $(this) && choiceCheck()) {
+                choiceChange($(this), 'update');
+                choiceHover($(this));
+            }
         });
     });
+
+    // 행 선택
+    function choiceHover(thiss) {
+        $('.hover').removeClass('hover');
+        thiss.addClass('hover');
+    }
+
+    // 행 변경 가능여부 체크
+    function choiceCheck() {
+        if(choice != null) {
+            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('td:eq(0)').text() != $('#categoryName').val())) {
+                alert('저장 또는 삭제를 진행해주세요');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // 행 변경
+    function choiceChange(thiss, type) {
+        choice = thiss;
+        choice.data('type', type);
+        $('#categoryName').val(choice.find('td:eq(0)').text());
+        $('#categoryId').val(choice.data('id'));
+    }
 </script>
-<div style="float:left;">
-    <button type="button" class="btn btn-primary" id="add">추가</button>
-    <button type="button" class="btn btn-primary" id="upd">수정</button>
-    <button type="button" class="btn btn-primary" id="del">삭제</button>
+<div class="inline-block" style="width:49%; float:left;">
+    <div style="float:left;">
+        <button type="button" class="btn btn-primary" id="add">추가</button>
+        <button type="button" class="btn btn-primary" id="del">삭제</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="95%">카테고리 명</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div class="inline-block" style="width:49%; float:right;">
+    <form>
+        <div class="col-md-6 mb-3">
+            <input type="hidden" id="categoryId" name="categoryId">
+
+            <label for="categoryName">카테고리 명</label>
+            <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+        </div>
+        <button type="submit" class="btn btn-primary">저장</button>
+    </form>
 </div>
 
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th scope="col" width="5%">No</th>
-        <th scope="col" width="95%">카테고리 명</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="hover">
-        <th scope="row">1</th>
-        <td>Mark</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-    </tr>
-    </tbody>
-</table>
