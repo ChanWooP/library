@@ -1,8 +1,6 @@
 package com.cwpark.library.controller.restcontroller;
 
-import com.cwpark.library.controller.controller.UserController;
-import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.service.UserService;

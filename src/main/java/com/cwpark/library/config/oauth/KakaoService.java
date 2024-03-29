@@ -1,7 +1,7 @@
 package com.cwpark.library.config.oauth;
 
-import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserKakaoDto;
+import com.cwpark.library.data.dto.user.UserInsertDto;
+import com.cwpark.library.data.dto.user.UserKakaoDto;
 import com.cwpark.library.data.enums.UserOauthType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,10 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.Reader;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
 
 @Service
 public class KakaoService {

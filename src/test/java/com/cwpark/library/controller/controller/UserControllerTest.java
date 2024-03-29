@@ -1,9 +1,8 @@
 package com.cwpark.library.controller.controller;
 
 import com.cwpark.library.test.annotation.WithMockCustomUser;
-import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserMyPageDto;
-import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.dto.user.UserMyPageDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.service.UserService;

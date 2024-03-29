@@ -1,6 +1,6 @@
 package com.cwpark.library.controller.restcontroller;
 
-import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.cwpark.library.data.dto;
+package com.cwpark.library.data.dto.user;
 
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;

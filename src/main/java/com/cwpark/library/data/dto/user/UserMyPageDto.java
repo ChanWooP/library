@@ -1,8 +1,5 @@
-package com.cwpark.library.data.dto;
+package com.cwpark.library.data.dto.user;
 
-import com.cwpark.library.data.entity.User;
-import com.cwpark.library.data.enums.UserAuthority;
-import com.cwpark.library.data.enums.UserOauthType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 

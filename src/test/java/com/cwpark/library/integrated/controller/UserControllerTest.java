@@ -1,26 +1,16 @@
 package com.cwpark.library.integrated.controller;
 
-import com.cwpark.library.controller.controller.UserController;
-import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserMyPageDto;
-import com.cwpark.library.data.dto.UserSelectDto;
-import com.cwpark.library.data.enums.UserAuthority;
-import com.cwpark.library.data.enums.UserOauthType;
+import com.cwpark.library.data.dto.user.UserInsertDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.integrated.IntegratedController;
 import com.cwpark.library.service.UserService;
 import com.cwpark.library.test.annotation.WithMockCustomUser;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

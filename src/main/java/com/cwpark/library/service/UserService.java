@@ -1,17 +1,13 @@
 package com.cwpark.library.service;
 
 import com.cwpark.library.config.email.EmailService;
-import com.cwpark.library.config.security.Account;
 import com.cwpark.library.dao.UserDao;
-import com.cwpark.library.data.dto.UserInsertDto;
-import com.cwpark.library.data.dto.UserMyPageDto;
-import com.cwpark.library.data.dto.UserSelectDto;
+import com.cwpark.library.data.dto.user.UserInsertDto;
+import com.cwpark.library.data.dto.user.UserMyPageDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.config.exception.RuntimeUserNotSameException;
 import com.cwpark.library.config.exception.RuntimeoAuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

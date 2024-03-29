@@ -1,6 +1,6 @@
 package com.cwpark.library.integrated.controller;
 
-import com.cwpark.library.data.dto.UserInsertDto;
+import com.cwpark.library.data.dto.user.UserInsertDto;
 import com.cwpark.library.integrated.IntegratedController;
 import com.cwpark.library.service.UserService;
 import org.junit.jupiter.api.DisplayName;
