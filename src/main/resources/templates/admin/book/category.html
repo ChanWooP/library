@@ -36,6 +36,8 @@
             // 추가 행 삭제
             if(choice.data('type') == 'insert') {
                 choice.remove();
+                $('#categoryId').val('');
+                $('#categoryName').val('');
             // 기존 행 삭제
             } else {
                 $.ajax({
@@ -52,6 +54,8 @@
                         searchPage(choicePage);
                         choicePage = null;
                         choice = null;
+                        $('#categoryId').val('');
+                        $('#categoryName').val('');
                     } else {
                         alert('삭제에 실패하였습니다');
                     }
@@ -99,6 +103,8 @@
                     searchPage(choicePage);
                     choicePage = null;
                     choice = null;
+                    $('#categoryId').val('');
+                    $('#categoryName').val('');
                 } else {
                     alert('저장에 실패하였습니다');
                 }

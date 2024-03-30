@@ -1,4 +1,4 @@
-package com.cwpark.library.config.querydsl;
+package com.cwpark.library.config.jpa;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
