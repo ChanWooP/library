@@ -8,7 +8,13 @@
 </head>
 <script th:inline="javascript">
     $(document).ready(function(){
-        alert([[${message}]]);
+        let message = [[${message}]];
+
+        if(message != 'No message available') {
+            alert([[${message}]]);
+        } else {
+            alert('서버 에러입니다');
+        }
 
         location.href = '/';
     });

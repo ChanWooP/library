@@ -24,18 +24,12 @@ public class SameUserCheckInterceptor implements HandlerInterceptor {
         String path = split[1];
         String requestId = request.getParameter("userId");
 
-        if((requestId != null && !account.getId().equals(requestId))
-            || (path.equals("api") && !account.getId().equals(pathUserId))) {
-
-            if(account.getAuthority().get(0).equals("ADMIN")) {
-                return true;
-            }
-
+        if((account.getId().equals(pathUserId) || account.getId().equals(requestId) || account.getAuthority().get(0).equals("ADMIN"))) {
+            return true;
+        } else {
             response.sendRedirect("/error/message?type=" + "NotSameUser");
             return false;
         }
-
-        return true;
     }
 
 }

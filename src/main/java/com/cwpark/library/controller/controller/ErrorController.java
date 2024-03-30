@@ -14,6 +14,6 @@ public class ErrorController {
             model.addAttribute("message", "접근이 불가능합니다");
         }
 
-        return "error/message";
+        return "/error/message";
     }
 }
