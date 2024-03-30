@@ -37,4 +37,15 @@ public class BookCategoryRestController {
         return ResponseEntity.ok()
                 .body(result);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Map<String, Object>> delete(@Valid @ModelAttribute BookCategoryDto dto) {
+        Map<String, Object> result = new HashMap<>();
+        service.delete(dto);
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
 }

@@ -23,4 +23,7 @@ public class BookCategoryDao {
         return repository.searchPage(pageable);
     }
 
+    public void delete(BookCategoryDto dto) {
+        repository.delete(BookCategory.toEntity(dto));
+    }
 }

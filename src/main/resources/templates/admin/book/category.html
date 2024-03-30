@@ -2,6 +2,9 @@
     // 현재 행
     let choice = null;
 
+    // 현재 페이지
+    let choicePage = null;
+
     $(document).ready(function(){
         // 행 추가
         $('#add').click(function(){
@@ -26,12 +29,43 @@
 
         // 행 삭제
         $('#del').click(function(){
+            if(!confirm("삭제하시겠습니까?")) {
+                return false;
+            }
+
             // 추가 행 삭제
             if(choice.data('type') == 'insert') {
                 choice.remove();
             // 기존 행 삭제
             } else {
-
+                $.ajax({
+                    type: "DELETE"
+                  , url : "/api/v1/admin/category/delete"
+                  , data : {
+                        categoryId : $('#categoryId').val()
+                        , categoryName : $('#categoryName').val()
+                  }
+                  , dataType: "json"
+                  , success : function(data) {
+                    if(data != null) {
+                        alert('삭제가 완료되었습니다');
+                        searchPage(choicePage);
+                        choicePage = null;
+                        choice = null;
+                    } else {
+                        alert('삭제에 실패하였습니다');
+                    }
+                  }
+                  , beforeSend:function(){
+                      $('.wrap-loading').removeClass('display-none');
+                  }
+                  , complete:function(){
+                      $('.wrap-loading').addClass('display-none');
+                  }
+                  , error : function(e) {
+                    alert('삭제에 실패하였습니다');
+                  }
+                });
             }
         });
 
@@ -47,6 +81,10 @@
                 return false;
             }
 
+            if(!confirm("저장하시겠습니까?")) {
+                return false;
+            }
+
             $.ajax({
                 type: "POST"
               , url : "/api/v1/admin/category/save"
@@ -57,7 +95,10 @@
               , dataType: "json"
               , success : function(data) {
                 if(data != null) {
-                    alert('성공');
+                    alert('저장이 완료되었습니다');
+                    searchPage(choicePage);
+                    choicePage = null;
+                    choice = null;
                 } else {
                     alert('저장에 실패하였습니다');
                 }
@@ -112,7 +153,6 @@
           , dataType: "json"
           , success : function(data) {
             if(data != null) {
-                console.log(data);
                 let str = '';
                 let str2 = '';
 
@@ -123,9 +163,9 @@
                     str += i + 1 + (10 * data.result.number)
                     str += '    </th> ';
 
-                    str += '    <td> ';
+                    str += '<td>';
                     str += data.result.content[i].categoryName;
-                    str += '    </td> ';
+                    str += '</td>';
 
                     str += '</tr> ';
                 }
@@ -134,15 +174,17 @@
                 str2 += '  <div class="page_nation"> ';
                 str2 += '    <a class="arrow pprev">First</a> ';
                 str2 += '    <a class="arrow prev">&lt;</a> ';
-<!--
-                for(let i=(Math.floor(pages / 10) * 10);i<?;i++) {
+
+                for(let i=(Math.floor(pages / 10) * 10);
+                i<(Math.floor(pages / 10) * 10 + 10 > data.result.totalPages ? data.result.totalPages : Math.floor(pages / 10) * 10 + 10);
+                i++) {
                   if(i == pages) {
                     str2 += '<a class="active">' + (i+1) + '</a>';
                   } else {
                     str2 += '<a class="pageNum" data-num=' + i + '>' + (i+1) + '</a>';
                   }
                 }
--->
+
                 str2 += '    <a class="arrow next">&gt;</a> ';
                 str2 += '    <a class="arrow nnext">Last</a> ';
                 str2 += '  </div> ';
@@ -150,6 +192,7 @@
 
                 $('table > tbody').html(str);
                 $('#page').html(str2);
+                choicePage = pages;
 
                 // 숫자 페이지
                 $('.pageNum').click(function(){

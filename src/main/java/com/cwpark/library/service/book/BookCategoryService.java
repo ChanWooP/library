@@ -19,4 +19,8 @@ public class BookCategoryService {
     public Page<BookCategoryDto> searchPage(Pageable pageable) {
         return dao.searchPage(pageable);
     }
+
+    public void delete(BookCategoryDto dto) {
+        dao.delete(dto);
+    }
 }
