@@ -34,14 +34,8 @@ public class KakaoController {
     @Value("${kakao.default.password}")
     private String KAKAO_PASSWORD;
 
-    @ExceptionHandler(RuntimeoAuthException.class)
-    public String oAuthExHandle(RuntimeoAuthException e, Model model) {
-        model.addAttribute("message", e.getMessage());
-        return "/error/5xx";
-    }
-
     @GetMapping("/callback")
-    public String callback(@RequestParam("code") String code, Model model, HttpServletRequest request, HttpServletResponse response) throws ParseException {
+    public String callback(@RequestParam("code") String code, Model model, HttpServletRequest request, HttpServletResponse response) {
         String accessToken = kakaoService.getAccessToken(code);
         UserInsertDto userInsertDto = kakaoService.getUserInfo(accessToken);
         UserSelectDto kakaoUser = null;

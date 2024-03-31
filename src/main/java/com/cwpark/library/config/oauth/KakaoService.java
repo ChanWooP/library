@@ -1,5 +1,6 @@
 package com.cwpark.library.config.oauth;
 
+import com.cwpark.library.config.exception.RuntimekakaoException;
 import com.cwpark.library.data.dto.user.UserInsertDto;
 import com.cwpark.library.data.dto.user.UserKakaoDto;
 import com.cwpark.library.data.enums.UserOauthType;
@@ -41,7 +42,7 @@ public class KakaoService {
     }
 
 
-    public String getAccessToken(String code) throws ParseException {
+    public String getAccessToken(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
@@ -55,16 +56,21 @@ public class KakaoService {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(KAKAO_AUTH_URI + "/oauth/token",
-                HttpMethod.POST, requestEntity, String.class);
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.exchange(KAKAO_AUTH_URI + "/oauth/token",
+                    HttpMethod.POST, requestEntity, String.class);
 
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(responseEntity.getBody());
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(responseEntity.getBody());
 
-        return (String) jsonObject.get("access_token");
+            return (String) jsonObject.get("access_token");
+        } catch (ParseException e) {
+            throw new RuntimekakaoException(e);
+        }
+
     }
 
-    public UserInsertDto getUserInfo(String accessToken) throws ParseException {
+    public UserInsertDto getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -73,23 +79,29 @@ public class KakaoService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                KAKAO_API_URI + "/v2/user/me"
-                ,HttpMethod.POST
-                ,requestEntity
-                ,String.class
-        );
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    KAKAO_API_URI + "/v2/user/me"
+                    ,HttpMethod.POST
+                    ,requestEntity
+                    ,String.class
+            );
 
-        String userInfo = responseEntity.getBody();
+            String userInfo = responseEntity.getBody();
 
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(responseEntity.getBody());
-        JSONObject account = (JSONObject) jsonObject.get("kakao_account");
-        JSONObject profile = (JSONObject) jsonObject.get("properties");
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(responseEntity.getBody());
+            JSONObject account = (JSONObject) jsonObject.get("kakao_account");
+            JSONObject profile = (JSONObject) jsonObject.get("properties");
 
-        String nickName = (String) profile.get("nickname");
-        String email = (String) account.get("email");
+            String nickName = (String) profile.get("nickname");
+            String email = (String) account.get("email");
 
-        return UserInsertDto.kakaoToDto(UserKakaoDto.toDto(email, nickName, KAKAO_PASSWORD, UserOauthType.KAKAO));
+            return UserInsertDto.kakaoToDto(UserKakaoDto.toDto(email, nickName, KAKAO_PASSWORD, UserOauthType.KAKAO));
+        } catch (ParseException e) {
+            throw new RuntimekakaoException(e);
+        }
+
+
     }
 }

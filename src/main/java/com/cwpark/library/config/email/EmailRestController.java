@@ -18,7 +18,7 @@ public class EmailRestController {
     private final EmailService emailService;
 
     @GetMapping("/check/{userEmail}")
-    public ResponseEntity<Map<String, Object>> emailConfirm(@PathVariable(name = "userEmail") String userEmail) throws Exception {
+    public ResponseEntity<Map<String, Object>> emailConfirm(@PathVariable(name = "userEmail") String userEmail) {
 
         Map<String, Object> result = new HashMap<>();
         result.put("check", emailService.sendSimpleMessage(userEmail));

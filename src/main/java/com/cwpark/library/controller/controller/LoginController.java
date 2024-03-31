@@ -19,12 +19,6 @@ public class LoginController {
     private final KakaoService kakaoService;
     private final UserService userService;
 
-    @ExceptionHandler(MessagingException.class)
-    public String messagingHandle(MessagingException e, Model model) {
-        model.addAttribute("message", "이메일 전송에 실패하였습니다");
-        return "/error/5xx";
-    }
-
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error
                         ,@RequestParam(value = "exception", required = false) String exception
@@ -56,7 +50,7 @@ public class LoginController {
     }
 
     @PostMapping("/find/password")
-    public String findPassword(@RequestParam("userId") String userId, RedirectAttributes redirectAttributes) throws Exception {
+    public String findPassword(@RequestParam("userId") String userId, RedirectAttributes redirectAttributes) {
         if(!userService.updateFindPassword(userId)) {
             redirectAttributes.addAttribute("error", "아이디가 존재하지 않습니다");
             return "redirect:/sign-in/find/password";

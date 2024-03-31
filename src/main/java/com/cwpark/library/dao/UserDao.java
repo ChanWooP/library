@@ -4,7 +4,6 @@ import com.cwpark.library.data.dto.user.UserInsertDto;
 import com.cwpark.library.data.dto.user.UserMyPageDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.User;
-import com.cwpark.library.config.exception.RuntimeEntityNotFoundException;
 import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,10 @@ public class UserDao {
     }
 
     public UserSelectDto findById(String userId){
-        try {
-            User findUser = userRepository.findById(userId)
-                    .orElseThrow(EntityNotFoundException::new);
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다"));
 
-            return UserSelectDto.toDto(findUser);
-        } catch (EntityNotFoundException e) {
-            throw new RuntimeEntityNotFoundException("아이디가 존재하지 않습니다.");
-        }
+        return UserSelectDto.toDto(findUser);
     }
 
     public List<UserSelectDto> findById(String userName, String userBirth){
@@ -54,7 +49,7 @@ public class UserDao {
 
     public void deleteUser(String userId) {
         User findUser = userRepository.findById(userId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다"));
 
         userRepository.delete(findUser);
     }

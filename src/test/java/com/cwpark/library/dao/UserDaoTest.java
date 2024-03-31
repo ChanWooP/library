@@ -6,8 +6,8 @@ import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.config.exception.RuntimeEntityNotFoundException;
 import com.cwpark.library.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,7 +86,7 @@ class UserDaoTest {
     void findByIdFail() {
         when(userRepository.findById("id")).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(RuntimeEntityNotFoundException.class, () -> {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
             userDao.findById("id");
         });
 
