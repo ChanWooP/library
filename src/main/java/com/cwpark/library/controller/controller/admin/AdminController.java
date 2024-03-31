@@ -1,4 +1,4 @@
-package com.cwpark.library.controller.controller;
+package com.cwpark.library.controller.controller.admin;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

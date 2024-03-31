@@ -1,4 +1,4 @@
-package com.cwpark.library.controller.restcontroller.book;
+package com.cwpark.library.controller.restcontroller.admin.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.service.book.BookCategoryService;

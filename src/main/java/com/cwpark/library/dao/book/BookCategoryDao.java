@@ -2,9 +2,8 @@ package com.cwpark.library.dao.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.entity.book.BookCategory;
-import com.cwpark.library.repository.book.BookCategoryRepository;
+import com.cwpark.library.repository.book.category.BookCategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

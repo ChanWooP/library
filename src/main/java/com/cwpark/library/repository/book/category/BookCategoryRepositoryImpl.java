@@ -1,4 +1,4 @@
-package com.cwpark.library.repository.book;
+package com.cwpark.library.repository.book.category;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.dto.book.category.QBookCategoryDto;

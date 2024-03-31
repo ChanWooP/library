@@ -1,9 +1,9 @@
-package com.cwpark.library.repository.book;
+package com.cwpark.library.repository.book.book;
 
 import com.cwpark.library.config.TestRepositoryConfig;
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.entity.book.BookCategory;
-import jakarta.persistence.EntityManager;
+import com.cwpark.library.repository.book.category.BookCategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
