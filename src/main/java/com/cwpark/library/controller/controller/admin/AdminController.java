@@ -1,5 +1,7 @@
 package com.cwpark.library.controller.controller.admin;
 
+import com.cwpark.library.service.book.BookCategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +12,10 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
+
+    private final BookCategoryService bookCategoryService;
 
     @GetMapping("/main")
     public String mains() {
@@ -20,5 +25,11 @@ public class AdminController {
     @GetMapping("/book/category")
     public String category() {
         return "/admin/book/category";
+    }
+
+    @GetMapping("/book/book")
+    public String book(Model model) {
+        model.addAttribute("category", bookCategoryService.findAll());
+        return "/admin/book/book";
     }
 }

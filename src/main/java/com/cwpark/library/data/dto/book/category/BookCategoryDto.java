@@ -21,10 +21,10 @@ public class BookCategoryDto {
         this.categoryName = categoryName;
     }
 
-    public BookCategoryDto toDto(BookCategoryDto bookCategoryDto) {
+    public static BookCategoryDto toDto(BookCategory bookCategory) {
         return BookCategoryDto.builder()
-                .categoryId(bookCategoryDto.getCategoryId())
-                .categoryName(bookCategoryDto.getCategoryName())
+                .categoryId(bookCategory.getCategoryId())
+                .categoryName(bookCategory.getCategoryName())
                 .build();
     }
 }

@@ -1,24 +1,26 @@
 package com.cwpark.library.data.dto.book.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
-import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookInsUpdDto {
-
+public class BookFormDto {
     @NotBlank(message = "ISBN은 필수 입력 사항 입니다")
     private String bookIsbn;
 
-    @NotBlank(message = "카테고리는 필수 입력 사항 입니다")
-    private BookCategoryDto bookCategory;
+    @NotNull(message = "카테고리는 필수 입력 사항 입니다")
+    private Long bookCategory;
 
     @NotBlank(message = "제목은 필수 입력 사항 입니다")
     private String bookTitle;
@@ -44,30 +46,15 @@ public class BookInsUpdDto {
     @NotBlank(message = "작가 소개는 필수 입력 사항 입니다")
     private String bookAuthorInt;
 
-    @NotBlank(message = "책 이미지는 필수 입력 사항 입니다")
-    private String bookImage;
-
-    @NotEmpty(message = "최대 대여횟수는 필수 입력 사항 입니다")
+    @NotNull(message = "최대 대여횟수는 필수 입력 사항 입니다")
     private int bookMaxLoanCnt;
 
-    @NotEmpty(message = "최대 예약횟수는 필수 입력 사항 입니다")
+    @NotNull(message = "최대 예약횟수는 필수 입력 사항 입니다")
     private int bookMaxReserveCnt;
 
-    public static BookInsUpdDto toDto(BookFormDto dto) {
-        return BookInsUpdDto.builder()
-                .bookIsbn(dto.getBookIsbn())
-                .bookTitle(dto.getBookTitle())
-                .bookAuthor(dto.getBookAuthor())
-                .bookPublisher(dto.getBookPublisher())
-                .bookDistributor(dto.getBookDistributor())
-                .bookPublicationYear(dto.getBookPublicationYear())
-                .bookIndex(dto.getBookIndex())
-                .bookInt(dto.getBookInt())
-                .bookAuthorInt(dto.getBookAuthor())
-                .bookImage(dto.getBookImage())
-                .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
-                .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
-                .build();
-    }
+    private String bookImage;
 
+    private MultipartFile multipartFile;
+
+    private List<MultipartFile> multipartFiles;
 }

@@ -1,6 +1,7 @@
 package com.cwpark.library.controller;
 
 import com.cwpark.library.config.exception.RuntimeEmailException;
+import com.cwpark.library.config.exception.RuntimeIOException;
 import com.cwpark.library.config.exception.RuntimekakaoException;
 import com.cwpark.library.config.exception.RuntimeoAuthException;
 import jakarta.persistence.EntityNotFoundException;
@@ -53,6 +54,14 @@ public class MainControllerAdvice {
     public String kakaoHandle(RuntimekakaoException e, Model model) {
         log.error("[emailHandle] : {}", e);
         model.addAttribute("message", "회원가입에 실패하였습니다");
+
+        return "/error/500";
+    }
+
+    @ExceptionHandler(RuntimeIOException.class)
+    public String IOEHandle(RuntimeIOException e, Model model) {
+        log.error("[IOEHandle] : {}", e);
+        model.addAttribute("message", "파일 업로드에 실패하였습니다");
 
         return "/error/500";
     }

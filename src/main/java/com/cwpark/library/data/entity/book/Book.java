@@ -1,6 +1,7 @@
 package com.cwpark.library.data.entity.book;
 
 import com.cwpark.library.data.dto.book.book.BookInsUpdDto;
+import com.cwpark.library.data.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @DynamicUpdate
 @DynamicInsert
 @Table(name = "BOOK")
-public class Book {
+public class Book extends BaseEntity {
 
     @Id
     @Column(name = "BOOK_ISBN")
@@ -72,7 +73,7 @@ public class Book {
     public static Book toEntity(BookInsUpdDto dto) {
         return Book.builder()
                 .bookIsbn(dto.getBookIsbn())
-                .bookCategory(dto.getBookCategory())
+                .bookCategory(BookCategory.toEntity(dto.getBookCategory()))
                 .bookTitle(dto.getBookTitle())
                 .bookAuthor(dto.getBookAuthor())
                 .bookPublisher(dto.getBookPublisher())

@@ -93,7 +93,7 @@
     </style>
     <script>
         $(document).ready(function(){
-           $('.link-body-emphasis').click(function(){
+           $('.text-decoration-none').click(function(){
             $('#menuTitle').html('<h5>' + $(this).html() + '</h5> <hr>');
 
             $.ajax({
@@ -148,7 +148,7 @@
                         <div class="collapse" id="book-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                                 <li><a data-path="/book/category" class="pointer link-body-emphasis d-inline-flex text-decoration-none rounded">책 카테고리 관리</a></li>
-                                <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 정보 관리</a></li>
+                                <li><a data-path="/book/book" class="pointer d-inline-flex text-decoration-none rounded">책 정보 관리</a></li>
                                 <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 대출 관리</a></li>
                                 <li><a data-path="" class="pointer d-inline-flex text-decoration-none rounded">책 예약 관리</a></li>
                             </ul>
