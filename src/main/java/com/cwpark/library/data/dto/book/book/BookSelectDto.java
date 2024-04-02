@@ -1,5 +1,6 @@
 package com.cwpark.library.data.dto.book.book;
 
+import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookCategory;
 import com.querydsl.core.annotations.QueryProjection;
@@ -17,7 +18,7 @@ public class BookSelectDto {
     private String bookIsbn;
 
     @NotBlank(message = "카테고리는 필수 입력 사항 입니다")
-    private BookCategory bookCategory;
+    private BookCategoryDto bookCategory;
 
     @NotBlank(message = "제목은 필수 입력 사항 입니다")
     private String bookTitle;
@@ -61,8 +62,11 @@ public class BookSelectDto {
     @NotBlank(message = "현재 예약횟수는 필수 입력 사항 입니다")
     private int bookReserveCnt;
 
+    @NotBlank(message = "총 페이지 수는 필수 입력 사항 입니다")
+    private int bookTotalPageCnt;
+
     @QueryProjection
-    public BookSelectDto(String bookIsbn, BookCategory bookCategory, String bookTitle, String bookAuthor, String bookPublisher, String bookDistributor, String bookPublicationYear, String bookIndex, String bookInt, String bookAuthorInt, String bookImage, int bookMaxLoanCnt, int bookMaxReserveCnt, int bookLike, int bookLoanCnt, int bookReserveCnt) {
+    public BookSelectDto(String bookIsbn, BookCategoryDto bookCategory, String bookTitle, String bookAuthor, String bookPublisher, String bookDistributor, String bookPublicationYear, String bookIndex, String bookInt, String bookAuthorInt, String bookImage, int bookMaxLoanCnt, int bookMaxReserveCnt, int bookLike, int bookLoanCnt, int bookReserveCnt, int bookTotalPageCnt) {
         this.bookIsbn = bookIsbn;
         this.bookCategory = bookCategory;
         this.bookTitle = bookTitle;
@@ -79,12 +83,13 @@ public class BookSelectDto {
         this.bookLike = bookLike;
         this.bookLoanCnt = bookLoanCnt;
         this.bookReserveCnt = bookReserveCnt;
+        this.bookTotalPageCnt = bookTotalPageCnt;
     }
 
     public static BookSelectDto toDto(Book entity) {
         return BookSelectDto.builder()
                 .bookIsbn(entity.getBookIsbn())
-                .bookCategory(entity.getBookCategory())
+                .bookCategory(BookCategoryDto.toDto(entity.getBookCategory()))
                 .bookTitle(entity.getBookTitle())
                 .bookAuthor(entity.getBookAuthor())
                 .bookPublisher(entity.getBookPublisher())
@@ -99,6 +104,7 @@ public class BookSelectDto {
                 .bookLike(entity.getBookLike())
                 .bookLoanCnt(entity.getBookLoanCnt())
                 .bookReserveCnt(entity.getBookReserveCnt())
+                .bookTotalPageCnt(entity.getBookTotalPageCnt())
                 .build();
     }
 }

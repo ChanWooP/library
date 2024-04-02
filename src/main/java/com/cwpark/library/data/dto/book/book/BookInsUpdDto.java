@@ -53,6 +53,9 @@ public class BookInsUpdDto {
     @NotEmpty(message = "최대 예약횟수는 필수 입력 사항 입니다")
     private int bookMaxReserveCnt;
 
+    @NotEmpty(message = "총 페이지 수는 필수 입력 사항 입니다")
+    private int bookTotalPageCnt;
+
     public static BookInsUpdDto toDto(BookFormDto dto) {
         return BookInsUpdDto.builder()
                 .bookIsbn(dto.getBookIsbn())
@@ -67,6 +70,7 @@ public class BookInsUpdDto {
                 .bookImage(dto.getBookImage())
                 .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
                 .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
+                .bookTotalPageCnt(dto.getBookTotalPageCnt())
                 .build();
     }
 

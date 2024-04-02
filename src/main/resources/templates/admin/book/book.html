@@ -3,9 +3,11 @@
     var choice = null;
 
     // 현재 페이지
-    var choicePage = null;
+    var choicePage = 0;
 
     $(document).ready(function(){
+        initDisabled(true);
+
         // 행 추가
         $('#add').click(function(){
             if(choiceCheck()) {
@@ -21,6 +23,8 @@
                 choiceHover($('table > tbody > tr:last-child'));
 
                 initForm();
+                $('#postType').val('insert');
+                initDisabled(false);
             }
         });
 
@@ -31,6 +35,11 @@
 
         // 행 삭제
         $('#del').click(function(){
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
+            }
+
             if(!confirm("삭제하시겠습니까?")) {
                 return false;
             }
@@ -38,26 +47,26 @@
             // 추가 행 삭제
             if(choice.data('type') == 'insert') {
                 choice.remove();
-                $('#categoryId').val('');
-                $('#categoryName').val('');
+                choice = null;
+                initDisabled(true);
+                initForm();
             // 기존 행 삭제
             } else {
+                console.log($('#bookIsbn').val());
                 $.ajax({
                     type: "DELETE"
-                  , url : "/api/v1/admin/category/delete"
+                  , url : "/api/v1/admin/book/delete"
                   , data : {
-                        categoryId : $('#categoryId').val()
-                        , categoryName : $('#categoryName').val()
+                        bookIsbn : $('#bookIsbn').val()
                   }
                   , dataType: "json"
                   , success : function(data) {
                     if(data != null) {
                         alert('삭제가 완료되었습니다');
                         searchPage(choicePage);
-                        choicePage = null;
                         choice = null;
-                        $('#categoryId').val('');
-                        $('#categoryName').val('');
+                        initDisabled(true);
+                        initForm();
                     } else {
                         alert('삭제에 실패하였습니다');
                     }
@@ -165,11 +174,15 @@
               , dataType: "json"
               , success : function(data) {
                 if(data != null) {
-                    alert('저장이 완료되었습니다');
-                    //searchPage(choicePage);
-                    choicePage = null;
-                    choice = null;
-                    initForm();
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    } else {
+                        alert('ISBN이 중복되었습니다');
+                    }
                 } else {
                     alert('저장에 실패하였습니다');
                 }
@@ -198,18 +211,31 @@
                 $('#preview').attr('src', "");
             }
         });
+
+        // 데이터 변경 감지
+        $('#formData').find('input, textarea, select').change(function() {
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
+            }
+
+            if(choice.find('th:eq(0)').text() != 'New') {
+                choice.find('th:eq(0)').text('U');
+            }
+        });
     });
 
     // 행 선택
     function choiceHover(thiss) {
         $('.hover').removeClass('hover');
         thiss.addClass('hover');
+        initDisabled(false);
     }
 
     // 행 변경 가능여부 체크
     function choiceCheck() {
         if(choice != null) {
-            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('td:eq(0)').text() != $('#categoryName').val())) {
+            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('th:eq(0)').text() == 'U')) {
                 alert('저장 또는 삭제를 진행해주세요');
                 return false;
             }
@@ -222,17 +248,35 @@
     function choiceChange(thiss, type) {
         choice = thiss;
         choice.data('type', type);
-        $('#categoryName').val(choice.find('td:eq(0)').text());
-        $('#categoryId').val(choice.data('id'));
+
+        if(type == 'update') {
+            $('#bookIsbn').attr('disabled', true);
+        }
+
+        $('#preview').attr('src', '/files/'+ choice.data('bookimage'));
+        $('#bookIsbn').val(choice.data('bookisbn'));
+        $('#bookCategory').val(choice.data('bookcategory'));
+        $('#bookTitle').val(choice.data('booktitle'));
+        $('#bookAuthor').val(choice.data('bookauthor'));
+        $('#bookPublisher').val(choice.data('bookpublisher'));
+        $('#bookDistributor').val(choice.data('bookdistributor'));
+        $('#bookPublicationYear').val(choice.data('bookpublicationyear'));
+        $('#bookIndex').val(choice.data('bookindex'));
+        $('#bookInt').val(choice.data('bookint'));
+        $('#bookAuthorInt').val(choice.data('bookauthorint'));
+        $('#bookMaxLoanCnt').val(choice.data('bookmaxloancnt'));
+        $('#bookMaxReserveCnt').val(choice.data('bookmaxreservecnt'));
+        $('#bookTotalPageCnt').val(choice.data('booktotalpagecnt'));
     }
 
     // 조회
     function searchPage(pages) {
         $.ajax({
             type: "GET"
-          , url : "/api/v1/admin/category/searchPage"
+          , url : "/api/v1/admin/book/searchPage"
           , data : {
-                page : pages
+                title : $('#search').val()
+                , page : pages
           }
           , dataType: "json"
           , success : function(data) {
@@ -241,14 +285,29 @@
                 let str2 = '';
 
                 for(let i=0; i<data.result.content.length; i++) {
-                    str += '<tr data-id=' + data.result.content[i].categoryId + '> ';
+                    str += '<tr ';
+                    str += ' data-bookisbn=' + data.result.content[i].bookIsbn;
+                    str += ' data-bookimage=' + data.result.content[i].bookImage;
+                    str += ' data-bookcategory=' + data.result.content[i].bookCategory.categoryId;
+                    str += ' data-booktitle=' + data.result.content[i].bookTitle;
+                    str += ' data-bookauthor=' + data.result.content[i].bookAuthor;
+                    str += ' data-bookpublisher=' + data.result.content[i].bookPublisher;
+                    str += ' data-bookdistributor=' + data.result.content[i].bookDistributor;
+                    str += ' data-bookpublicationyear=' + data.result.content[i].bookPublicationYear;
+                    str += ' data-bookindex=' + data.result.content[i].bookIndex;
+                    str += ' data-bookint=' + data.result.content[i].bookInt;
+                    str += ' data-bookauthorint=' + data.result.content[i].bookAuthorInt;
+                    str += ' data-bookmaxloancnt=' + data.result.content[i].bookMaxLoanCnt;
+                    str += ' data-bookmaxreservecnt=' + data.result.content[i].bookMaxReserveCnt;
+                    str += ' data-booktotalpagecnt=' + data.result.content[i].bookTotalPageCnt;
+                    str += '> ';
 
                     str += '    <th scope="col"> ';
                     str += i + 1 + (10 * data.result.number)
                     str += '    </th> ';
 
                     str += '<td>';
-                    str += data.result.content[i].categoryName;
+                    str += data.result.content[i].bookTitle;
                     str += '</td>';
 
                     str += '</tr> ';
@@ -276,7 +335,14 @@
 
                 $('table > tbody').html(str);
                 $('#page').html(str2);
+                choice = null;
                 choicePage = pages;
+                initDisabled(true);
+                initForm();
+
+                if(data.result.totalPages  <= 0) {
+                    return false;
+                }
 
                 // 숫자 페이지
                 $('.pageNum').click(function(){
@@ -350,13 +416,25 @@
         $('#multipartFiles').val('');
         $('#bookMaxLoanCnt').val('');
         $('#bookMaxReserveCnt').val('');
+        $('#bookTotalPageCnt').val('');
+    }
+
+    function initDisabled(bool) {
+        $('#formData').find('input').attr('disabled', bool);
+        $('#formData').find('select').attr('disabled', bool);
+        $('#formData').find('textarea').attr('disabled', bool);
+        $('#formData').find('button').attr('disabled', bool);
     }
 </script>
 <div class="inline-block" style="width:29%; float:left;">
     <div style="float:left;">
-        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+
         <button type="button" class="btn btn-primary" id="add">추가</button>
         <button type="button" class="btn btn-primary" id="del">삭제</button>
+    </div>
+    <div class="input-group" style="padding-top:5px;">
+        <input type="search" id="search" class="form-control rounded" placeholder="책 제목 검색" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
     </div>
     <table class="table table-hover">
         <thead>
@@ -372,6 +450,9 @@
 </div>
 <div class="inline-block" style="width:69%; height:100%; float:right; overflow:auto;">
     <form method="POST" enctype="multipart/form-data" id="formData">
+
+        <input type="hidden" id="postType" name="postType">
+
         <div class="col-md-6 mb-3 margin-left">
             <label for="multipartFile">대표 이미지</label>
             <div style="margin-bottom:5px;">
@@ -383,7 +464,8 @@
 
         <div class="col-md-6 mb-3 margin-left">
             <label for="bookIsbn">ISBN</label>
-            <input type="text" class="form-control" id="bookIsbn" name="bookIsbn" required>
+            <input type="text" class="form-control" id="bookIsbn" name="bookIsbn"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
         </div>
 
         <div class="col-md-6 mb-3 margin-left">
@@ -438,6 +520,11 @@
         <div class="col-md-6 mb-3 margin-left">
             <label for="multipartFiles">책 등록</label>
             <input type="file" class="form-control" multiple="multiple" id="multipartFiles" name="multipartFiles" accept="image/jpg, image/png, image/jpeg" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookTotalPageCnt">총 페이지 수</label>
+            <input type="number" class="form-control" id="bookTotalPageCnt" name="bookTotalPageCnt" required>
         </div>
 
         <div class="col-md-6 mb-3 margin-left">

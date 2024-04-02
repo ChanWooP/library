@@ -3,6 +3,7 @@ package com.cwpark.library.repository.book.book;
 import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.dto.book.book.QBookSelectDto;
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
+import com.cwpark.library.data.dto.book.category.QBookCategoryDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         List<BookSelectDto> content = queryFactory
                 .select(new QBookSelectDto(
                         book.bookIsbn
-                        ,book.bookCategory
+                        , new QBookCategoryDto(
+                                book.bookCategory.categoryId
+                              , book.bookCategory.categoryName
+                        )
                         ,book.bookTitle
                         ,book.bookAuthor
                         ,book.bookPublisher
@@ -41,9 +45,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         ,book.bookLike
                         ,book.bookLoanCnt
                         ,book.bookReserveCnt
+                        ,book.bookTotalPageCnt
                 ))
                 .from(book)
-                .where(book.bookTitle.like(title))
+                .where(book.bookTitle.contains(title))
                 .orderBy(book.bookTitle.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

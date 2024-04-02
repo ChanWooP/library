@@ -32,6 +32,11 @@
 
         // 행 삭제
         $('#del').click(function(){
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
+            }
+
             if(!confirm("삭제하시겠습니까?")) {
                 return false;
             }
@@ -202,6 +207,10 @@
                 $('table > tbody').html(str);
                 $('#page').html(str2);
                 choicePage = pages;
+
+                if(data.result.totalPages  <= 0) {
+                    return false;
+                }
 
                 // 숫자 페이지
                 $('.pageNum').click(function(){

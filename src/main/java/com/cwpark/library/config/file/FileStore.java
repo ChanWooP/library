@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Component
@@ -18,11 +21,11 @@ public class FileStore {
         return fileDir + fileName;
     }
 
-    public String storeFile(String filePath, MultipartFile multipartFile) {
+    public String storeFile(String filePath, MultipartFile multipartFile, String fileName) {
         try {
             if(!multipartFile.isEmpty()) {
-                String fileName = multipartFile.getOriginalFilename();
-                File file = new File(getFullPath(filePath + "/" + fileName));
+                String ext = extractExt(multipartFile.getOriginalFilename());
+                File file = new File(getFullPath(filePath + "/" + fileName + ext));
 
                 if(!file.exists()) {
                     file.mkdirs();
@@ -30,7 +33,7 @@ public class FileStore {
 
                 multipartFile.transferTo(file);
 
-                return filePath + "/" + fileName;
+                return filePath + "/" + fileName + ext;
             } else {
                 return null;
             }
@@ -40,10 +43,41 @@ public class FileStore {
     }
 
     public void storeFiles(String filePath, List<MultipartFile> multipartFiles) {
-        for(MultipartFile multipartFile : multipartFiles) {
-            if(!multipartFile.isEmpty()) {
-                storeFile(filePath, multipartFile);
+        for(int i=0; i<multipartFiles.size(); i++) {
+            if(!multipartFiles.get(i).isEmpty()) {
+                storeFile(filePath, multipartFiles.get(i), String.valueOf(i+1));
             }
         }
+    }
+
+    // 폴더 삭제
+    public void deleteDirectory(String filePath, Boolean recursion) {
+        File directory = null;
+
+        if(!recursion) {
+            directory = new File(getFullPath(filePath));
+        } else {
+            directory = new File(filePath);
+        }
+
+        if(directory.exists()) {
+            File[] list = directory.listFiles();
+
+            for(int i=0; i<list.length; i++) {
+                if(list[i].isFile()) {
+                    list[i].delete();
+                } else {
+                    deleteDirectory(list[i].getPath(), true);
+                }
+            }
+
+            directory.delete();
+        }
+    }
+
+    // 확장자 구하기
+    private String extractExt(String originalFilename) {
+        int pos = originalFilename.lastIndexOf(".");
+        return "." + originalFilename.substring(pos + 1);
     }
 }

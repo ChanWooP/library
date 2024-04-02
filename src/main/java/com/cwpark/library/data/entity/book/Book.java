@@ -1,6 +1,7 @@
 package com.cwpark.library.data.entity.book;
 
 import com.cwpark.library.data.dto.book.book.BookInsUpdDto;
+import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +25,7 @@ public class Book extends BaseEntity {
     @Column(name = "BOOK_ISBN")
     private String bookIsbn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOK_CATEGORY_ID")
     private BookCategory bookCategory;
 
@@ -70,6 +71,9 @@ public class Book extends BaseEntity {
     @Column(name = "BOOK_RESERVE_CNT")
     private int bookReserveCnt;
 
+    @Column(name = "BOOK_TOTAL_PAGE_CNT")
+    private int bookTotalPageCnt;
+
     public static Book toEntity(BookInsUpdDto dto) {
         return Book.builder()
                 .bookIsbn(dto.getBookIsbn())
@@ -85,6 +89,26 @@ public class Book extends BaseEntity {
                 .bookImage(dto.getBookImage())
                 .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
                 .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
+                .bookTotalPageCnt(dto.getBookTotalPageCnt())
+                .build();
+    }
+
+    public static Book selectToEntity(BookSelectDto dto) {
+        return Book.builder()
+                .bookIsbn(dto.getBookIsbn())
+                .bookCategory(BookCategory.toEntity(dto.getBookCategory()))
+                .bookTitle(dto.getBookTitle())
+                .bookAuthor(dto.getBookAuthor())
+                .bookPublisher(dto.getBookPublisher())
+                .bookDistributor(dto.getBookDistributor())
+                .bookPublicationYear(dto.getBookPublicationYear())
+                .bookIndex(dto.getBookIndex())
+                .bookInt(dto.getBookInt())
+                .bookAuthorInt(dto.getBookAuthor())
+                .bookImage(dto.getBookImage())
+                .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
+                .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
+                .bookTotalPageCnt(dto.getBookTotalPageCnt())
                 .build();
     }
 
@@ -93,12 +117,12 @@ public class Book extends BaseEntity {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Book book = (Book) object;
-        return getBookMaxLoanCnt() == book.getBookMaxLoanCnt() && getBookMaxReserveCnt() == book.getBookMaxReserveCnt() && getBookLike() == book.getBookLike() && getBookLoanCnt() == book.getBookLoanCnt() && getBookReserveCnt() == book.getBookReserveCnt() && Objects.equals(getBookIsbn(), book.getBookIsbn()) && Objects.equals(getBookCategory(), book.getBookCategory()) && Objects.equals(getBookTitle(), book.getBookTitle()) && Objects.equals(getBookAuthor(), book.getBookAuthor()) && Objects.equals(getBookPublisher(), book.getBookPublisher()) && Objects.equals(getBookDistributor(), book.getBookDistributor()) && Objects.equals(getBookPublicationYear(), book.getBookPublicationYear()) && Objects.equals(getBookIndex(), book.getBookIndex()) && Objects.equals(getBookInt(), book.getBookInt()) && Objects.equals(getBookAuthorInt(), book.getBookAuthorInt()) && Objects.equals(getBookImage(), book.getBookImage());
+        return getBookMaxLoanCnt() == book.getBookMaxLoanCnt() && getBookMaxReserveCnt() == book.getBookMaxReserveCnt() && getBookLike() == book.getBookLike() && getBookLoanCnt() == book.getBookLoanCnt() && getBookReserveCnt() == book.getBookReserveCnt() && getBookTotalPageCnt() == book.getBookTotalPageCnt() && Objects.equals(getBookIsbn(), book.getBookIsbn()) && Objects.equals(getBookCategory(), book.getBookCategory()) && Objects.equals(getBookTitle(), book.getBookTitle()) && Objects.equals(getBookAuthor(), book.getBookAuthor()) && Objects.equals(getBookPublisher(), book.getBookPublisher()) && Objects.equals(getBookDistributor(), book.getBookDistributor()) && Objects.equals(getBookPublicationYear(), book.getBookPublicationYear()) && Objects.equals(getBookIndex(), book.getBookIndex()) && Objects.equals(getBookInt(), book.getBookInt()) && Objects.equals(getBookAuthorInt(), book.getBookAuthorInt()) && Objects.equals(getBookImage(), book.getBookImage());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getBookIsbn(), getBookCategory(), getBookTitle(), getBookAuthor(), getBookPublisher(), getBookDistributor(), getBookPublicationYear(), getBookIndex(), getBookInt(), getBookAuthorInt(), getBookImage(), getBookMaxLoanCnt(), getBookMaxReserveCnt(), getBookLike(), getBookLoanCnt(), getBookReserveCnt());
+        return Objects.hash(getBookIsbn(), getBookCategory(), getBookTitle(), getBookAuthor(), getBookPublisher(), getBookDistributor(), getBookPublicationYear(), getBookIndex(), getBookInt(), getBookAuthorInt(), getBookImage(), getBookMaxLoanCnt(), getBookMaxReserveCnt(), getBookLike(), getBookLoanCnt(), getBookReserveCnt(), getBookTotalPageCnt());
     }
 
 }

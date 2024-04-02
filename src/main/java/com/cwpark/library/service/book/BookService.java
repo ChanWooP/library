@@ -25,11 +25,15 @@ public class BookService {
     private final static String FILE_PATH = "book/";
     private final static String IMG_FILE_PATH = "/img";
 
-    public void save(BookFormDto dto) {
+    public Boolean existsById(String bookIsbn) {
+        return bookDao.existsById(bookIsbn);
+    }
+
+    public void insert(BookFormDto dto) {
         BookInsUpdDto book = BookInsUpdDto.toDto(dto);
         book.setBookCategory(bookCategoryDao.findById(dto.getBookCategory()));
 
-        String fileName = fileStore.storeFile(FILE_PATH + dto.getBookIsbn(), dto.getMultipartFile());
+        String fileName = fileStore.storeFile(FILE_PATH + dto.getBookIsbn(), dto.getMultipartFile(), book.getBookIsbn());
         fileStore.storeFiles(FILE_PATH + dto.getBookIsbn() + IMG_FILE_PATH, dto.getMultipartFiles());
 
         book.setBookImage(fileName);
@@ -41,7 +45,10 @@ public class BookService {
         return bookDao.searchPage(title, pageable);
     }
 
-    public void delete(BookInsUpdDto dto) {
-        bookDao.delete(dto);
+    public void delete(String bookIsbn) {
+        BookSelectDto findBook = bookDao.findById(bookIsbn);
+        bookDao.delete(findBook);
+
+        fileStore.deleteDirectory(FILE_PATH + bookIsbn, false);
     }
 }

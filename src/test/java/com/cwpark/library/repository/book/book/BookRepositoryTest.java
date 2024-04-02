@@ -50,15 +50,18 @@ class BookRepositoryTest {
                 "책대표이미지", 5, 5, 0, 0, 0);
         Book book2 = new Book("isbn2", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
                 "책대표이미지", 5, 5, 0, 0, 0);
+        Book book3 = new Book("isbn3", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
+                "책대표이미지", 5, 5, 0, 0, 0);
 
         bookCategoryRepository.save(bookCategory);
         bookRepository.save(book1);
         bookRepository.save(book2);
+        bookRepository.save(book3);
 
-        PageRequest pageRequest = PageRequest.of(0, 2);
-        Page<BookSelectDto> page = bookRepository.searchPage("isbn", pageRequest);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<BookSelectDto> page = bookRepository.searchPage("제목", pageRequest);
 
-        Assertions.assertEquals(page.getSize(), 2);
+        Assertions.assertEquals(page.getContent().size(), 3);
     }
 
 }

@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeRequests((authorizeRequests) ->
                         authorizeRequests
                                 .requestMatchers(
-                                        "/", "/css/**", "/js/**", "/img/**",
+                                        "/", "/css/**", "/js/**", "/img/**", "/files/**",
                                         "/email/check/**", "/kakao/callback",
                                         "/sign-in/**", "/api/v1/sign-in/**"
                                 ).permitAll()

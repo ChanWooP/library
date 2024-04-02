@@ -16,6 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class BookFormDto {
+
+    private String postType;
+
     @NotBlank(message = "ISBN은 필수 입력 사항 입니다")
     private String bookIsbn;
 
@@ -51,6 +54,9 @@ public class BookFormDto {
 
     @NotNull(message = "최대 예약횟수는 필수 입력 사항 입니다")
     private int bookMaxReserveCnt;
+
+    @NotNull(message = "총 페이지 수는 필수 입력 사항 입니다")
+    private int bookTotalPageCnt;
 
     private String bookImage;
 
