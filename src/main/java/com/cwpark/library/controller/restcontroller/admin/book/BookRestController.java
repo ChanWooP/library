@@ -27,11 +27,11 @@ public class BookRestController {
                 result.put("success", "N");
             } else {
                 service.insert(dto);
-                result.put("success", "Y");
             }
         } else {
-            result.put("success", "Y");
+
         }
+        result.put("success", "Y");
 
         return ResponseEntity.ok()
                 .body(result);

@@ -214,11 +214,6 @@
 
         // 데이터 변경 감지
         $('#formData').find('input, textarea, select').change(function() {
-            if(choice == null) {
-                alert('행을 선택해주세요');
-                return false;
-            }
-
             if(choice.find('th:eq(0)').text() != 'New') {
                 choice.find('th:eq(0)').text('U');
             }

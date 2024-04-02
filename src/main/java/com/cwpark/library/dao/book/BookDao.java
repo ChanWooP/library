@@ -36,6 +36,6 @@ public class BookDao {
     }
 
     public BookSelectDto findById(String bookIsbn) {
-        return BookSelectDto.toDto(repository.findById(bookIsbn).orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다")));
+        return BookSelectDto.toDto(repository.findById(bookIsbn).orElseThrow(() -> new EntityNotFoundException("책이 존재하지 않습니다")));
     }
 }

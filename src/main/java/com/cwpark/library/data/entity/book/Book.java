@@ -77,7 +77,7 @@ public class Book extends BaseEntity {
     public static Book toEntity(BookInsUpdDto dto) {
         return Book.builder()
                 .bookIsbn(dto.getBookIsbn())
-                .bookCategory(BookCategory.toEntity(dto.getBookCategory()))
+                .bookCategory(BookCategory.selectToEntity(dto.getBookCategory()))
                 .bookTitle(dto.getBookTitle())
                 .bookAuthor(dto.getBookAuthor())
                 .bookPublisher(dto.getBookPublisher())
@@ -96,7 +96,7 @@ public class Book extends BaseEntity {
     public static Book selectToEntity(BookSelectDto dto) {
         return Book.builder()
                 .bookIsbn(dto.getBookIsbn())
-                .bookCategory(BookCategory.toEntity(dto.getBookCategory()))
+                .bookCategory(BookCategory.selectToEntity(dto.getBookCategory()))
                 .bookTitle(dto.getBookTitle())
                 .bookAuthor(dto.getBookAuthor())
                 .bookPublisher(dto.getBookPublisher())

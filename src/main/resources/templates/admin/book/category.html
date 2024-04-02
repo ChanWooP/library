@@ -3,9 +3,10 @@
     var choice = null;
 
     // 현재 페이지
-    var choicePage = null;
+    var choicePage = 0;
 
     $(document).ready(function(){
+        initDisabled(true);
         // 행 추가
         $('#add').click(function(){
             if(choiceCheck()) {
@@ -20,8 +21,9 @@
                 choiceChange($('table > tbody > tr:last-child'), 'insert');
                 choiceHover($('table > tbody > tr:last-child'));
 
-                $('#categoryId').val('');
-                $('#categoryName').val('');
+                initForm();
+                $('#postType').val('insert');
+                initDisabled(false);
             }
         });
 
@@ -44,26 +46,25 @@
             // 추가 행 삭제
             if(choice.data('type') == 'insert') {
                 choice.remove();
-                $('#categoryId').val('');
-                $('#categoryName').val('');
+                choice = null;
+                initDisabled(true);
+                initForm();
             // 기존 행 삭제
             } else {
                 $.ajax({
                     type: "DELETE"
                   , url : "/api/v1/admin/category/delete"
                   , data : {
-                        categoryId : $('#categoryId').val()
-                        , categoryName : $('#categoryName').val()
+                        bookCategoryId : $('#categoryId').val()
                   }
                   , dataType: "json"
                   , success : function(data) {
                     if(data != null) {
                         alert('삭제가 완료되었습니다');
                         searchPage(choicePage);
-                        choicePage = null;
                         choice = null;
-                        $('#categoryId').val('');
-                        $('#categoryName').val('');
+                        initDisabled(true);
+                        initForm();
                     } else {
                         alert('삭제에 실패하였습니다');
                     }
@@ -97,22 +98,24 @@
                 return false;
             }
 
+            let form = $('#formData')[0];
+            let data = new FormData(form);
+
             $.ajax({
                 type: "POST"
+              , enctype : 'text/plain'
               , url : "/api/v1/admin/category/save"
-              , data : {
-                    categoryId : $('#categoryId').val()
-                    , categoryName : $('#categoryName').val()
-              }
+              , data : data
+              , contentType: false
+              , processData: false
               , dataType: "json"
               , success : function(data) {
                 if(data != null) {
                     alert('저장이 완료되었습니다');
                     searchPage(choicePage);
-                    choicePage = null;
                     choice = null;
-                    $('#categoryId').val('');
-                    $('#categoryName').val('');
+                    initForm();
+                    initDisabled(true);
                 } else {
                     alert('저장에 실패하였습니다');
                 }
@@ -128,18 +131,26 @@
               }
             });
         });
+
+        // 데이터 변경 감지
+        $('#formData').find('input').change(function() {
+            if(choice.find('th:eq(0)').text() != 'New') {
+                choice.find('th:eq(0)').text('U');
+            }
+        });
     });
 
     // 행 선택
     function choiceHover(thiss) {
         $('.hover').removeClass('hover');
         thiss.addClass('hover');
+        initDisabled(false);
     }
 
     // 행 변경 가능여부 체크
     function choiceCheck() {
         if(choice != null) {
-            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('td:eq(0)').text() != $('#categoryName').val())) {
+            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('th:eq(0)').text() == 'U')) {
                 alert('저장 또는 삭제를 진행해주세요');
                 return false;
             }
@@ -154,6 +165,7 @@
         choice.data('type', type);
         $('#categoryName').val(choice.find('td:eq(0)').text());
         $('#categoryId').val(choice.data('id'));
+        $('#postType').val('update');
     }
 
     // 조회
@@ -206,7 +218,10 @@
 
                 $('table > tbody').html(str);
                 $('#page').html(str2);
+                choice = null;
                 choicePage = pages;
+                initDisabled(true);
+                initForm();
 
                 if(data.result.totalPages  <= 0) {
                     return false;
@@ -267,6 +282,16 @@
           }
         });
     }
+
+    function initForm() {
+        $('#categoryId').val('');
+        $('#categoryName').val('');
+    }
+
+    function initDisabled(bool) {
+        $('#formData').find('input').attr('disabled', bool);
+        $('#formData').find('button').attr('disabled', bool);
+    }
 </script>
 <div class="inline-block" style="width:49%; float:left;">
     <div style="float:left;">
@@ -287,12 +312,17 @@
     <div id="page"></div>
 </div>
 <div class="inline-block" style="width:49%; float:right;">
-    <div class="col-md-6 mb-3">
-        <input type="hidden" id="categoryId" name="categoryId">
+    <form method="POST" enctype="text/plain" id="formData">
+        <div class="col-md-6 mb-3">
 
-        <label for="categoryName">카테고리 명</label>
-        <input type="text" class="form-control" id="categoryName" name="categoryName" required>
-    </div>
-    <button type="button" class="btn btn-primary" id="save">저장</button>
+            <input type="hidden" id="postType" name="postType">
+
+            <input type="hidden" id="categoryId" name="categoryId">
+
+            <label for="categoryName">카테고리 명</label>
+            <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+        </div>
+        <button type="button" class="btn btn-primary" id="save">저장</button>
+    </form>
 </div>
 

@@ -1,6 +1,7 @@
 package com.cwpark.library.dao.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
+import com.cwpark.library.data.dto.book.category.BookCategoryInsUpdDto;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookCategory;
 import com.cwpark.library.repository.book.category.BookCategoryRepository;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class BookCategoryDao {
     private final BookCategoryRepository repository;
 
-    public void save(BookCategoryDto dto) {
+    public void save(BookCategoryInsUpdDto dto) {
         repository.save(BookCategory.toEntity(dto));
     }
 
@@ -28,7 +29,7 @@ public class BookCategoryDao {
     }
 
     public void delete(BookCategoryDto dto) {
-        repository.delete(BookCategory.toEntity(dto));
+        repository.delete(BookCategory.selectToEntity(dto));
     }
 
     public List<BookCategoryDto> findAll() {
@@ -38,6 +39,5 @@ public class BookCategoryDao {
     public BookCategoryDto findById(Long categoryId) {
         return BookCategoryDto.toDto(
                 repository.findById(categoryId).orElseThrow(() -> new EntityNotFoundException("카테고리가 존재하지 않습니다")));
-
     }
 }

@@ -1,6 +1,7 @@
 package com.cwpark.library.controller.restcontroller.admin.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
+import com.cwpark.library.data.dto.book.category.BookCategoryFormDto;
 import com.cwpark.library.service.book.BookCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,17 @@ public class BookCategoryRestController {
     private final BookCategoryService service;
 
     @PostMapping("/save")
-    public ResponseEntity<Map<String, Object>> save(@Valid @ModelAttribute BookCategoryDto dto) {
+    public ResponseEntity<Map<String, Object>> save(@Valid @ModelAttribute BookCategoryFormDto dto) {
         Map<String, Object> result = new HashMap<>();
-        service.save(dto);
+
+        if(dto.getPostType().equals("insert")) {
+            service.insert(dto);
+        } else  {
+            service.update(dto);
+        }
 
         result.put("success", "Y");
+
 
         return ResponseEntity.ok()
                 .body(result);
@@ -39,9 +46,9 @@ public class BookCategoryRestController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Map<String, Object>> delete(@Valid @ModelAttribute BookCategoryDto dto) {
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("bookCategoryId") Long bookCategoryId) {
         Map<String, Object> result = new HashMap<>();
-        service.delete(dto);
+        service.delete(bookCategoryId);
 
         result.put("success", "Y");
 

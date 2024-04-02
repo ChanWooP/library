@@ -1,6 +1,8 @@
 package com.cwpark.library.data.entity.book;
 
+import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
+import com.cwpark.library.data.dto.book.category.BookCategoryInsUpdDto;
 import com.cwpark.library.data.entity.BaseEntity;
 import jakarta.persistence.*;
 import jdk.jfr.Category;
@@ -28,10 +30,17 @@ public class BookCategory extends BaseEntity {
     @Column(name = "CATEGORY_NAME")
     private String categoryName;
 
-    public static BookCategory toEntity(BookCategoryDto bookCategoryDto) {
+    public static BookCategory toEntity(BookCategoryInsUpdDto dto) {
         return BookCategory.builder()
-                .categoryId(bookCategoryDto.getCategoryId())
-                .categoryName(bookCategoryDto.getCategoryName())
+                .categoryId(dto.getCategoryId())
+                .categoryName(dto.getCategoryName())
+                .build();
+    }
+
+    public static BookCategory selectToEntity(BookCategoryDto dto) {
+        return BookCategory.builder()
+                .categoryId(dto.getCategoryId())
+                .categoryName(dto.getCategoryName())
                 .build();
     }
 

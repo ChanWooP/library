@@ -2,6 +2,8 @@ package com.cwpark.library.service.book;
 
 import com.cwpark.library.dao.book.BookCategoryDao;
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
+import com.cwpark.library.data.dto.book.category.BookCategoryFormDto;
+import com.cwpark.library.data.dto.book.category.BookCategoryInsUpdDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,16 +16,25 @@ import java.util.List;
 public class BookCategoryService {
     private final BookCategoryDao dao;
 
-    public void save(BookCategoryDto dto) {
-        dao.save(dto);
+    public void insert(BookCategoryFormDto dto) {
+        BookCategoryInsUpdDto category = BookCategoryInsUpdDto.toDto(dto);
+        dao.save(category);
+    }
+
+    public void update(BookCategoryFormDto dto) {
+        BookCategoryDto findCategory = dao.findById(dto.getCategoryId());
+        findCategory.setCategoryName(dto.getCategoryName());
+
+        dao.save(BookCategoryInsUpdDto.selectToDto(findCategory));
     }
 
     public Page<BookCategoryDto> searchPage(Pageable pageable) {
         return dao.searchPage(pageable);
     }
 
-    public void delete(BookCategoryDto dto) {
-        dao.delete(dto);
+    public void delete(Long bookCategoryId) {
+        BookCategoryDto findCategory = dao.findById(bookCategoryId);
+        dao.delete(findCategory);
     }
 
     public List<BookCategoryDto> findAll() {

@@ -33,7 +33,7 @@ class BookRepositoryTest {
     void insert() {
         BookCategory bookCategory = new BookCategory(null, "test");
         Book book = new Book("isbn", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
-        "책대표이미지", 5, 5, 0, 0, 0);
+        "책대표이미지", 5, 5, 0, 0, 0, 0);
 
         bookCategoryRepository.save(bookCategory);
         Book saveBook = bookRepository.save(book);
@@ -47,11 +47,11 @@ class BookRepositoryTest {
         BookCategory bookCategory = new BookCategory(null, "test");
 
         Book book1 = new Book("isbn1", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
-                "책대표이미지", 5, 5, 0, 0, 0);
+                "책대표이미지", 5, 5, 0, 0, 0, 0);
         Book book2 = new Book("isbn2", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
-                "책대표이미지", 5, 5, 0, 0, 0);
+                "책대표이미지", 5, 5, 0, 0, 0, 0);
         Book book3 = new Book("isbn3", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
-                "책대표이미지", 5, 5, 0, 0, 0);
+                "책대표이미지", 5, 5, 0, 0, 0, 0);
 
         bookCategoryRepository.save(bookCategory);
         bookRepository.save(book1);
