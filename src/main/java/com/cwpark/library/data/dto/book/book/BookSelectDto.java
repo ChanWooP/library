@@ -97,7 +97,7 @@ public class BookSelectDto {
                 .bookPublicationYear(entity.getBookPublicationYear())
                 .bookIndex(entity.getBookIndex())
                 .bookInt(entity.getBookInt())
-                .bookAuthorInt(entity.getBookAuthor())
+                .bookAuthorInt(entity.getBookAuthorInt())
                 .bookImage(entity.getBookImage())
                 .bookMaxLoanCnt(entity.getBookMaxLoanCnt())
                 .bookMaxReserveCnt(entity.getBookMaxReserveCnt())
@@ -107,4 +107,5 @@ public class BookSelectDto {
                 .bookTotalPageCnt(entity.getBookTotalPageCnt())
                 .build();
     }
+
 }

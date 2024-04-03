@@ -33,12 +33,41 @@ public class BookService {
         BookInsUpdDto book = BookInsUpdDto.toDto(dto);
         book.setBookCategory(bookCategoryDao.findById(dto.getBookCategory()));
 
-        String fileName = fileStore.storeFile(FILE_PATH + dto.getBookIsbn(), dto.getMultipartFile(), book.getBookIsbn());
+        String fileName = fileStore.storeFile(FILE_PATH + dto.getBookIsbn(), dto.getMultipartFile(), dto.getBookIsbn());
         fileStore.storeFiles(FILE_PATH + dto.getBookIsbn() + IMG_FILE_PATH, dto.getMultipartFiles());
 
         book.setBookImage(fileName);
 
         bookDao.save(book);
+    }
+
+    public void update(BookFormDto dto) {
+        BookSelectDto findBook = bookDao.findById(dto.getBookIsbn());
+        findBook.setBookCategory(bookCategoryDao.findById(dto.getBookCategory()));
+        findBook.setBookTitle(dto.getBookTitle());
+        findBook.setBookAuthor(dto.getBookAuthor());
+        findBook.setBookPublisher(dto.getBookPublisher());
+        findBook.setBookDistributor(dto.getBookDistributor());
+        findBook.setBookPublicationYear(dto.getBookPublicationYear());
+        findBook.setBookIndex(dto.getBookIndex());
+        findBook.setBookInt(dto.getBookInt());
+        findBook.setBookAuthorInt(dto.getBookAuthorInt());
+        findBook.setBookMaxLoanCnt(dto.getBookMaxLoanCnt());
+        findBook.setBookMaxReserveCnt(dto.getBookMaxReserveCnt());
+        findBook.setBookTotalPageCnt(dto.getBookTotalPageCnt());
+
+        if(!dto.getMultipartFile().isEmpty()) {
+            fileStore.deleteFile(findBook.getBookImage());
+            String fileName = fileStore.storeFile(FILE_PATH + dto.getBookIsbn(), dto.getMultipartFile(), dto.getBookIsbn());
+            findBook.setBookImage(fileName);
+        }
+
+        if(!dto.getMultipartFiles().get(0).isEmpty()) {
+            fileStore.deleteFiles(FILE_PATH + dto.getBookIsbn() + IMG_FILE_PATH, false);
+            fileStore.storeFiles(FILE_PATH + dto.getBookIsbn() + IMG_FILE_PATH, dto.getMultipartFiles());
+        }
+
+        bookDao.save(BookInsUpdDto.selectToDto(findBook));
     }
 
     public Page<BookSelectDto> searchPage(String title, Pageable pageable) {
@@ -49,6 +78,6 @@ public class BookService {
         BookSelectDto findBook = bookDao.findById(bookIsbn);
         bookDao.delete(findBook);
 
-        fileStore.deleteDirectory(FILE_PATH + bookIsbn, false);
+        fileStore.deleteFiles(FILE_PATH + bookIsbn, false);
     }
 }

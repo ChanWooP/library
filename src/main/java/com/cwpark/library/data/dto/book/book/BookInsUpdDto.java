@@ -66,7 +66,26 @@ public class BookInsUpdDto {
                 .bookPublicationYear(dto.getBookPublicationYear())
                 .bookIndex(dto.getBookIndex())
                 .bookInt(dto.getBookInt())
-                .bookAuthorInt(dto.getBookAuthor())
+                .bookAuthorInt(dto.getBookAuthorInt())
+                .bookImage(dto.getBookImage())
+                .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
+                .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
+                .bookTotalPageCnt(dto.getBookTotalPageCnt())
+                .build();
+    }
+
+    public static BookInsUpdDto selectToDto(BookSelectDto dto) {
+        return BookInsUpdDto.builder()
+                .bookIsbn(dto.getBookIsbn())
+                .bookCategory(dto.getBookCategory())
+                .bookTitle(dto.getBookTitle())
+                .bookAuthor(dto.getBookAuthor())
+                .bookPublisher(dto.getBookPublisher())
+                .bookDistributor(dto.getBookDistributor())
+                .bookPublicationYear(dto.getBookPublicationYear())
+                .bookIndex(dto.getBookIndex())
+                .bookInt(dto.getBookInt())
+                .bookAuthorInt(dto.getBookAuthorInt())
                 .bookImage(dto.getBookImage())
                 .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
                 .bookMaxReserveCnt(dto.getBookMaxReserveCnt())

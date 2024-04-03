@@ -50,8 +50,17 @@ public class FileStore {
         }
     }
 
-    // 폴더 삭제
-    public void deleteDirectory(String filePath, Boolean recursion) {
+    // 파일 삭제
+    public void deleteFile(String filePath) {
+        File file = new File(getFullPath(filePath));
+
+        if(file.exists()) {
+            file.delete();
+        }
+    }
+
+    // 하위 목록 포함 삭제
+    public void deleteFiles(String filePath, Boolean recursion) {
         File directory = null;
 
         if(!recursion) {
@@ -67,7 +76,7 @@ public class FileStore {
                 if(list[i].isFile()) {
                     list[i].delete();
                 } else {
-                    deleteDirectory(list[i].getPath(), true);
+                    deleteFiles(list[i].getPath(), true);
                 }
             }
 

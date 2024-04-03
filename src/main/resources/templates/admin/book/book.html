@@ -19,12 +19,9 @@
 
                 $('table > tbody').append(str);
 
-                choiceChange($('table > tbody > tr:last-child'), 'insert');
-                choiceHover($('table > tbody > tr:last-child'));
-
                 initForm();
-                $('#postType').val('insert');
-                initDisabled(false);
+                choiceHover($('table > tbody > tr:last-child'));
+                choiceChange($('table > tbody > tr:last-child'), 'insert');
             }
         });
 
@@ -52,7 +49,6 @@
                 initForm();
             // 기존 행 삭제
             } else {
-                console.log($('#bookIsbn').val());
                 $.ajax({
                     type: "DELETE"
                   , url : "/api/v1/admin/book/delete"
@@ -243,9 +239,12 @@
     function choiceChange(thiss, type) {
         choice = thiss;
         choice.data('type', type);
+        $('#postType').val(type);
 
         if(type == 'update') {
-            $('#bookIsbn').attr('disabled', true);
+            $('#bookIsbn').attr('readonly', true);
+        } else {
+            $('#bookIsbn').attr('readonly', false);
         }
 
         $('#preview').attr('src', '/files/'+ choice.data('bookimage'));
@@ -375,8 +374,8 @@
                 // 행 선택
                 $('table > tbody > tr').click(function(){
                     if(choice != $(this) && choiceCheck()) {
-                        choiceChange($(this), 'update');
                         choiceHover($(this));
+                        choiceChange($(this), 'update');
                     }
                 });
             } else {

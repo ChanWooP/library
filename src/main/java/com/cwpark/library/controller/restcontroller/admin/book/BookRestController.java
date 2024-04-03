@@ -29,8 +29,9 @@ public class BookRestController {
                 service.insert(dto);
             }
         } else {
-
+            service.update(dto);
         }
+
         result.put("success", "Y");
 
         return ResponseEntity.ok()

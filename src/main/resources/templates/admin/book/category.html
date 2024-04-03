@@ -18,12 +18,9 @@
 
                 $('table > tbody').append(str);
 
-                choiceChange($('table > tbody > tr:last-child'), 'insert');
-                choiceHover($('table > tbody > tr:last-child'));
-
                 initForm();
-                $('#postType').val('insert');
-                initDisabled(false);
+                choiceHover($('table > tbody > tr:last-child'));
+                choiceChange($('table > tbody > tr:last-child'), 'insert');
             }
         });
 
@@ -163,9 +160,10 @@
     function choiceChange(thiss, type) {
         choice = thiss;
         choice.data('type', type);
+        $('#postType').val(type);
+
         $('#categoryName').val(choice.find('td:eq(0)').text());
         $('#categoryId').val(choice.data('id'));
-        $('#postType').val('update');
     }
 
     // 조회
@@ -263,8 +261,8 @@
                 // 행 선택
                 $('table > tbody > tr').click(function(){
                     if(choice != $(this) && choiceCheck()) {
-                        choiceChange($(this), 'update');
                         choiceHover($(this));
+                        choiceChange($(this), 'update');
                     }
                 });
             } else {

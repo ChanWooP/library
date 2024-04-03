@@ -49,7 +49,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 ))
                 .from(book)
                 .where(book.bookTitle.contains(title))
-                .orderBy(book.bookTitle.asc())
+                .orderBy(book.bookIsbn.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
