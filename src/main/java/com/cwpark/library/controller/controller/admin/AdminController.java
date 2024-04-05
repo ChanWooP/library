@@ -32,4 +32,14 @@ public class AdminController {
         model.addAttribute("category", bookCategoryService.findAll());
         return "/admin/book/book";
     }
+
+    @GetMapping("/book/loan")
+    public String loan() {
+        return "/admin/book/loan";
+    }
+
+    @GetMapping("/book/reserve")
+    public String reserve() {
+        return "/admin/book/reserve";
+    }
 }

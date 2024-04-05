@@ -123,3 +123,7 @@ header {
 	border:1px solid #42454c;
 	cursor: pointer;
 }
+
+.text_bold {
+    font-weight : bold;
+}

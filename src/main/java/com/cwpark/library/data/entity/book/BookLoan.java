@@ -1,5 +1,6 @@
 package com.cwpark.library.data.entity.book;
 
+import com.cwpark.library.data.dto.book.BookLoanDto;
 import com.cwpark.library.data.dto.book.book.BookInsUpdDto;
 import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.entity.BaseEntity;
@@ -44,6 +45,17 @@ public class BookLoan extends BaseEntity {
 
     @Column(name = "LOAN_RETURN_YN")
     private String loanReturnYn;
+
+    public static BookLoan toEntity(BookLoanDto dto) {
+        return BookLoan.builder()
+                .loanId(dto.getLoanId())
+                .book(Book.selectToEntity(dto.getBook()))
+                .loanDate(dto.getLoanDate())
+                .loanReturnDate(dto.getLoanReturnDate())
+                .user(User.selectToEntity(dto.getUser()))
+                .loanReturnYn(dto.getLoanReturnYn())
+                .build();
+    }
 
     @Override
     public boolean equals(Object object) {

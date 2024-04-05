@@ -24,7 +24,7 @@ public class BookLoanDto {
     private LocalDateTime loanDate;
 
     @NotBlank(message = "반납일자는 입력 사항입니다")
-    private String loanReturnDate;
+    private LocalDateTime loanReturnDate;
 
     @NotBlank(message = "대출자는 필수 입력 사항입니다")
     private UserSelectDto user;
@@ -37,7 +37,7 @@ public class BookLoanDto {
                 .loanId(bookLoan.getLoanId())
                 .book(BookSelectDto.toDto(bookLoan.getBook()))
                 .loanDate(bookLoan.getLoanDate())
-                .loanReturnDate(bookLoan.getLoanReturnYn())
+                .loanReturnDate(bookLoan.getLoanReturnDate())
                 .user(UserSelectDto.toDto(bookLoan.getUser()))
                 .loanReturnYn(bookLoan.getLoanReturnYn())
                 .build();
