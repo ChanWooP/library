@@ -105,6 +105,9 @@ public class BookSelectDto {
                 .bookLoanCnt(entity.getBookLoanCnt())
                 .bookReserveCnt(entity.getBookReserveCnt())
                 .bookTotalPageCnt(entity.getBookTotalPageCnt())
+                .bookLike(entity.getBookLike())
+                .bookLoanCnt(entity.getBookLoanCnt())
+                .bookReserveCnt(entity.getBookReserveCnt())
                 .build();
     }
 

@@ -209,14 +209,15 @@
 
     function loanReturn(loanId) {
         if(!confirm("반납하시겠습니까?")) {
-                return false;
+            return false;
         }
 
         $.ajax({
             type: "POST"
           , url : "/api/v1/admin/loan/return"
           , data : {
-            loanId : loanId
+              loanId : loanId
+            , bookIsbn : choice.data('bookisbn')
           }
           , dataType: "json"
           , success : function(data) {

@@ -109,6 +109,9 @@ public class Book extends BaseEntity {
                 .bookMaxLoanCnt(dto.getBookMaxLoanCnt())
                 .bookMaxReserveCnt(dto.getBookMaxReserveCnt())
                 .bookTotalPageCnt(dto.getBookTotalPageCnt())
+                .bookLike(dto.getBookLike())
+                .bookLoanCnt(dto.getBookLoanCnt())
+                .bookReserveCnt(dto.getBookReserveCnt())
                 .build();
     }
 

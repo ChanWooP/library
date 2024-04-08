@@ -2,10 +2,12 @@ package com.cwpark.library.dao.book;
 
 import com.cwpark.library.data.dto.book.BookLoanDto;
 import com.cwpark.library.data.dto.book.book.BookSelectDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.repository.book.BookLoanRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +34,9 @@ public class BookLoanDao {
         findByLoan.setLoanReturnYn("Y");
 
         repository.save(findByLoan);
+    }
+
+    public void save(BookLoanDto bookLoanDto) {
+        repository.save(BookLoan.toEntity(bookLoanDto));
     }
 }

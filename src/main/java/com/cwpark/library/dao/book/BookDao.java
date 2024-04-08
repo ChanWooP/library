@@ -27,6 +27,10 @@ public class BookDao {
         repository.save(Book.toEntity(dto));
     }
 
+    public void save(BookSelectDto dto) {
+        repository.save(Book.selectToEntity(dto));
+    }
+
     public Page<BookSelectDto> searchPage(String title, Pageable pageable) {
         return repository.searchPage(title, pageable);
     }

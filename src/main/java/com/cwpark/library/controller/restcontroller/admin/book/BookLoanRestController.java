@@ -1,5 +1,6 @@
 package com.cwpark.library.controller.restcontroller.admin.book;
 
+import com.cwpark.library.service.book.BookLoanReserveService;
 import com.cwpark.library.service.book.BookLoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/admin/loan")
 public class BookLoanRestController {
     private final BookLoanService bookLoanService;
+    private final BookLoanReserveService bookLoanReserveService;
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> getLoanReserve(@RequestParam("bookIsbn") String bookIsbn) {
@@ -25,9 +27,10 @@ public class BookLoanRestController {
     }
 
     @PostMapping("/return")
-    public ResponseEntity<Map<String, Object>> loanReturn(@RequestParam("loanId") Long loanId) {
+    public ResponseEntity<Map<String, Object>> loanReturn(@RequestParam("loanId") Long loanId, @RequestParam("bookIsbn") String bookIsbn) {
         Map<String, Object> result = new HashMap<>();
         bookLoanService.loanReturn(loanId);
+        bookLoanReserveService.loanReserve(bookIsbn);
 
         result.put("success", "Y");
 

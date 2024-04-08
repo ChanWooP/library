@@ -80,4 +80,12 @@ public class BookService {
 
         fileStore.deleteFiles(FILE_PATH + bookIsbn, false);
     }
+
+    public BookSelectDto findById(String bookIsbn) {
+        return bookDao.findById(bookIsbn);
+    }
+
+    public void likeLoanReserve(BookSelectDto bookSelectDto) {
+        bookDao.save(bookSelectDto);
+    }
 }

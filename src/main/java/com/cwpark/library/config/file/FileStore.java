@@ -23,7 +23,7 @@ public class FileStore {
 
     public String storeFile(String filePath, MultipartFile multipartFile, String fileName) {
         try {
-            if(!multipartFile.isEmpty()) {
+            if(multipartFile != null && !multipartFile.isEmpty()) {
                 String ext = extractExt(multipartFile.getOriginalFilename());
                 File file = new File(getFullPath(filePath + "/" + fileName + ext));
 
@@ -43,9 +43,11 @@ public class FileStore {
     }
 
     public void storeFiles(String filePath, List<MultipartFile> multipartFiles) {
-        for(int i=0; i<multipartFiles.size(); i++) {
-            if(!multipartFiles.get(i).isEmpty()) {
-                storeFile(filePath, multipartFiles.get(i), String.valueOf(i+1));
+        if(multipartFiles != null) {
+            for(int i=0; i<multipartFiles.size(); i++) {
+                if(multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
+                    storeFile(filePath, multipartFiles.get(i), String.valueOf(i+1));
+                }
             }
         }
     }
