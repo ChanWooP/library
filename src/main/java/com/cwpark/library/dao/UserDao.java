@@ -8,11 +8,13 @@ import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserDao {
 
@@ -39,12 +41,11 @@ public class UserDao {
     }
 
     public void updateUser(UserMyPageDto user) {
-        userRepository.findById(user.getUserId()).ifPresent((u) -> {
-            u.setUserName(user.getUserName());
-            u.setUserBirth(user.getUserBirth());
-            u.setUserSex(user.getUserSex());
-            userRepository.save(u);
-        });
+        User findUser = userRepository.findById(user.getUserId()).orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다"));
+
+        findUser.setUserName(user.getUserName());
+        findUser.setUserBirth(user.getUserBirth());
+        findUser.setUserSex(user.getUserSex());
     }
 
     public void deleteUser(String userId) {

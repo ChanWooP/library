@@ -31,46 +31,36 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        Object principal = authentication.getPrincipal();
+        Account account = (Account) principal;
+        User user = userRepository.findById(account.getId()).orElseThrow(() -> new EntityNotFoundException("사용자가 존재하지 않습니다"));
+
         request.getSession().setMaxInactiveInterval(3600);
-        loginFailCntInit(authentication);
-        resultRedirectStrategy(request, response, authentication);
+        loginFailCntInit(user);
+        resultRedirectStrategy(request, response, user);
     }
 
-    private void loginFailCntInit(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        Account account = (Account) principal;
+    private void loginFailCntInit(User user) {
+        if(user.getUserLoginFailCnt() != 0) {
+            user.setUserLoginFailCnt(0);
+            userRepository.save(user);
+        }
+    }
 
-        userRepository.findById(account.getId()).ifPresent((u) -> {
-            if(u.getUserLoginFailCnt() != 0) {
-                u.setUserLoginFailCnt(0);
-                userRepository.save(u);
+    private void resultRedirectStrategy(HttpServletRequest request,HttpServletResponse response, User user) throws IOException {
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+        if(user.getUserFindPasswordYn().equals("Y")) {
+            redirectStrategy.sendRedirect(request, response, "/user/change/password");
+        } else {
+            if(savedRequest != null) {
+                String targetUrl = savedRequest.getRedirectUrl();
+                redirectStrategy.sendRedirect(request, response, targetUrl);
+            } else {
+                String defaultUrl = "/";
+                redirectStrategy.sendRedirect(request, response, defaultUrl);
             }
-        });
-    }
-
-    private void resultRedirectStrategy(HttpServletRequest request,HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        SavedRequest savedRequest =requestCache.getRequest(request, response);
-
-        Object principal = authentication.getPrincipal();
-        Account account = (Account) principal;
-
-            userRepository.findById(account.getId()).ifPresent((u) -> {
-                try {
-                    if(u.getUserFindPasswordYn().equals("Y")) {
-                        redirectStrategy.sendRedirect(request, response, "/user/change/password");
-                    } else {
-                        if(savedRequest != null) {
-                            String targetUrl = savedRequest.getRedirectUrl();
-                            redirectStrategy.sendRedirect(request, response, targetUrl);
-                        } else {
-                            String defaultUrl = "/";
-                            redirectStrategy.sendRedirect(request, response, defaultUrl);
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-        });
+        }
     }
 
 }

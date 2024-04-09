@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class RememberMeTokenService implements PersistentTokenRepository {
 
@@ -28,7 +30,6 @@ public class RememberMeTokenService implements PersistentTokenRepository {
         rememberMeToken.ifPresent((t) -> {
             t.setLoginToken(tokenValue);
             t.setLoginTokenLastUsed(lastUsed);
-            rememberMeTokenRepository.save(t);
         });
     }
 
