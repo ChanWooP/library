@@ -59,7 +59,6 @@ public class UserDao {
         userRepository.findById(userId).ifPresent((u) -> {
             u.setUserPassword(password);
             u.setUserFindPasswordYn(yN);
-            userRepository.save(u);
         });
     }
 

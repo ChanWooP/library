@@ -64,4 +64,9 @@ public class LoginController {
         return "/sign-in/id";
     }
 
+    @GetMapping("/change/password")
+    public String changePasswordGet() {
+        return "/user/password";
+    }
+
 }

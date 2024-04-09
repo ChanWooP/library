@@ -51,7 +51,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         if(user.getUserFindPasswordYn().equals("Y")) {
-            redirectStrategy.sendRedirect(request, response, "/user/change/password");
+            redirectStrategy.sendRedirect(request, response, "/sign-in/change/password");
         } else {
             if(savedRequest != null) {
                 String targetUrl = savedRequest.getRedirectUrl();
