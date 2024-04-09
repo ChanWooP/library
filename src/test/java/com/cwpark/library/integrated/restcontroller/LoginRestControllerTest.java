@@ -1,13 +1,20 @@
 package com.cwpark.library.integrated.restcontroller;
 
+import com.cwpark.library.data.dto.user.UserInsertDto;
+import com.cwpark.library.data.enums.UserAuthority;
+import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.integrated.IntegratedController;
 import com.cwpark.library.service.UserService;
+import com.cwpark.library.test.annotation.WithMockCustomUser;
+import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -15,9 +22,10 @@ import java.util.Map;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
 class LoginRestControllerTest extends IntegratedController {
 
     @Autowired
@@ -25,12 +33,18 @@ class LoginRestControllerTest extends IntegratedController {
 
     @Test
     @DisplayName("아이디 중복 확인 (중복 O)")
-    void existsByUserIdO() {
+    @WithMockCustomUser(userName = "1@1.com")
+    void existsByUserIdO() throws Exception {
         String userId = "1@1.com";
+        UserInsertDto insertDto = new UserInsertDto(
+                userId, "userPassword", "userName", "M", "951111", null, null);
+        userService.insertUser(insertDto);
 
-        ResponseEntity<Map> entity = restTemplate.getForEntity("/api/v1/sign-in/join/{userId}", Map.class, userId);
-        Assertions.assertEquals(entity.getBody().get("success"), "N");
-        Assertions.assertEquals(entity.getBody().get("message"), "아이디가 중복되었습니다.");
+        mockMvc.perform(get("/api/v1/sign-in/join/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value("N"))
+                .andExpect(jsonPath("$.message").value("아이디가 중복되었습니다."))
+                .andReturn();
     }
 
     @Test

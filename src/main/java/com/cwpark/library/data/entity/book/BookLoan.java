@@ -29,7 +29,7 @@ public class BookLoan extends BaseEntity {
     @Column(name = "LOAN_ID")
     private Long loanId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LOAN_ISBN")
     private Book book;
 
@@ -39,7 +39,7 @@ public class BookLoan extends BaseEntity {
     @Column(name = "LOAN_RETURN_DATE")
     private LocalDateTime loanReturnDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LOAN_USER")
     private User user;
 

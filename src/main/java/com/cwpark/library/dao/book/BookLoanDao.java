@@ -39,4 +39,13 @@ public class BookLoanDao {
     public void save(BookLoanDto bookLoanDto) {
         repository.save(BookLoan.toEntity(bookLoanDto));
     }
+
+    public BookLoanDto findById(Long id) {
+        BookLoan bookLoan = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("예약이 존재하지 않습니다"));
+        return BookLoanDto.toDto(bookLoan);
+    }
+
+    public void delete(Long id) {
+        repository.delete(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("예약이 존재하지 않습니다")));
+    }
 }

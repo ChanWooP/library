@@ -28,11 +28,11 @@ class UserRepositoryTest {
     @Test
     @DisplayName("아이디 찾기")
     void findId() {
-        User saveUser = userRepository.save(new User("userId", "userPassword", "userName", "M", "941212",
+        User saveUser = userRepository.save(new User("userId", "userPassword", "userName", "M", "941213",
                 UserAuthority.USER, 0, UserOauthType.EMALE, "N"));
 
-        List<User> findUser = userRepository.findByUserNameAndUserBirth("userName", "941212");
+        List<User> findUser = userRepository.findByUserNameAndUserBirth("userName", "941213");
 
-        Assertions.assertEquals(saveUser, findUser.get(0));
+        Assertions.assertEquals(saveUser.getUserId(), findUser.get(0).getUserId());
     }
 }

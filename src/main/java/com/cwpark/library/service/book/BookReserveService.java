@@ -18,9 +18,17 @@ public class BookReserveService {
     private final BookDao bookDao;
     private final BookReserveDao bookReserveDao;
 
-    public List<BookReserveDto> findByBookAndLoanReturnYn(String bookIsbn, BookReserveType bookReserveType) {
+    public List<BookReserveDto> findByReserves(String bookIsbn, BookReserveType bookReserveType) {
         BookSelectDto book = bookDao.findById(bookIsbn);
 
         return bookReserveDao.findByBookAndLoanReturnYn(book, bookReserveType);
+    }
+
+    public void save(BookReserveDto bookReserveDto) {
+        bookReserveDao.save(bookReserveDto);
+    }
+
+    public void delete(Long id) {
+        bookReserveDao.delete(id);
     }
 }

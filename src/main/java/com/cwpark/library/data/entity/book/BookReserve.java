@@ -1,5 +1,6 @@
 package com.cwpark.library.data.entity.book;
 
+import com.cwpark.library.data.dto.book.BookReserveDto;
 import com.cwpark.library.data.entity.BaseEntity;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.BookReserveType;
@@ -27,20 +28,30 @@ public class BookReserve extends BaseEntity {
     @Column(name = "RESERVE_ID")
     private Long reserveId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RESERVE_ISBN")
     private Book book;
 
     @Column(name = "RESERVE_DATE")
     private LocalDateTime reserveDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RESERVE_USER")
     private User user;
 
     @Column(name = "RESERVE_STATUS")
     @Enumerated(EnumType.STRING)
     private BookReserveType reserveStatus;
+
+    public static BookReserve toEntity(BookReserveDto dto) {
+        return BookReserve.builder()
+                .reserveId(dto.getReserveId())
+                .book(Book.selectToEntity(dto.getBook()))
+                .reserveDate(dto.getReserveDate())
+                .user(User.selectToEntity(dto.getUser()))
+                .reserveStatus(dto.getReserveStatus())
+                .build();
+    }
 
     @Override
     public boolean equals(Object object) {
