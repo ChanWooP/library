@@ -1,0 +1,271 @@
+<script>
+    // 현재 행
+    var choice = null;
+
+    // 현재 페이지
+    var choicePage = 0;
+
+    $(document).ready(function(){
+        // 조회
+        $('#searchPage').click(function(){
+            searchPage(0);
+        });
+    });
+
+    // 행 선택
+    function choiceHover(thiss) {
+        $('.hover').removeClass('hover');
+        thiss.addClass('hover');
+    }
+
+    // 행 변경
+    function choiceChange(thiss) {
+        choice = thiss;
+    }
+
+    // 조회
+    function searchPage(pages) {
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/book/searchPage"
+          , data : {
+                title : $('#search').val()
+                , page : pages
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                let str = '';
+                let str2 = '';
+
+                for(let i=0; i<data.result.content.length; i++) {
+                    str += '<tr ';
+                    str += ' data-bookisbn=' + data.result.content[i].bookIsbn;
+                    str += '> ';
+
+                    str += '    <th scope="col"> ';
+                    str += i + 1 + (10 * data.result.number)
+                    str += '    </th> ';
+
+                    str += '<td>';
+                    str += data.result.content[i].bookTitle;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.result.content[i].bookLoanCnt + ' / ' + data.result.content[i].bookMaxLoanCnt;
+                    str += '</td>';
+
+                    str += '</tr> ';
+                }
+
+                str2 += '<div class="page_wrap"> ';
+                str2 += '  <div class="page_nation"> ';
+                str2 += '    <a class="arrow pprev">First</a> ';
+                str2 += '    <a class="arrow prev">&lt;</a> ';
+
+                for(let i=(Math.floor(pages / 10) * 10);
+                i<(Math.floor(pages / 10) * 10 + 10 > data.result.totalPages ? data.result.totalPages : Math.floor(pages / 10) * 10 + 10);
+                i++) {
+                  if(i == pages) {
+                    str2 += '<a class="active">' + (i+1) + '</a>';
+                  } else {
+                    str2 += '<a class="pageNum" data-num=' + i + '>' + (i+1) + '</a>';
+                  }
+                }
+
+                str2 += '    <a class="arrow next">&gt;</a> ';
+                str2 += '    <a class="arrow nnext">Last</a> ';
+                str2 += '  </div> ';
+                str2 += '</div> ';
+
+                $('#bookTable > tbody').html(str);
+                $('#page').html(str2);
+                $('#reserveTable > tbody').html('');
+                choice = null;
+                choicePage = pages;
+
+                if(data.result.totalPages  <= 0) {
+                    return false;
+                }
+
+                // 숫자 페이지
+                $('.pageNum').click(function(){
+                    searchPage($(this).data('num'));
+                });
+
+                // 이전 10 페이지
+                $('.prev').click(function(){
+                    if(pages == 0) {
+                        alert('처음 페이지 입니다');
+                    } else {
+                        searchPage(pages-1);
+                    }
+                });
+
+                // 이후 10 페이지
+                $('.next').click(function(){
+                    if(pages == data.result.totalPages-1) {
+                        alert('마지막 페이지 입니다');
+                    } else {
+                         searchPage(pages+1);
+                    }
+                });
+
+                // 맨 처음
+                $('.pprev').click(function(){
+                    searchPage(0);
+                });
+
+                // 맨 끝
+                $('.nnext').click(function(){
+                    searchPage(data.result.totalPages-1);
+                });
+
+                // 행 선택
+                $('#bookTable > tbody > tr').click(function(){
+                    if(choice != $(this)) {
+                        choiceHover($(this));
+                        choiceChange($(this));
+                        search($(this));
+                    }
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
+
+    // 대출 및 예약 조회
+    function search(thiss) {
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/reserve/search"
+          , data : {
+                bookIsbn : thiss.data('bookisbn')
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                let str = '';
+
+                for(let i=0; i<data.content.length; i++) {
+                    str += '<tr ';
+                    str += ' data-reserveid=' + data.content[i].reserveId;
+                    str += '> ';
+
+                    str += '    <th scope="col"> ';
+                    str += i + 1
+                    str += '    </th> ';
+
+                    str += '<td>';
+                    str += data.content[i].user.userId;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.content[i].reserveDate;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += '<button type="button" class="btn btn-primary btn-sm reserve-cancel">예약취소</button>';
+                    str += '</td>';
+
+                    str += '</tr> ';
+                }
+
+                $('#reserveTable > tbody').html(str);
+
+                $('.reserve-cancel').click(function(){
+                    reserveCancel($(this).parent().parent().data('reserveid'));
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
+
+    function reserveCancel(reserveId) {
+        if(!confirm("취소하시겠습니까?")) {
+            return false;
+        }
+
+        $.ajax({
+            type: "POST"
+          , url : "/api/v1/admin/reserve/cancel"
+          , data : {
+              reserveId : reserveId
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                if(data.success == 'Y') {
+                    search(choice);
+                }
+            } else {
+                alert('취소 처리가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('취소 처리가 실패하였습니다');
+          }
+        });
+    }
+</script>
+<div class="inline-block" style="width:29%; float:left;">
+    <div class="input-group" style="padding-top:5px;">
+        <input type="search" id="search" class="form-control rounded" placeholder="책 제목 검색" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+    </div>
+    <table class="table table-hover" id="bookTable">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="42%">제목</th>
+            <th scope="col" width="43%">예약현황</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+<div class="inline-block" style="width:1%;"></div>
+<div class="inline-block" style="width:67%; height:100%; overflow:auto;">
+    <table class="table table-hover" id="reserveTable">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="26%">예약자</th>
+            <th scope="col" width="34%">예약일자</th>
+            <th scope="col" width="35%">예약취소</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>

@@ -32,4 +32,8 @@ public class BookReserveDao {
     public void delete(Long id) {
         repository.delete(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("예약이 존재하지 않습니다")));
     }
+
+    public BookReserveDto findById(Long id) {
+        return BookReserveDto.toDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("예약이 존재하지 않습니다")));
+    }
 }

@@ -28,6 +28,13 @@ public class BookReserveService {
         bookReserveDao.save(bookReserveDto);
     }
 
+    public void cancel(Long reserveId) {
+        BookReserveDto reserve = bookReserveDao.findById(reserveId);
+        reserve.setReserveStatus(BookReserveType.CANCEL);
+
+        bookReserveDao.save(reserve);
+    }
+
     public void delete(Long id) {
         bookReserveDao.delete(id);
     }
