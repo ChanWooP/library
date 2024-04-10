@@ -7,7 +7,7 @@ import com.cwpark.library.data.entity.book.BookCategory;
 import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.repository.UserRepository;
+import com.cwpark.library.repository.user.UserRepository;
 import com.cwpark.library.repository.book.book.BookRepository;
 import com.cwpark.library.repository.book.category.BookCategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -19,8 +19,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

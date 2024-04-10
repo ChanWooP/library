@@ -1,0 +1,335 @@
+<script>
+    // 현재 행
+    var choice = null;
+
+    // 현재 페이지
+    var choicePage = 0;
+
+    $(document).ready(function(){
+        initDisabled(true);
+
+        // 조회
+        $('#searchPage').click(function(){
+            searchPage(0);
+        });
+
+        // 저장
+        $('#save').click(function(){
+            if(!$('#userName').val()) {
+                alert("이름을 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userBirth').val()) {
+                alert("생년월일을 입력해주세요");
+                return false;
+            }
+
+            if($('#userBirth').val().length != 6) {
+                alert("생년월일은 6자리로 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userSex').val()) {
+                alert("성별을 입력해주세요");
+                return false;
+            }
+
+            if(!$('#userAuthority').val()) {
+                alert("권한을 입력해주세요");
+                return false;
+            }
+
+            let form = $('#formData')[0];
+            let data = new FormData(form);
+
+            $.ajax({
+                type: "POST"
+              , enctype : 'text/plain'
+              , contentType: false
+              , processData: false
+              , url : "/api/v1/admin/user/info"
+              , data : data
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
+
+        // 데이터 변경 감지
+        $('#formData').find('input, textarea, select').change(function() {
+            if(choice.find('th:eq(0)').text() != 'New') {
+                choice.find('th:eq(0)').text('U');
+            }
+        });
+    });
+
+    // 조회
+    function searchPage(pages) {
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/user/info"
+          , data : {
+                search : $('#search').val()
+                , page : pages
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                let str = '';
+                let str2 = '';
+
+                for(let i=0; i<data.result.content.length; i++) {
+                    str += '<tr ';
+                    str += ' data-userid=' + data.result.content[i].userId;
+                    str += ' data-userauthority=' + data.result.content[i].userAuthority;
+                    str += ' data-username=' + data.result.content[i].userName;
+                    str += ' data-usersex=' + data.result.content[i].userSex;
+                    str += ' data-userbirth=' + data.result.content[i].userBirth;
+                    str += ' data-useroauthtype=' + data.result.content[i].userOauthType;
+                    str += '> ';
+
+                    str += '    <th scope="col"> ';
+                    str += i + 1 + (10 * data.result.number)
+                    str += '    </th> ';
+
+                    str += '<td>';
+                    str += data.result.content[i].userId;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.result.content[i].userName;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.result.content[i].userAuthority;
+                    str += '</td>';
+
+                    str += '</tr> ';
+                }
+
+                str2 += '<div class="page_wrap"> ';
+                str2 += '  <div class="page_nation"> ';
+                str2 += '    <a class="arrow pprev">First</a> ';
+                str2 += '    <a class="arrow prev">&lt;</a> ';
+
+                for(let i=(Math.floor(pages / 10) * 10);
+                i<(Math.floor(pages / 10) * 10 + 10 > data.result.totalPages ? data.result.totalPages : Math.floor(pages / 10) * 10 + 10);
+                i++) {
+                  if(i == pages) {
+                    str2 += '<a class="active">' + (i+1) + '</a>';
+                  } else {
+                    str2 += '<a class="pageNum" data-num=' + i + '>' + (i+1) + '</a>';
+                  }
+                }
+
+                str2 += '    <a class="arrow next">&gt;</a> ';
+                str2 += '    <a class="arrow nnext">Last</a> ';
+                str2 += '  </div> ';
+                str2 += '</div> ';
+
+                $('table > tbody').html(str);
+                $('#page').html(str2);
+                choice = null;
+                choicePage = pages;
+                initDisabled(true);
+                initForm();
+
+                if(data.result.totalPages  <= 0) {
+                    return false;
+                }
+
+                // 숫자 페이지
+                $('.pageNum').click(function(){
+                    searchPage($(this).data('num'));
+                });
+
+                // 이전 10 페이지
+                $('.prev').click(function(){
+                    if(pages == 0) {
+                        alert('처음 페이지 입니다');
+                    } else {
+                        searchPage(pages-1);
+                    }
+                });
+
+                // 이후 10 페이지
+                $('.next').click(function(){
+                    if(pages == data.result.totalPages-1) {
+                        alert('마지막 페이지 입니다');
+                    } else {
+                         searchPage(pages+1);
+                    }
+                });
+
+                // 맨 처음
+                $('.pprev').click(function(){
+                    searchPage(0);
+                });
+
+                // 맨 끝
+                $('.nnext').click(function(){
+                    searchPage(data.result.totalPages-1);
+                });
+
+                // 행 선택
+                $('table > tbody > tr').click(function(){
+                    if(choice != $(this) && choiceCheck()) {
+                        choiceHover($(this));
+                        choiceChange($(this), 'update');
+                    }
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
+
+    // 행 선택
+    function choiceHover(thiss) {
+        $('.hover').removeClass('hover');
+        thiss.addClass('hover');
+        initDisabled(false);
+    }
+
+    // 행 변경
+    function choiceChange(thiss, type) {
+        choice = thiss;
+        choice.data('type', type);
+        $('#postType').val(type);
+
+        $('#userId').val(choice.data('userid'));
+        $('#userName').val(choice.data('username'));
+        $('#userSex').val(choice.data('usersex'));
+        $('#userBirth').val(choice.data('userbirth'));
+        $('#userAuthority').val(choice.data('userauthority'));
+    }
+
+    // 행 변경 가능여부 체크
+    function choiceCheck() {
+        if(choice != null) {
+            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('th:eq(0)').text() == 'U')) {
+                alert('저장 또는 삭제를 진행해주세요');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function initDisabled(bool) {
+        $('#formData').find('input').attr('disabled', bool);
+        $('#formData').find('select').attr('disabled', bool);
+        $('#formData').find('button').attr('disabled', bool);
+        $('#userOauthType').attr('disabled', true);
+    }
+
+    function initForm() {
+        $('#userId').val('');
+        $('#userName').val('');
+        $('#userSex').val('');
+        $('#userBirth').val('');
+        $('#userAuthority').val('');
+    }
+</script>
+<div class="inline-block" style="width:45%; float:left;">
+    <div class="input-group" style="padding-top:5px;">
+        <input type="search" id="search" class="form-control rounded" placeholder="아이디 또는 이름 검색" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="35%">아이디</th>
+            <th scope="col" width="35%">이름</th>
+            <th scope="col" width="25%">권한</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+<div class="inline-block" style="width:54%; height:100%; float:right; overflow:auto; padding:2px;">
+    <form method="POST" id="formData">
+        <div class="col-md-6 mb-3">
+            <label for="userId">이메일</label>
+            <input type="email" class="form-control" id="userId" name="userId" placeholder="예) example@naver.com" readonly>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label>비밀번호</label><br>
+            <button type="button" class="btn btn-primary" id="userPassword" name="userPassword">비밀번호 초기화</button>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="userName">이름</label>
+            <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해주세요" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="userBirth">생년월일</label>
+            <input type="text" class="form-control" id="userBirth" name="userBirth" placeholder="예) 980102"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="userSex">성별</label>
+            <select class="form-select" id="userSex" name="userSex">
+                <option value="" selected>= 선택 =</option>
+                <option value="M">남</option>
+                <option value="W">여</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="userAuthority">권한</label>
+            <select class="form-select" id="userAuthority" name="userAuthority">
+                <option value="" selected>=== 선택 ===</option>
+                <option value="USER">일반사용자</option>
+                <option value="ADMIN">관리자</option>
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label>계정관리</label><br>
+            <button type="button" class="btn btn-primary" id="lock" name="lock">잠금</button>
+            <button type="button" class="btn btn-primary" id="unlock" name="unlock">잠금해제</button>
+            <button type="button" class="btn btn-primary" id="delete" name="unlock">회원탈퇴</button>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="userOauthType">가입경로</label>
+            <select class="form-select" id="userOauthType" name="userOauthType" disabled>
+                <option value="EMAIL">사이트</option>
+                <option value="KAKAO">카카오</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" id="save">저장</button>
+    </form>
+</div>
+

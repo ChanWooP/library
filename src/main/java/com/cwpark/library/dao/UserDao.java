@@ -1,12 +1,15 @@
 package com.cwpark.library.dao;
 
+import com.cwpark.library.data.dto.user.UserAdminFormDto;
 import com.cwpark.library.data.dto.user.UserInsertDto;
 import com.cwpark.library.data.dto.user.UserMyPageDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.User;
-import com.cwpark.library.repository.UserRepository;
+import com.cwpark.library.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +62,19 @@ public class UserDao {
         userRepository.findById(userId).ifPresent((u) -> {
             u.setUserPassword(password);
             u.setUserFindPasswordYn(yN);
+        });
+    }
+
+    public Page<UserSelectDto> userList(String search, Pageable pageable) {
+        return userRepository.searchPage(search, pageable);
+    }
+
+    public void infoSave(UserAdminFormDto userAdminFormDto) {
+        userRepository.findById(userAdminFormDto.getUserId()).ifPresent((u) -> {
+            u.setUserName(userAdminFormDto.getUserName());
+            u.setUserBirth(userAdminFormDto.getUserBirth());
+            u.setUserSex(userAdminFormDto.getUserSex());
+            u.setUserAuthority(userAdminFormDto.getUserAuthority());
         });
     }
 

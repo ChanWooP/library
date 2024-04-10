@@ -2,12 +2,15 @@ package com.cwpark.library.service;
 
 import com.cwpark.library.config.email.EmailService;
 import com.cwpark.library.dao.UserDao;
+import com.cwpark.library.data.dto.user.UserAdminFormDto;
 import com.cwpark.library.data.dto.user.UserInsertDto;
 import com.cwpark.library.data.dto.user.UserMyPageDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.enums.UserOauthType;
 import com.cwpark.library.config.exception.RuntimeoAuthException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +72,14 @@ public class UserService {
 
     public void updateChangePassword(String userId, String password) {
         userDao.updatePassword(userId, pwEncoder.encode(password), "N");
+    }
+
+    public Page<UserSelectDto> userList(String search, Pageable pageable) {
+        return userDao.userList(search, pageable);
+    }
+
+    public void infoSave(UserAdminFormDto userAdminFormDto) {
+        userDao.infoSave(userAdminFormDto);
     }
 
 }

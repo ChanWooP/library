@@ -6,7 +6,7 @@ import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.repository.UserRepository;
+import com.cwpark.library.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;

@@ -42,4 +42,9 @@ public class AdminController {
     public String reserve() {
         return "/admin/book/reserve";
     }
+
+    @GetMapping("/user/info")
+    public String info() {
+        return "/admin/user/info";
+    }
 }

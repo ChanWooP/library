@@ -1,18 +1,10 @@
 package com.cwpark.library.dao;
 
 import com.cwpark.library.data.dto.SettingDto;
-import com.cwpark.library.data.dto.user.UserInsertDto;
-import com.cwpark.library.data.dto.user.UserMyPageDto;
-import com.cwpark.library.data.dto.user.UserSelectDto;
-import com.cwpark.library.data.entity.User;
 import com.cwpark.library.repository.SettingRepository;
-import com.cwpark.library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

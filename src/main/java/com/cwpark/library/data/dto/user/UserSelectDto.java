@@ -3,6 +3,7 @@ package com.cwpark.library.data.dto.user;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
+import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -11,7 +12,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class UserSelectDto {
 
@@ -38,6 +38,18 @@ public class UserSelectDto {
 
     @NotBlank(message = "가입 경로는 필수 입력 사항 입니다")
     private UserOauthType userOauthType;
+
+    @QueryProjection
+    public UserSelectDto(String userId, String userPassword, String userName, String userSex, String userBirth, UserAuthority userAuthority, int userLoginFailCnt, UserOauthType userOauthType) {
+        this.userId = userId;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userSex = userSex;
+        this.userBirth = userBirth;
+        this.userAuthority = userAuthority;
+        this.userLoginFailCnt = userLoginFailCnt;
+        this.userOauthType = userOauthType;
+    }
 
     public static UserSelectDto toDto(User user) {
         return UserSelectDto.builder()

@@ -4,15 +4,13 @@ import com.cwpark.library.config.TestRepositoryConfig;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookCategory;
-import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.data.entity.book.BookReserve;
 import com.cwpark.library.data.enums.BookReserveType;
 import com.cwpark.library.data.enums.UserAuthority;
 import com.cwpark.library.data.enums.UserOauthType;
-import com.cwpark.library.repository.UserRepository;
+import com.cwpark.library.repository.user.UserRepository;
 import com.cwpark.library.repository.book.book.BookRepository;
 import com.cwpark.library.repository.book.category.BookCategoryRepository;
-import jakarta.persistence.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +20,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
