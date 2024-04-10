@@ -1,6 +1,7 @@
 package com.cwpark.library.service;
 
 import com.cwpark.library.config.email.EmailService;
+import com.cwpark.library.config.security.Account;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.data.dto.user.UserAdminFormDto;
 import com.cwpark.library.data.dto.user.UserInsertDto;
@@ -11,6 +12,9 @@ import com.cwpark.library.config.exception.RuntimeoAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,7 @@ public class UserService {
     private final UserDao userDao;
     private final PasswordEncoder pwEncoder;
     private final EmailService emailService;
+    private final SessionRegistry sessionRegistry;
 
     public Boolean existsById(String userId) {
         return userDao.existsById(userId);
@@ -46,7 +51,16 @@ public class UserService {
     }
 
     public void deleteUser(String userId) {
+        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+
         userDao.deleteUser(userId);
+
+        for(Object principal : allPrincipals) {
+            if(principal instanceof Account account) {
+                List<SessionInformation> allSessions = sessionRegistry.getAllSessions(account, false);
+                allSessions.clear();
+            }
+        }
     }
 
     public UserSelectDto findByIdToKakao(String userId) {
@@ -80,6 +94,10 @@ public class UserService {
 
     public void infoSave(UserAdminFormDto userAdminFormDto) {
         userDao.infoSave(userAdminFormDto);
+    }
+
+    public void loginFailCntUpdate(String userId, int cnt) {
+        userDao.loginFailCntUpdate(userId, cnt);
     }
 
 }

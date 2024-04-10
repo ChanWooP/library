@@ -40,7 +40,7 @@ public class FailHandler extends SimpleUrlAuthenticationFailureHandler {
         } else if (exception instanceof AuthenticationCredentialsNotFoundException) {
             errorMessage = "인증 요청이 거부되었습니다";
         } else if(exception instanceof LockedException) {
-            errorMessage = "로그인 가능 횟수를 초과했습니다";
+            errorMessage = "계정이 잠겼습니다";
         } else {
             errorMessage = "알 수 없는 오류입니다 관리자에게 문의해주세요";
         }

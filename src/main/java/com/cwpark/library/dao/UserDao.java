@@ -78,4 +78,11 @@ public class UserDao {
         });
     }
 
+    public void loginFailCntUpdate(String userId, int cnt) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("아이디가 존재하지 않습니다"));
+
+        findUser.setUserLoginFailCnt(cnt);
+    }
+
 }

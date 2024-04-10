@@ -40,4 +40,52 @@ public class UserInfoRestController {
         return ResponseEntity.ok()
                 .body(result);
     }
+
+    @PostMapping("/passwordInit")
+    public ResponseEntity<Map<String, Object>> passwordInit(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        userService.updateChangePassword(userId, userId);
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @PostMapping("/lock")
+    public ResponseEntity<Map<String, Object>> lock(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        userService.loginFailCntUpdate(userId, 5);
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @PostMapping("/unlock")
+    public ResponseEntity<Map<String, Object>> unlock(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        userService.loginFailCntUpdate(userId, 0);
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        userService.deleteUser(userId);
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
 }

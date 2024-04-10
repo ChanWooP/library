@@ -82,6 +82,158 @@
                 choice.find('th:eq(0)').text('U');
             }
         });
+
+        // 비밀번호 초기화
+        $('#passwordInit').click(function() {
+            if(!confirm("비밀번호 초기화를 하시겠습니까?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST"
+              , url : "/api/v1/admin/user/passwordInit"
+              , data : {
+                userId : choice.data('userid')
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
+
+        // 계정 잠금
+        $('#lock').click(function() {
+            if(!confirm("계정 잠금을 하시겠습니까?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST"
+              , url : "/api/v1/admin/user/lock"
+              , data : {
+                userId : choice.data('userid')
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
+
+        // 계정 잠금 해제
+        $('#unlock').click(function() {
+            if(!confirm("계정 잠금 해제를 하시겠습니까?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: "POST"
+              , url : "/api/v1/admin/user/unlock"
+              , data : {
+                userId : choice.data('userid')
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
+
+        // 회원 탈퇴
+        $('#delete').click(function() {
+            if(!confirm("회원 탈퇴를 하시겠습니까?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: "DELETE"
+              , url : "/api/v1/admin/user/delete"
+              , data : {
+                userId : choice.data('userid')
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
     });
 
     // 조회
@@ -289,7 +441,7 @@
         </div>
         <div class="col-md-6 mb-3">
             <label>비밀번호</label><br>
-            <button type="button" class="btn btn-primary" id="userPassword" name="userPassword">비밀번호 초기화</button>
+            <button type="button" class="btn btn-primary" id="passwordInit" name="passwordInit">비밀번호 초기화</button>
         </div>
         <div class="col-md-6 mb-3">
             <label for="userName">이름</label>
@@ -320,7 +472,7 @@
             <label>계정관리</label><br>
             <button type="button" class="btn btn-primary" id="lock" name="lock">잠금</button>
             <button type="button" class="btn btn-primary" id="unlock" name="unlock">잠금해제</button>
-            <button type="button" class="btn btn-primary" id="delete" name="unlock">회원탈퇴</button>
+            <button type="button" class="btn btn-primary" id="delete" name="delete">회원탈퇴</button>
         </div>
         <div class="col-md-6 mb-3">
             <label for="userOauthType">가입경로</label>
