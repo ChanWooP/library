@@ -28,14 +28,14 @@ public class BookReserve extends BaseEntity {
     @Column(name = "RESERVE_ID")
     private Long reserveId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESERVE_ISBN")
     private Book book;
 
     @Column(name = "RESERVE_DATE")
     private LocalDateTime reserveDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESERVE_USER")
     private User user;
 

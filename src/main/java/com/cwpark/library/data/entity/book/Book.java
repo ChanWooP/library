@@ -25,7 +25,7 @@ public class Book extends BaseEntity {
     @Column(name = "BOOK_ISBN")
     private String bookIsbn;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOK_CATEGORY_ID")
     private BookCategory bookCategory;
 
