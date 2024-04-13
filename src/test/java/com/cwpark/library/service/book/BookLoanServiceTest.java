@@ -83,7 +83,7 @@ class BookLoanServiceTest {
         bookService.insert(book);
         BookSelectDto findBook = bookService.findById(book.getBookIsbn());
         findBook.setBookReserveCnt(1);
-        findBook.setBookLoanCnt(1);
+        findBook.setBookLoanCnt(2);
         bookService.likeLoanReserve(findBook);
 
         // 대출 2건

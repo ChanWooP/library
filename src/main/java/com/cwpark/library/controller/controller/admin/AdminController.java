@@ -47,4 +47,14 @@ public class AdminController {
     public String info() {
         return "/admin/user/info";
     }
+
+    @GetMapping("/user/loan")
+    public String userLoan() {
+        return "/admin/user/loan";
+    }
+
+    @GetMapping("/user/reserve")
+    public String userReserve() {
+        return "/admin/user/reserve";
+    }
 }

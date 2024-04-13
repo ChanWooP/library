@@ -3,6 +3,7 @@ package com.cwpark.library.dao.book;
 import com.cwpark.library.data.dto.book.BookLoanDto;
 import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
+import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.repository.book.BookLoanRepository;
@@ -23,6 +24,11 @@ public class BookLoanDao {
 
     public List<BookLoanDto> findByBookAndLoanReturnYn(BookSelectDto book, String loanReturnYn) {
         return repository.findByBookAndLoanReturnYn(Book.selectToEntity(book), loanReturnYn)
+                .stream().map(BookLoanDto::toDto).collect(Collectors.toList());
+    }
+
+    public List<BookLoanDto> findByUserAndLoanReturnYn(UserSelectDto user, String loanReturnYn) {
+        return repository.findByUserAndLoanReturnYn(User.selectToEntity(user), loanReturnYn)
                 .stream().map(BookLoanDto::toDto).collect(Collectors.toList());
     }
 

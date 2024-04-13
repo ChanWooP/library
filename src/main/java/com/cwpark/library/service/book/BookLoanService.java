@@ -1,6 +1,7 @@
 package com.cwpark.library.service.book;
 
 import com.cwpark.library.dao.SettingDao;
+import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.dao.book.BookDao;
 import com.cwpark.library.dao.book.BookLoanDao;
 import com.cwpark.library.dao.book.BookReserveDao;
@@ -23,17 +24,29 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookLoanService {
     private final BookDao bookDao;
     private final BookReserveDao bookReserveDao;
     private final BookLoanDao bookLoanDao;
     private final SettingDao settingDao;
+    private final UserDao userDao;
 
     public List<BookLoanDto> findByBookAndLoanReturnYn(String bookIsbn, String loanReturnYn) {
         BookSelectDto book = bookDao.findById(bookIsbn);
         int loanDate = (int) settingDao.findById("loanDate").getTypeConversionValue();
 
         List<BookLoanDto> bookLoanList = bookLoanDao.findByBookAndLoanReturnYn(book, loanReturnYn);
+        bookLoanList.forEach(l -> l.setLoanReturnDate(l.getLoanDate().plusDays(loanDate)));
+
+        return bookLoanList;
+    }
+
+    public List<BookLoanDto> findByUserAndLoanReturnYn(String userId, String loanReturnYn) {
+        UserSelectDto user = userDao.findById(userId);
+        int loanDate = (int) settingDao.findById("loanDate").getTypeConversionValue();
+
+        List<BookLoanDto> bookLoanList = bookLoanDao.findByUserAndLoanReturnYn(user, loanReturnYn);
         bookLoanList.forEach(l -> l.setLoanReturnDate(l.getLoanDate().plusDays(loanDate)));
 
         return bookLoanList;

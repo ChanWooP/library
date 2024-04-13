@@ -16,11 +16,21 @@ import java.util.Map;
 public class BookReserveRestController {
     private final BookReserveService bookReserveService;
 
-    @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> getReserve(@RequestParam("bookIsbn") String bookIsbn) {
+    @GetMapping("/search/book")
+    public ResponseEntity<Map<String, Object>> getReserveBook(@RequestParam("bookIsbn") String bookIsbn) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("content", bookReserveService.findByReserves(bookIsbn, BookReserveType.RESERVE));
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @GetMapping("/search/user")
+    public ResponseEntity<Map<String, Object>> getReserveUser(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("content", bookReserveService.findByUserAndReserveStatus(userId, BookReserveType.RESERVE));
 
         return ResponseEntity.ok()
                 .body(result);

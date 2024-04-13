@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -34,6 +35,8 @@ class UserServiceTest {
     EmailService emailService;
     @Mock
     PasswordEncoder pwEncoder;
+    @Mock
+    SessionRegistry sessionRegistry;
 
     @Test
     @DisplayName("아이디 중복 체크 미존재")
@@ -95,6 +98,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 삭제")
     void deleteUser() {
+        when(sessionRegistry.getAllPrincipals()).thenReturn(null);
         userService.deleteUser("id");
 
         verify(userDao).deleteUser("id");

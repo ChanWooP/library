@@ -149,7 +149,7 @@
     function search(thiss) {
         $.ajax({
             type: "GET"
-          , url : "/api/v1/admin/loan/search"
+          , url : "/api/v1/admin/loan/search/book"
           , data : {
                 bookIsbn : thiss.data('bookisbn')
           }

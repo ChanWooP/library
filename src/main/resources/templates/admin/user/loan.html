@@ -6,30 +6,20 @@
     var choicePage = 0;
 
     $(document).ready(function(){
+
         // 조회
         $('#searchPage').click(function(){
             searchPage(0);
         });
     });
 
-    // 행 선택
-    function choiceHover(thiss) {
-        $('.hover').removeClass('hover');
-        thiss.addClass('hover');
-    }
-
-    // 행 변경
-    function choiceChange(thiss) {
-        choice = thiss;
-    }
-
     // 조회
     function searchPage(pages) {
         $.ajax({
             type: "GET"
-          , url : "/api/v1/admin/book/searchPage"
+          , url : "/api/v1/admin/user/info"
           , data : {
-                title : $('#search').val()
+                search : $('#search').val()
                 , page : pages
           }
           , dataType: "json"
@@ -40,7 +30,7 @@
 
                 for(let i=0; i<data.result.content.length; i++) {
                     str += '<tr ';
-                    str += ' data-bookisbn=' + data.result.content[i].bookIsbn;
+                    str += ' data-userid=' + data.result.content[i].userId;
                     str += '> ';
 
                     str += '    <th scope="col"> ';
@@ -48,11 +38,11 @@
                     str += '    </th> ';
 
                     str += '<td>';
-                    str += data.result.content[i].bookTitle;
+                    str += data.result.content[i].userId;
                     str += '</td>';
 
                     str += '<td>';
-                    str += data.result.content[i].bookLoanCnt + ' / ' + data.result.content[i].bookMaxLoanCnt;
+                    str += data.result.content[i].userName;
                     str += '</td>';
 
                     str += '</tr> ';
@@ -78,9 +68,8 @@
                 str2 += '  </div> ';
                 str2 += '</div> ';
 
-                $('#bookTable > tbody').html(str);
+                $('#userTable > tbody').html(str);
                 $('#page').html(str2);
-                $('#reserveTable > tbody').html('');
                 choice = null;
                 choicePage = pages;
 
@@ -122,10 +111,10 @@
                 });
 
                 // 행 선택
-                $('#bookTable > tbody > tr').click(function(){
+                $('table > tbody > tr').click(function(){
                     if(choice != $(this)) {
                         choiceHover($(this));
-                        choiceChange($(this));
+                        choiceChange($(this), 'update');
                         search($(this));
                     }
                 });
@@ -145,13 +134,24 @@
         });
     }
 
+    // 행 선택
+    function choiceHover(thiss) {
+        $('.hover').removeClass('hover');
+        thiss.addClass('hover');
+    }
+
+    // 행 변경
+    function choiceChange(thiss) {
+        choice = thiss;
+    }
+
     // 대출 및 예약 조회
     function search(thiss) {
         $.ajax({
             type: "GET"
-          , url : "/api/v1/admin/reserve/search/book"
+          , url : "/api/v1/admin/loan/search/user"
           , data : {
-                bookIsbn : thiss.data('bookisbn')
+                userId : thiss.data('userid')
           }
           , dataType: "json"
           , success : function(data) {
@@ -160,7 +160,8 @@
 
                 for(let i=0; i<data.content.length; i++) {
                     str += '<tr ';
-                    str += ' data-reserveid=' + data.content[i].reserveId;
+                    str += ' data-loanId=' + data.content[i].loanId;
+                    str += ' data-loanIsbn=' + data.content[i].book.bookIsbn
                     str += '> ';
 
                     str += '    <th scope="col"> ';
@@ -168,24 +169,28 @@
                     str += '    </th> ';
 
                     str += '<td>';
-                    str += data.content[i].user.userId;
+                    str += data.content[i].book.bookTitle;
                     str += '</td>';
 
                     str += '<td>';
-                    str += data.content[i].reserveDate;
+                    str += data.content[i].loanDate;
                     str += '</td>';
 
                     str += '<td>';
-                    str += '<button type="button" class="btn btn-primary btn-sm reserve-cancel">예약취소</button>';
+                    str += data.content[i].loanReturnDate;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += '<button type="button" class="btn btn-primary btn-sm loan-return">반납하기</button>';
                     str += '</td>';
 
                     str += '</tr> ';
                 }
 
-                $('#reserveTable > tbody').html(str);
+                $('#loanTable > tbody').html(str);
 
-                $('.reserve-cancel').click(function(){
-                    reserveCancel($(this).parent().parent().data('reserveid'));
+                $('.loan-return').click(function(){
+                    loanReturn($(this).parent().parent().data('loanid'), $(this).parent().parent().data('loanisbn'));
                 });
             } else {
                 alert('조회가 실패하였습니다');
@@ -203,16 +208,17 @@
         });
     }
 
-    function reserveCancel(reserveId) {
-        if(!confirm("취소하시겠습니까?")) {
+    function loanReturn(loanId, loanIsbn) {
+        if(!confirm("반납하시겠습니까?")) {
             return false;
         }
 
         $.ajax({
             type: "POST"
-          , url : "/api/v1/admin/reserve/cancel"
+          , url : "/api/v1/admin/loan/return"
           , data : {
-              reserveId : reserveId
+              loanId : loanId
+            , bookIsbn : loanIsbn
           }
           , dataType: "json"
           , success : function(data) {
@@ -221,7 +227,7 @@
                     search(choice);
                 }
             } else {
-                alert('취소 처리가 실패하였습니다');
+                alert('반납 처리가 실패하였습니다');
             }
           }
           , beforeSend:function(){
@@ -231,22 +237,22 @@
               $('.wrap-loading').addClass('display-none');
           }
           , error : function(e) {
-            alert('취소 처리가 실패하였습니다');
+            alert('반납 처리가 실패하였습니다');
           }
         });
     }
 </script>
-<div class="inline-block" style="width:29%; float:left;">
+<div class="inline-block" style="width:30%; float:left;">
     <div class="input-group" style="padding-top:5px;">
-        <input type="search" id="search" class="form-control rounded" placeholder="책 제목 검색" aria-label="Search" aria-describedby="search-addon" />
+        <input type="search" id="search" class="form-control rounded" placeholder="아이디 또는 이름 검색" aria-label="Search" aria-describedby="search-addon" />
         <button type="button" class="btn btn-primary" id="searchPage">조회</button>
     </div>
-    <table class="table table-hover" id="bookTable">
+    <table class="table table-hover" id="userTable">
         <thead>
         <tr>
             <th scope="col" width="5%">No</th>
-            <th scope="col" width="42%">제목</th>
-            <th scope="col" width="43%">예약현황</th>
+            <th scope="col" width="45%">아이디</th>
+            <th scope="col" width="40%">이름</th>
         </tr>
         </thead>
         <tbody>
@@ -254,18 +260,19 @@
     </table>
     <div id="page"></div>
 </div>
-<div class="inline-block" style="width:1%;"></div>
-<div class="inline-block" style="width:67%; height:100%; overflow:auto;">
-    <table class="table table-hover" id="reserveTable">
+<div class="inline-block" style="width:68%; height:100%; float:right; overflow:auto; padding:2px;">
+    <table class="table table-hover" id="loanTable">
         <thead>
         <tr>
             <th scope="col" width="5%">No</th>
-            <th scope="col" width="26%">예약자</th>
-            <th scope="col" width="34%">예약일자</th>
-            <th scope="col" width="35%">예약취소</th>
+            <th scope="col" width="26%">책 이름</th>
+            <th scope="col" width="23%">대출일자</th>
+            <th scope="col" width="23%">반납일자(예정)</th>
+            <th scope="col" width="23%">반납처리</th>
         </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
 </div>
+

@@ -1,6 +1,8 @@
 package com.cwpark.library.integrated.restcontroller;
 
 import com.cwpark.library.controller.restcontroller.UserRestController;
+import com.cwpark.library.data.dto.user.UserInsertDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.integrated.IntegratedController;
 import com.cwpark.library.service.UserService;
 import com.cwpark.library.test.annotation.WithMockCustomUser;
@@ -24,12 +26,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class UserRestControllerTest extends IntegratedController {
+    @Autowired
+    UserService userService;
 
     @Test
     @DisplayName("회원 삭제")
     @WithMockCustomUser(userName = "1@1.com")
     void deleteUser() throws Exception {
         String userId = "1@1.com";
+
+        UserInsertDto user = new UserInsertDto(
+                userId, "userPassword", "userName", "M", "951111", null, null);
+        userService.insertUser(user);
 
         mockMvc.perform(delete("/api/v1/user/{userId}", userId).with(csrf()))
                 .andExpect(status().isOk())

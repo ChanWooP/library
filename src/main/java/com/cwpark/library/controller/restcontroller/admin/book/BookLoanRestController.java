@@ -14,11 +14,21 @@ import java.util.Map;
 public class BookLoanRestController {
     private final BookLoanService bookLoanService;
 
-    @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> getLoanReserve(@RequestParam("bookIsbn") String bookIsbn) {
+    @GetMapping("/search/book")
+    public ResponseEntity<Map<String, Object>> getLoanReserveBook(@RequestParam("bookIsbn") String bookIsbn) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("content", bookLoanService.findByBookAndLoanReturnYn(bookIsbn, "N"));
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @GetMapping("/search/user")
+    public ResponseEntity<Map<String, Object>> getLoanReserveUser(@RequestParam("userId") String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("content", bookLoanService.findByUserAndLoanReturnYn(userId, "N"));
 
         return ResponseEntity.ok()
                 .body(result);

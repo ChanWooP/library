@@ -55,10 +55,12 @@ public class UserService {
 
         userDao.deleteUser(userId);
 
-        for(Object principal : allPrincipals) {
-            if(principal instanceof Account account) {
-                List<SessionInformation> allSessions = sessionRegistry.getAllSessions(account, false);
-                allSessions.clear();
+        if(allPrincipals != null) {
+            for(Object principal : allPrincipals) {
+                if(principal instanceof Account account) {
+                    List<SessionInformation> allSessions = sessionRegistry.getAllSessions(account, false);
+                    allSessions.clear();
+                }
             }
         }
     }

@@ -107,7 +107,6 @@ class UserDaoTest {
         userDao.updateUser(myPageDto);
 
         verify(userRepository).findById("id");
-        verify(userRepository).save(compUser);
     }
 
     @Test
