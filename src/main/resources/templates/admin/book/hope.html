@@ -1,0 +1,42 @@
+<script>
+    // 현재 행
+    var choice = null;
+
+    // 현재 페이지
+    var choicePage = 0;
+
+    $(document).ready(function(){
+
+    });
+</script>
+<div>
+    <div style="padding-top:5px;">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="search">검색</label>
+                <input type="search" id="search" class="form-control rounded" placeholder="책 제목 및 ISBN 검색" aria-label="Search" aria-describedby="search-addon" />
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="frDt">시작일자</label>
+                <input type="date" class="form-control" id="frDt">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="toDt">종료일자</label>
+                <input type="date" class="form-control" id="toDt">
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="95%">제목</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+

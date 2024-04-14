@@ -57,4 +57,9 @@ public class AdminController {
     public String userReserve() {
         return "/admin/user/reserve";
     }
+
+    @GetMapping("/book/hope")
+    public String hope() {
+        return "/admin/book/hope";
+    }
 }
