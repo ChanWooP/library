@@ -1,0 +1,116 @@
+<script>
+
+</script>
+<div class="inline-block" style="width:29%; float:left;">
+    <div style="float:left;">
+        <button type="button" class="btn btn-primary" id="add">추가</button>
+        <button type="button" class="btn btn-primary" id="del">삭제</button>
+    </div>
+    <div class="input-group" style="padding-top:5px;">
+        <input type="search" id="search" class="form-control rounded" placeholder="책 제목 검색" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" width="5%">No</th>
+            <th scope="col" width="95%">제목</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+<div class="inline-block" style="width:69%; height:100%; float:right; overflow:auto;">
+    <form method="POST" enctype="multipart/form-data" id="formData">
+
+        <input type="hidden" id="postType" name="postType">
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="multipartFile">대표 이미지</label>
+            <div style="margin-bottom:5px;">
+                <img id="preview" src="" onerror="this.src='/img/noImage.png'" border="1" width="200px" height="200px">
+            </div>
+
+            <input type="file" class="form-control" id="multipartFile" name="multipartFile" accept="image/jpg, image/png, image/jpeg" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookIsbn">ISBN</label>
+            <input type="text" class="form-control" id="bookIsbn" name="bookIsbn"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookCategory">카테고리 명</label>
+            <select class="form-select" id="bookCategory" name="bookCategory">
+                <option value="">==카테고리 선택==</option>
+                <option th:each="category : ${category}" th:value="${category.categoryId}"
+                        th:text="${category.categoryName}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookTitle">제목</label>
+            <input type="text" class="form-control" id="bookTitle" name="bookTitle" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookAuthor">작가</label>
+            <input type="text" class="form-control" id="bookAuthor" name="bookAuthor" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookPublisher">출판사</label>
+            <input type="text" class="form-control" id="bookPublisher" name="bookPublisher" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookDistributor">유통사</label>
+            <input type="text" class="form-control" id="bookDistributor" name="bookDistributor" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookPublicationYear">출판년도</label>
+            <input type="text" class="form-control" id="bookPublicationYear" name="bookPublicationYear" required>
+        </div>
+
+        <div class="col-md-9 mb-3 margin-left">
+            <label for="bookIndex">목차</label>
+            <textarea class="form-control" style="resize:none;" id="bookIndex" name="bookIndex" rows="5"></textarea>
+        </div>
+
+        <div class="col-md-9 mb-3 margin-left">
+            <label for="bookInt">책 소개</label>
+            <textarea class="form-control" style="resize:none;" id="bookInt" name="bookInt" rows="5"></textarea>
+        </div>
+
+        <div class="col-md-9 mb-3 margin-left">
+            <label for="bookAuthorInt">작가 소개</label>
+            <textarea class="form-control" style="resize:none;" id="bookAuthorInt" name="bookAuthorInt" rows="5"></textarea>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="multipartFiles">책 등록</label>
+            <input type="file" class="form-control" multiple="multiple" id="multipartFiles" name="multipartFiles" accept="image/jpg, image/png, image/jpeg" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookTotalPageCnt">총 페이지 수</label>
+            <input type="number" class="form-control" id="bookTotalPageCnt" name="bookTotalPageCnt" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookMaxLoanCnt">최대 대출 횟수</label>
+            <input type="number" class="form-control" id="bookMaxLoanCnt" name="bookMaxLoanCnt" required>
+        </div>
+
+        <div class="col-md-6 mb-3 margin-left">
+            <label for="bookMaxReserveCnt">최대 예약 횟수</label>
+            <input type="number" class="form-control" id="bookMaxReserveCnt" name="bookMaxReserveCnt" required>
+        </div>
+        <button type="button" class="btn btn-primary" id="save">저장</button>
+    </form>
+</div>
+

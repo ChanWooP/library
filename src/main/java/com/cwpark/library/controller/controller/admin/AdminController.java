@@ -62,4 +62,9 @@ public class AdminController {
     public String hope() {
         return "/admin/book/hope";
     }
+
+    @GetMapping("/guide/notify")
+    public String notifys() {
+        return "/admin/guide/notify";
+    }
 }

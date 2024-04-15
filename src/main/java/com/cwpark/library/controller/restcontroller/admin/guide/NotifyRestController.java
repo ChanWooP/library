@@ -22,10 +22,10 @@ public class NotifyRestController {
     private final NotifyService notifyService;
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> search(@RequestParam("search") String search, @PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<Map<String, Object>> search(@RequestParam("frDt") String frDt, @RequestParam("toDt") String toDt, @RequestParam("search") String search, @PageableDefault(size = 10) Pageable pageable) {
         Map<String, Object> result = new HashMap<>();
 
-        result.put("result", notifyService.searchPage(LocalDate.now().toString().replaceAll("-", ""), search, pageable));
+        result.put("result", notifyService.searchPage(frDt, toDt, search, pageable));
 
         return ResponseEntity.ok()
                 .body(result);

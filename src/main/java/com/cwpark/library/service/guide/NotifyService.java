@@ -23,6 +23,10 @@ public class NotifyService {
         return notifyDao.searchPage(nowDate, search, pageable);
     }
 
+    public Page<NotifyDto> searchPage(String frDt, String toDt, String search, Pageable pageable) {
+        return notifyDao.searchPage(frDt, toDt, search, pageable);
+    }
+
     public NotifyDto findById(Long id) {
         return notifyDao.findById(id);
     }

@@ -22,6 +22,10 @@ public class NotifyDao {
         return notifyRepository.searchPage(nowDate, search, pageable);
     }
 
+    public Page<NotifyDto> searchPage(String frDt, String toDt, String search, Pageable pageable) {
+        return notifyRepository.searchPage(frDt, toDt, search, pageable);
+    }
+
     public NotifyDto findById(Long id) {
         Notify notify = notifyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("공지사항이 존재하지 않습니다"));

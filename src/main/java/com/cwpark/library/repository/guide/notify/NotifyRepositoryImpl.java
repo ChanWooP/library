@@ -51,8 +51,41 @@ public class NotifyRepositoryImpl implements NotifyRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    @Override
+    public Page<NotifyDto> searchPage(String search, String frDt, String toDt, Pageable pageable) {
+        List<NotifyDto> content = queryFactory
+                .select(new QNotifyDto(
+                        notify.notifyId
+                        , notify.notifyType
+                        , notify.notifyTitle
+                        , notify.notifyText
+                        , notify.notifyImg
+                        , notify.notifyStartDt
+                        , notify.notifyEndDt
+                ))
+                .from(notify)
+                .where(allCond(frDt, toDt, search))
+                .orderBy(notify.notifyStartDt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(notify)
+                .from(notify)
+                .where(allCond(frDt, toDt, search))
+                .fetch().size();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
     private BooleanExpression dateBetween(String nowDate) {
         return notify.notifyStartDt.loe(nowDate).and(notify.notifyEndDt.goe(nowDate));
+    }
+
+    private BooleanExpression dateBetween(String frDt, String toDt) {
+        return notify.notifyStartDt.between(frDt, toDt).or(notify.notifyEndDt.between(frDt, toDt))
+                .or(notify.notifyStartDt.loe(frDt).and(notify.notifyEndDt.goe(frDt)));
     }
 
     private BooleanExpression titleContains(String search) {
@@ -65,6 +98,10 @@ public class NotifyRepositoryImpl implements NotifyRepositoryCustom {
 
     private BooleanExpression allCond(String nowDate, String search) {
         return dateBetween(nowDate).and(titleContains(search));
+    }
+
+    private BooleanExpression allCond(String frDt, String toDt, String search) {
+        return dateBetween(frDt, toDt).and(titleContains(search));
     }
 
 }

@@ -37,8 +37,19 @@ class NotifyRepositoryTest {
         notifyRepository.save(notify);
 
         PageRequest pageRequest = PageRequest.of(0, 2);
-        log.info(LocalDate.now().toString().replaceAll("-", ""));
-        Page<NotifyDto> notifies = notifyRepository.searchPage("", LocalDate.now().toString().replaceAll("-", ""), pageRequest);
+        Page<NotifyDto> notifies = notifyRepository.searchPage("", "20240415", pageRequest);
+
+        Assertions.assertEquals(notifies.getContent().size(), 1);
+    }
+
+    @Test
+    @DisplayName("공지사항 조회2")
+    void search2() {
+        Notify notify = new Notify(null, NotifyType.GENERAL,"title", "text", "img", "20240411", "20240415");
+        notifyRepository.save(notify);
+
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        Page<NotifyDto> notifies = notifyRepository.searchPage("", "20240412", "20240414", pageRequest);
 
         Assertions.assertEquals(notifies.getContent().size(), 1);
     }
