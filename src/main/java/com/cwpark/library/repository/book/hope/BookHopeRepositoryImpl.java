@@ -57,6 +57,7 @@ public class BookHopeRepositoryImpl implements BookHopeRepositoryCustom {
         long total = queryFactory
                 .select(bookHope)
                 .from(bookHope)
+                .where(allCond(bookHopeStatus, frDt, toDt, search))
                 .fetch().size();
 
         return new PageImpl<>(content, pageable, total);

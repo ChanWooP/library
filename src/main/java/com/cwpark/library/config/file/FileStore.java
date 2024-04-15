@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -34,6 +36,32 @@ public class FileStore {
                 multipartFile.transferTo(file);
 
                 return filePath + "/" + fileName + ext;
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
+
+    public String storeFile2(String filePath, MultipartFile multipartFile) {
+        try {
+            if(multipartFile != null && !multipartFile.isEmpty()) {
+                String ext = extractExt(multipartFile.getOriginalFilename());
+
+                Date nowDate = new Date();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String saveFileName = simpleDateFormat.format(nowDate);
+
+                File file = new File(getFullPath(filePath + saveFileName + ext));
+
+                if(!file.exists()) {
+                    file.mkdirs();
+                }
+
+                multipartFile.transferTo(file);
+
+                return saveFileName + ext;
             } else {
                 return null;
             }
