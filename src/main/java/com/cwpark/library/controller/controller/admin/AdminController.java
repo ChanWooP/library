@@ -72,4 +72,9 @@ public class AdminController {
     public String qna() {
         return "/admin/guide/qna";
     }
+
+    @GetMapping("/set/set")
+    public String set() {
+        return "/admin/set/set";
+    }
 }

@@ -1,0 +1,94 @@
+<script>
+    $(document).ready(function(){
+        search();
+    });
+
+    // 조회
+    function search() {
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/setting/search"
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                let str = '';
+                let type = '';
+
+                for(let i=0; i<data.result.length; i++) {
+                    if(data.result[i].setType == 'INTEGER') {
+                        type = 'number';
+                    } else {
+                        type = 'text';
+                    }
+
+                    str += '<div class="col-md-3 mb-3 margin-left"> ';
+                    str += '    <label for="' + data.result[i].setId + '">' + data.result[i].setName + '</label> ';
+                    str += '    <input type="' + type + '" class="form-control" value="' + data.result[i].setValue + '"';
+                    str += '       id="' + data.result[i].setId + '" name="' + data.result[i].setId + '"> ';
+                    str += '    <button type="button" class="btn btn-primary saveBtn">저장</button> ';
+                    str += '</div> ';
+                }
+
+                $("#setDiv").html(str);
+
+                $(".saveBtn").click(function() {
+                    save($(this));
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
+
+    function save(thiss) {
+        let set = thiss.siblings('input');
+
+        if(!set.val()) {
+            alert('값을 입력해주세요');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST"
+          , url : "/api/v1/admin/setting/save"
+          , data : {
+            id : set.attr('id')
+            , value : set.val()
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                if(data.success == 'Y') {
+                    alert('저장이 완료되었습니다');
+                    search();
+                }
+            } else {
+                alert('저장에 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('저장에 실패하였습니다');
+          }
+        });
+    }
+</script>
+
+<div id="setDiv" style="height:100%; overflow:auto;">
+</div>
+
