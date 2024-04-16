@@ -67,4 +67,9 @@ public class AdminController {
     public String notifys() {
         return "/admin/guide/notify";
     }
+
+    @GetMapping("/guide/qna")
+    public String qna() {
+        return "/admin/guide/qna";
+    }
 }

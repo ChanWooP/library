@@ -1,0 +1,354 @@
+<script>
+    // 현재 행
+    var choice = null;
+
+    // 현재 페이지
+    var choicePage = 0;
+
+    $(document).ready(function(){
+        initDisabled(true);
+
+        $('#frDt').val(new Date().toISOString().substring(0, 10))
+        $('#toDt').val(new Date().toISOString().substring(0, 10))
+
+        // 조회
+        $('#searchPage').click(function(){
+            searchPage(0);
+        });
+
+        // 행 삭제
+        $('#del').click(function(){
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
+            }
+
+            if(!confirm("삭제하시겠습니까?")) {
+                return false;
+            }
+
+            $.ajax({
+                type: "DELETE"
+              , url : "/api/v1/admin/qna/delete"
+              , data : {
+                id :  choice.data('qnaid')
+              }
+              , dataType: "json"
+              , success : function(data) {
+                if(data.success == 'Y') {
+                    alert('삭제가 완료되었습니다');
+                    searchPage(choicePage);
+                } else {
+                    alert('삭제가 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('삭제가 실패하였습니다');
+              }
+            });
+        });
+
+        // 행 저장
+        $('#save').click(function() {
+            if(choice == null) {
+                alert('행을 선택해주세요');
+                return false;
+            }
+
+            if(!$('#qnaAnswer').val()) {
+                alert('답변을 입력해주세요');
+                return false;
+            }
+
+            let form = $('#formData')[0];
+            let data = new FormData(form);
+
+            $.ajax({
+                type: "POST"
+              , enctype : 'text/plain'
+              , url : "/api/v1/admin/qna/save"
+              , data : data
+              , contentType: false
+              , processData: false
+              , dataType: "json"
+              , success : function(data) {
+                if(data != null) {
+                    if(data.success == 'Y') {
+                        alert('저장이 완료되었습니다');
+                        searchPage(choicePage);
+                        choice = null;
+                        initForm();
+                        initDisabled(true);
+                    }
+                } else {
+                    alert('저장에 실패하였습니다');
+                }
+              }
+              , beforeSend:function(){
+                  $('.wrap-loading').removeClass('display-none');
+              }
+              , complete:function(){
+                  $('.wrap-loading').addClass('display-none');
+              }
+              , error : function(e) {
+                alert('저장에 실패하였습니다');
+              }
+            });
+        });
+
+        // 데이터 변경 감지
+        $('#formData').find('input, textarea, select').change(function() {
+            if(choice.find('th:eq(0)').text() != 'New') {
+                choice.find('th:eq(0)').text('U');
+            }
+        });
+    });
+
+    function initDisabled(bool) {
+        $('#formData').find('textarea').attr('disabled', bool);
+        $('#formData').find('button').attr('disabled', bool);
+    }
+
+    // 조회
+    function searchPage(pages) {
+        if(!$('#frDt').val()) {
+            alert('시작일자를 입력해주세요');
+            return false;
+        }
+
+        if(!$('#toDt').val()) {
+            alert('종료일자를 입력해주세요');
+            return false;
+        }
+
+        $.ajax({
+            type: "GET"
+          , url : "/api/v1/admin/qna/search"
+          , data : {
+                frDt : $('#frDt').val().replace(/-/gi, "")
+                , toDt : $('#toDt').val().replace(/-/gi, "")
+                , page : pages
+          }
+          , dataType: "json"
+          , success : function(data) {
+            if(data != null) {
+                let str = '';
+                let str2 = '';
+
+                for(let i=0; i<data.result.content.length; i++) {
+                    str += '<tr ';
+                    str += ' data-qnaid=' + data.result.content[i].qnaId;
+                    str += ' data-userid=' + data.result.content[i].user.userId;
+                    str += ' data-qnaquestion=' + data.result.content[i].qnaQuestion;
+                    str += ' data-qnaanswer=' + data.result.content[i].qnaAnswer;
+                    str += '> ';
+
+                    str += '    <th scope="col"> ';
+                    str += i + 1 + (10 * data.result.number)
+                    str += '    </th> ';
+
+                    str += '<td>';
+                    str += data.result.content[i].user.userId;
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.result.content[i].qnaQuestion;
+                    str += '</td>';
+
+                    let dt = data.result.content[i].qnaDate;
+
+                    str += '<td>';
+                    str += dt.substr(0,4) + '-' + dt.substr(4,2) + '-' + dt.substr(6,2);
+                    str += '</td>';
+
+                    str += '<td>';
+                    str += data.result.content[i].qnaAnswerYn;
+                    str += '</td>';
+
+                    str += '</tr> ';
+                }
+
+                str2 += '<div class="page_wrap"> ';
+                str2 += '  <div class="page_nation"> ';
+                str2 += '    <a class="arrow pprev">First</a> ';
+                str2 += '    <a class="arrow prev">&lt;</a> ';
+
+                for(let i=(Math.floor(pages / 10) * 10);
+                i<(Math.floor(pages / 10) * 10 + 10 > data.result.totalPages ? data.result.totalPages : Math.floor(pages / 10) * 10 + 10);
+                i++) {
+                  if(i == pages) {
+                    str2 += '<a class="active">' + (i+1) + '</a>';
+                  } else {
+                    str2 += '<a class="pageNum" data-num=' + i + '>' + (i+1) + '</a>';
+                  }
+                }
+
+                str2 += '    <a class="arrow next">&gt;</a> ';
+                str2 += '    <a class="arrow nnext">Last</a> ';
+                str2 += '  </div> ';
+                str2 += '</div> ';
+
+                $('table > tbody').html(str);
+                $('#page').html(str2);
+                choice = null;
+                choicePage = pages;
+                initDisabled(true);
+                initForm();
+
+                if(data.result.totalPages  <= 0) {
+                    return false;
+                }
+
+                // 숫자 페이지
+                $('.pageNum').click(function(){
+                    searchPage($(this).data('num'));
+                });
+
+                // 이전 10 페이지
+                $('.prev').click(function(){
+                    if(pages == 0) {
+                        alert('처음 페이지 입니다');
+                    } else {
+                        searchPage(pages-1);
+                    }
+                });
+
+                // 이후 10 페이지
+                $('.next').click(function(){
+                    if(pages == data.result.totalPages-1) {
+                        alert('마지막 페이지 입니다');
+                    } else {
+                         searchPage(pages+1);
+                    }
+                });
+
+                // 맨 처음
+                $('.pprev').click(function(){
+                    searchPage(0);
+                });
+
+                // 맨 끝
+                $('.nnext').click(function(){
+                    searchPage(data.result.totalPages-1);
+                });
+
+                // 행 선택
+                $('table > tbody > tr').click(function(){
+                    if(choice != $(this) && choiceCheck()) {
+                        choiceHover($(this));
+                        choiceChange($(this), 'update');
+                    }
+                });
+            } else {
+                alert('조회가 실패하였습니다');
+            }
+          }
+          , beforeSend:function(){
+              $('.wrap-loading').removeClass('display-none');
+          }
+          , complete:function(){
+              $('.wrap-loading').addClass('display-none');
+          }
+          , error : function(e) {
+            alert('조회가 실패하였습니다');
+          }
+        });
+    }
+
+    function initForm() {
+        $('#qnaId').val('');
+        $('#userId').val('');
+        $('#qnaQuestion').val('');
+        $('#qnaAnswer').val('');
+    }
+
+    // 행 선택
+    function choiceHover(thiss) {
+        $('.hover').removeClass('hover');
+        thiss.addClass('hover');
+        initDisabled(false);
+    }
+
+    // 행 변경 가능여부 체크
+    function choiceCheck() {
+        if(choice != null) {
+            if((choice.data('type') == 'insert') || (choice.data('type') == 'update' && choice.find('th:eq(0)').text() == 'U')) {
+                alert('저장 또는 삭제를 진행해주세요');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // 행 변경
+    function choiceChange(thiss, type) {
+        choice = thiss;
+        choice.data('type', type);
+
+        $('#qnaId').val(choice.data('qnaid'));
+        $('#userId').val(choice.data('userid'));
+        $('#qnaQuestion').val(choice.data('qnaquestion'));
+        $('#qnaAnswer').val(choice.data('qnaanswer'));
+    }
+</script>
+<div class="inline-block" style="width:60%;">
+    <div>
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
+        <button type="button" class="btn btn-primary" id="del">삭제</button>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="frDt">시작일자</label>
+            <input type="date" class="form-control" id="frDt">
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="toDt">종료일자</label>
+            <input type="date" class="form-control" id="toDt">
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" width="10%">No</th>
+            <th scope="col" width="20%">작성자</th>
+            <th scope="col" width="50%">질문</th>
+            <th scope="col" width="20%">작성일자</th>
+            <th scope="col" width="20%">답변여부</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+<div class="inline-block" style="width:40%; height:100%; float:right; overflow:auto; padding-left:5px;">
+    <form method="POST" enctype="multipart/form-data" id="formData">
+
+        <input type="hidden" id="qnaId" name="qnaId">
+
+        <div class="col-md-5 mb-3 margin-left">
+            <label for="userId">작성자</label>
+            <input type="text" class="form-control" id="userId" name="userId" readonly>
+        </div>
+
+        <div class="col-md-10 mb-3 margin-left">
+            <label for="qnaQuestion">질문</label>
+            <textarea class="form-control" style="resize:none;" id="qnaQuestion" name="qnaQuestion" rows="5" readonly></textarea>
+        </div>
+
+        <div class="col-md-10 mb-3 margin-left">
+            <label for="qnaAnswer">답변</label>
+            <textarea class="form-control" style="resize:none;" id="qnaAnswer" name="qnaAnswer" rows="5"></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="save">저장</button>
+    </form>
+</div>
+
