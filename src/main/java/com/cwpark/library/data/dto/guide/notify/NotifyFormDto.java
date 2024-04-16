@@ -19,7 +19,7 @@ public class NotifyFormDto {
     private Long notifyId;
 
     @NotBlank(message = "타입은 필수 입력 사항입니다")
-    private NotifyType notifyType;
+    private String notifyType;
 
     @NotBlank(message = "제목은 필수 입력 사항입니다")
     private String notifyTitle;

@@ -66,12 +66,28 @@ public class NotifyDto {
     public static NotifyDto formToDto(NotifyFormDto dto) {
         return NotifyDto.builder()
                 .notifyId(dto.getNotifyId())
-                .notifyType(dto.getNotifyType())
+                .notifyType(typeSelect(dto.getNotifyType()))
                 .notifyTitle(dto.getNotifyTitle())
                 .notifyText(dto.getNotifyText())
                 .notifyImg(dto.getNotifyImg())
                 .notifyStartDt(dto.getNotifyStartDt())
                 .notifyEndDt(dto.getNotifyEndDt())
                 .build();
+    }
+
+    private static NotifyType typeSelect(String type) {
+        NotifyType notifyType = null;
+        switch (type) {
+            case "GENERAL" :
+                notifyType = NotifyType.GENERAL;
+                break;
+            case "EVENT" :
+                notifyType = NotifyType.EVENT;
+                break;
+            default :
+                break;
+        }
+
+        return notifyType;
     }
 }

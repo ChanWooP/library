@@ -33,8 +33,6 @@
             return false;
         }
 
-        console.log(pages);
-
         $.ajax({
             type: "GET"
           , url : "/api/v1/admin/hope/search"
@@ -260,6 +258,7 @@
 </script>
 <div>
     <div style="padding-top:5px;">
+        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
         <div class="row">
             <div class="col-md-3 mb-3">
                 <label for="search">검색</label>
@@ -284,7 +283,6 @@
                 </select>
             </div>
         </div>
-        <button type="button" class="btn btn-primary" id="searchPage">조회</button>
     </div>
     <table class="table table-hover">
         <thead>

@@ -44,9 +44,20 @@ public class NotifyDao {
         notify.setNotifyType(notifyDto.getNotifyType());
         notify.setNotifyTitle(notifyDto.getNotifyTitle());
         notify.setNotifyText(notifyDto.getNotifyText());
-        notify.setNotifyImg(notifyDto.getNotifyImg());
+
+        if(notifyDto.getNotifyImg() != null) {
+            notify.setNotifyImg(notifyDto.getNotifyImg());
+        }
+
         notify.setNotifyStartDt(notifyDto.getNotifyStartDt());
         notify.setNotifyEndDt(notifyDto.getNotifyEndDt());
+    }
+
+    public void delete(Long id) {
+        Notify notify = notifyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("공지사항이 존재하지 않습니다"));
+
+        notifyRepository.delete(notify);
     }
 
 }

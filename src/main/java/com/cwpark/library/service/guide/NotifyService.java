@@ -47,4 +47,8 @@ public class NotifyService {
         notifyDao.update(NotifyDto.formToDto(dto));
     }
 
+    public void delete(Long id) {
+        notifyDao.delete(id);
+    }
+
 }

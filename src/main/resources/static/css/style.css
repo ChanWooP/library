@@ -127,3 +127,13 @@ header {
 .text_bold {
     font-weight : bold;
 }
+
+table {
+    table-layout: fixed;
+}
+
+table td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

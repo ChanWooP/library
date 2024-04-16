@@ -25,7 +25,7 @@ public class NotifyRestController {
     public ResponseEntity<Map<String, Object>> search(@RequestParam("frDt") String frDt, @RequestParam("toDt") String toDt, @RequestParam("search") String search, @PageableDefault(size = 10) Pageable pageable) {
         Map<String, Object> result = new HashMap<>();
 
-        result.put("result", notifyService.searchPage(frDt, toDt, search, pageable));
+        result.put("result", notifyService.searchPage(search, frDt, toDt, pageable));
 
         return ResponseEntity.ok()
                 .body(result);
@@ -45,11 +45,26 @@ public class NotifyRestController {
     public ResponseEntity<Map<String, Object>> save(@Valid @ModelAttribute NotifyFormDto notifyFormDto) {
         Map<String, Object> result = new HashMap<>();
 
+        notifyFormDto.setNotifyStartDt(notifyFormDto.getNotifyStartDt().replaceAll("-", ""));
+        notifyFormDto.setNotifyEndDt(notifyFormDto.getNotifyEndDt().replaceAll("-", ""));
+
         if(notifyFormDto.getType().equals("insert")) {
             notifyService.insert(notifyFormDto);
         } else {
             notifyService.update(notifyFormDto);
         }
+
+        result.put("success", "Y");
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") Long id) {
+        Map<String, Object> result = new HashMap<>();
+
+        notifyService.delete(id);
 
         result.put("success", "Y");
 
