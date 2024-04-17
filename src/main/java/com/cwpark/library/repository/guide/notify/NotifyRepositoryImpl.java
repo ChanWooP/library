@@ -24,7 +24,7 @@ public class NotifyRepositoryImpl implements NotifyRepositoryCustom {
      * @return
      */
     @Override
-    public Page<NotifyDto> searchPage(String search, String nowDate, Pageable pageable) {
+    public Page<NotifyDto> searchPage(String nowDate, String search , Pageable pageable) {
         List<NotifyDto> content = queryFactory
                 .select(new QNotifyDto(
                         notify.notifyId

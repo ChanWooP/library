@@ -23,7 +23,7 @@ public class MainControllerAdvice {
         log.error("[runtimeHandle] : {}", e);
         model.addAttribute("message", "서버 에러입니다");
 
-        return "/error/500";
+        return "error/500";
     }
 
     @ExceptionHandler(RuntimeoAuthException.class)
@@ -31,7 +31,7 @@ public class MainControllerAdvice {
         log.error("[oAuthExceptionHandle] : {}", e);
         model.addAttribute("message", e.getMessage());
 
-        return "/error/400";
+        return "error/400";
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -39,7 +39,7 @@ public class MainControllerAdvice {
         log.error("[entityNotFoundHandle] : {}", e);
         model.addAttribute("message", e.getMessage());
 
-        return "/error/400";
+        return "error/400";
     }
 
     @ExceptionHandler(RuntimeEmailException.class)
@@ -47,7 +47,7 @@ public class MainControllerAdvice {
         log.error("[emailHandle] : {}", e);
         model.addAttribute("message", "이메일 전송에 실패하였습니다");
 
-        return "/error/500";
+        return "error/500";
     }
 
     @ExceptionHandler(RuntimekakaoException.class)
@@ -55,7 +55,7 @@ public class MainControllerAdvice {
         log.error("[emailHandle] : {}", e);
         model.addAttribute("message", "회원가입에 실패하였습니다");
 
-        return "/error/500";
+        return "error/500";
     }
 
     @ExceptionHandler(RuntimeIOException.class)
@@ -63,7 +63,7 @@ public class MainControllerAdvice {
         log.error("[IOEHandle] : {}", e);
         model.addAttribute("message", "파일 업로드에 실패하였습니다");
 
-        return "/error/500";
+        return "error/500";
     }
 
 }

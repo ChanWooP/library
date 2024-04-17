@@ -65,7 +65,8 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/", "/css/**", "/js/**", "/img/**", "/files/**",
                                         "/email/check/**", "/kakao/callback",
-                                        "/sign-in/**", "/api/v1/sign-in/**"
+                                        "/sign-in/**", "/api/v1/sign-in/**",
+                                        "/notify/**"
                                 ).permitAll()
                                 .anyRequest().authenticated())
                 .formLogin((formLogin) ->

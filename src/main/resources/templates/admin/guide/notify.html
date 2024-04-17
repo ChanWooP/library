@@ -263,8 +263,8 @@
                     str += '<tr ';
                     str += ' data-notifyid=' + data.result.content[i].notifyId;
                     str += ' data-notifytype=' + data.result.content[i].notifyType;
-                    str += ' data-notifytitle=' + data.result.content[i].notifyTitle;
-                    str += ' data-notifytext=' + data.result.content[i].notifyText;
+                    str += ' data-notifytitle="' + data.result.content[i].notifyTitle + '"';
+                    str += ' data-notifytext="' + data.result.content[i].notifyText + '"';
                     str += ' data-notifyimg=' + data.result.content[i].notifyImg;
                     str += ' data-notifystartdt=' + start.substr(0,4) + '-' + start.substr(4,2) + '-' + start.substr(6,2);
                     str += ' data-notifyenddt=' + end.substr(0,4) + '-' + end.substr(4,2) + '-' + end.substr(6,2);

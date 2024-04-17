@@ -30,12 +30,12 @@ public class LoginController {
         model.addAttribute("expire", expire);
         model.addAttribute("kakao", kakaoService.getKakaoLogin());
 
-        return "/sign-in/login";
+        return "sign-in/login";
     }
 
     @GetMapping("/join")
     public String join() {
-        return "/sign-in/join";
+        return "sign-in/join";
     }
 
     @PostMapping("/join")
@@ -46,7 +46,7 @@ public class LoginController {
 
     @GetMapping("/find/password")
     public String findPassword() {
-        return "/sign-in/password";
+        return "sign-in/password";
     }
 
     @PostMapping("/find/password")
@@ -61,12 +61,12 @@ public class LoginController {
 
     @GetMapping("/find/id")
     public String findId() {
-        return "/sign-in/id";
+        return "sign-in/id";
     }
 
     @GetMapping("/change/password")
     public String changePasswordGet() {
-        return "/user/password";
+        return "user/password";
     }
 
 }

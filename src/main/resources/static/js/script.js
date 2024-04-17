@@ -21,3 +21,8 @@ function join() {
 function admin() {
     location.href = '/admin/main';
 }
+
+function notify() {
+    location.href = '/notify/search';
+}
+

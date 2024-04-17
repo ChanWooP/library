@@ -7,6 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface NotifyRepositoryCustom {
-    Page<NotifyDto> searchPage(String search, String nowDate, Pageable pageable);
+    Page<NotifyDto> searchPage(String nowDate, String search, Pageable pageable);
     Page<NotifyDto> searchPage(String search, String frDt, String toDt, Pageable pageable);
 }

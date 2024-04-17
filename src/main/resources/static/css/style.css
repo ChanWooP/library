@@ -137,3 +137,20 @@ table td {
     overflow: hidden;
     white-space: nowrap;
 }
+
+.menu-title {
+    width:100%;
+    background-color:#E4EAF6;
+    padding:20px;
+}
+
+.menu-main {
+    width:100%;
+    padding:20px;
+}
+
+.menu-table th{
+    background-color: #8A909E;
+    color: white;
+    text-align: center;
+}

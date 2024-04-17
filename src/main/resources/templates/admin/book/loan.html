@@ -40,7 +40,7 @@
 
                 for(let i=0; i<data.result.content.length; i++) {
                     str += '<tr ';
-                    str += ' data-bookisbn=' + data.result.content[i].bookIsbn;
+                    str += ' data-bookisbn="' + data.result.content[i].bookIsbn + '"';
                     str += '> ';
 
                     str += '    <th scope="col"> ';

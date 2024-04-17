@@ -19,62 +19,62 @@ public class AdminController {
 
     @GetMapping("/main")
     public String mains() {
-        return "/admin/main";
+        return "admin/main";
     }
 
     @GetMapping("/book/category")
     public String category() {
-        return "/admin/book/category";
+        return "admin/book/category";
     }
 
     @GetMapping("/book/book")
     public String book(Model model) {
         model.addAttribute("category", bookCategoryService.findAll());
-        return "/admin/book/book";
+        return "admin/book/book";
     }
 
     @GetMapping("/book/loan")
     public String loan() {
-        return "/admin/book/loan";
+        return "admin/book/loan";
     }
 
     @GetMapping("/book/reserve")
     public String reserve() {
-        return "/admin/book/reserve";
+        return "admin/book/reserve";
     }
 
     @GetMapping("/user/info")
     public String info() {
-        return "/admin/user/info";
+        return "admin/user/info";
     }
 
     @GetMapping("/user/loan")
     public String userLoan() {
-        return "/admin/user/loan";
+        return "admin/user/loan";
     }
 
     @GetMapping("/user/reserve")
     public String userReserve() {
-        return "/admin/user/reserve";
+        return "admin/user/reserve";
     }
 
     @GetMapping("/book/hope")
     public String hope() {
-        return "/admin/book/hope";
+        return "admin/book/hope";
     }
 
     @GetMapping("/guide/notify")
     public String notifys() {
-        return "/admin/guide/notify";
+        return "admin/guide/notify";
     }
 
     @GetMapping("/guide/qna")
     public String qna() {
-        return "/admin/guide/qna";
+        return "admin/guide/qna";
     }
 
     @GetMapping("/set/set")
     public String set() {
-        return "/admin/set/set";
+        return "admin/set/set";
     }
 }

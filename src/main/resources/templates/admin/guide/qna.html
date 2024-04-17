@@ -143,10 +143,10 @@
 
                 for(let i=0; i<data.result.content.length; i++) {
                     str += '<tr ';
-                    str += ' data-qnaid=' + data.result.content[i].qnaId;
-                    str += ' data-userid=' + data.result.content[i].user.userId;
-                    str += ' data-qnaquestion=' + data.result.content[i].qnaQuestion;
-                    str += ' data-qnaanswer=' + data.result.content[i].qnaAnswer;
+                    str += ' data-qnaid="' + data.result.content[i].qnaId + '"';
+                    str += ' data-userid="' + data.result.content[i].user.userId + '"';
+                    str += ' data-qnaquestion="' + data.result.content[i].qnaQuestion + '"';
+                    str += ' data-qnaanswer="' + data.result.content[i].qnaAnswer + '"';
                     str += '> ';
 
                     str += '    <th scope="col"> ';

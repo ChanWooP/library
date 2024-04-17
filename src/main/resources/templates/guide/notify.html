@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta>
+    <link>
+    <style></style>
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            let pageNumber = [[${result.pageable.pageNumber}]];
+            let totalPages = [[${result.totalPages}]];
+
+            // 숫자 페이지
+            $('.pageNum').click(function(){
+                searchPage($(this).text() - 1);
+            });
+
+            // 이전 10 페이지
+            $('.prev').click(function(){
+                if(pageNumber == 0) {
+                    alert('처음 페이지 입니다');
+                } else {
+                    searchPage(pageNumber - 1);
+                }
+            });
+
+            // 이후 10 페이지
+            $('.next').click(function(){
+                if(pageNumber == totalPages - 1) {
+                    alert('마지막 페이지 입니다');
+                } else {
+                     searchPage(pageNumber + 1);
+                }
+            });
+
+            // 맨 처음
+            $('.pprev').click(function(){
+                searchPage(0);
+            });
+
+            // 맨 끝
+            $('.nnext').click(function(){
+                searchPage(totalPages - 1);
+            });
+
+            // 행 선택
+            $('table > tbody > tr').click(function(){
+
+            });
+        });
+
+    // 조회
+    function searchPage(pages) {
+        location.href = '/notify/search?page=' + pages;
+    }
+
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="menu-title">
+    <h3> | &nbsp&nbsp&nbsp 공지사항 &nbsp&nbsp&nbsp |</h3>
+</div>
+<div class="menu-main">
+    <table class="table table-hover menu-table">
+        <thead>
+        <tr>
+            <th scope="col" width="10%">No</th>
+            <th scope="col" width="70%">제목</th>
+            <th scope="col" width="20%">등록일</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr style="font-weight:bold;" th:each="notify, stat: ${result.content}">
+                <td style="text-align:center;" th:text="${stat.index + 1 + (10 * result.number)}"></td>
+                <td th:text="${notify.notifyTitle}"></td>
+                <td style="text-align:center;" th:text="|${#strings.substring(notify.notifyStartDt, 0, 4)}-${#strings.substring(notify.notifyStartDt, 4, 6)}-${#strings.substring(notify.notifyStartDt, 6, 8)}|"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="page">
+        <div class="page_wrap">
+            <div class="page_nation">
+                <a class="arrow pprev">First</a>
+                <a class="arrow prev">&lt;</a>
+                <th:block th:each="num : ${#numbers.sequence(T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 1, T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10 > result.totalPages ? result.totalPages : T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10)}">
+                    <a class="active" th:if="${num == result.pageable.pageNumber + 1}" th:text="${num}"></a>
+                    <a class="pageNum" th:unless="${num == result.pageable.pageNumber + 1}" th:text="${num}"></a>
+                </th:block>
+                <a class="arrow next">&gt;</a>
+                <a class="arrow nnext">Last</a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>
