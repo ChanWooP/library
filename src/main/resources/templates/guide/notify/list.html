@@ -46,7 +46,7 @@
 
             // 행 선택
             $('table > tbody > tr').click(function(){
-
+                location.href = '/notify/detail?id=' + $(this).data('id');
             });
         });
 
@@ -72,7 +72,7 @@
         </tr>
         </thead>
         <tbody>
-            <tr style="font-weight:bold;" th:each="notify, stat: ${result.content}">
+            <tr style="font-weight:bold;" th:each="notify, stat: ${result.content}" th:data-id="${notify.notifyId}">
                 <td style="text-align:center;" th:text="${stat.index + 1 + (10 * result.number)}"></td>
                 <td th:text="${notify.notifyTitle}"></td>
                 <td style="text-align:center;" th:text="|${#strings.substring(notify.notifyStartDt, 0, 4)}-${#strings.substring(notify.notifyStartDt, 4, 6)}-${#strings.substring(notify.notifyStartDt, 6, 8)}|"></td>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta>
+    <link>
+    <style></style>
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            $('#list').click(function() {
+                location.href = '/notify/search';
+            });
+        });
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="menu-title">
+    <h3> | &nbsp&nbsp&nbsp 공지사항 &nbsp&nbsp&nbsp |</h3>
+</div>
+<div class="menu-main">
+    <div id="title" style="background-color:#DCDEE0; width:100%; height:60px; padding:10px; font-weight:bold; font-size:20px;">
+        <div class="inline-block" style="width:74%; text-align:left;">
+            <span th:text="${result.notifyTitle}"></span>
+        </div>
+        <div class="inline-block" style="width:24%; text-align:right;">
+            <span th:text="|${#strings.substring(result.notifyStartDt, 0, 4)}-${#strings.substring(result.notifyStartDt, 4, 6)}-${#strings.substring(result.notifyStartDt, 6, 8)}|"></span>
+        </div>
+    </div>
+    <div id="content" style="padding:10px;">
+        <div th:if="${result.notifyImg != null}">
+            <img id="preview" th:src="|/files/notify/${result.notifyImg}|" onerror="this.src='/img/noImage.png'" border="1">
+        </div>
+        <div style="margin-top:10px;">
+            <span style="white-space:pre;" th:text="${result.notifyText}"></span>
+        </div>
+    </div>
+    <hr>
+    <button type="button" class="btn btn-primary" id="list">목록으로</button>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>
