@@ -42,6 +42,7 @@ public class QnaDto extends BaseEntity {
         return QnaDto.builder()
                 .qnaId(qna.getQnaId())
                 .user(qna.getUser())
+                .qnaDate(qna.getQnaDate())
                 .qnaQuestion(qna.getQnaQuestion())
                 .qnaAnswer(qna.getQnaAnswer())
                 .qnaAnswerYn(qna.getQnaAnswerYn())

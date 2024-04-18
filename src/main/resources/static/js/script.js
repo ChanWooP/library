@@ -26,3 +26,6 @@ function notify() {
     location.href = '/notify/search';
 }
 
+function qna() {
+    location.href = '/qna/search';
+}

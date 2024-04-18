@@ -22,6 +22,17 @@ public class QnaDao {
         return qnaRepository.searchPage(user, frDt, toDt, pageable);
     }
 
+    public Page<QnaDto> searchPage(Pageable pageable) {
+        return qnaRepository.searchPage(pageable);
+    }
+
+    public QnaDto findById(Long id) {
+        Qna qna = qnaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("질문이 존재하지 않습니다"));
+
+        return QnaDto.toDto(qna);
+    }
+
     public void insert(QnaDto qnaDto) {
         qnaRepository.save(Qna.toEntity(qnaDto));
     }

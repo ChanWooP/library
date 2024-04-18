@@ -46,7 +46,7 @@ public class QnaRepositoryImpl implements QnaRepositoryCustom {
                 ))
                 .from(qna)
                 .where(allCond(user, frDt, toDt))
-                .orderBy(qna.qnaDate.desc())
+                .orderBy(qna.qnaId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -55,6 +55,40 @@ public class QnaRepositoryImpl implements QnaRepositoryCustom {
                 .select(qna)
                 .from(qna)
                 .where(allCond(user, frDt, toDt))
+                .fetch().size();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<QnaDto> searchPage(Pageable pageable) {
+        List<QnaDto> content = queryFactory
+                .select(new QQnaDto (
+                        qna.qnaId
+                        , new QUserSelectDto(
+                        qna.user.userId
+                        , qna.user.userPassword
+                        , qna.user.userName
+                        , qna.user.userSex
+                        , qna.user.userBirth
+                        , qna.user.userAuthority
+                        , qna.user.userLoginFailCnt
+                        , qna.user.userOauthType
+                )
+                        , qna.qnaDate
+                        , qna.qnaQuestion
+                        , qna.qnaAnswer
+                        , qna.qnaAnswerYn
+                ))
+                .from(qna)
+                .orderBy(qna.qnaId.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(qna)
+                .from(qna)
                 .fetch().size();
 
         return new PageImpl<>(content, pageable, total);

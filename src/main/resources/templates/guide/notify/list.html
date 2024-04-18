@@ -46,12 +46,14 @@
 
             // 행 선택
             $('table > tbody > tr').click(function(){
+                $('.wrap-loading').removeClass('display-none');
                 location.href = '/notify/detail?id=' + $(this).data('id');
             });
         });
 
     // 조회
     function searchPage(pages) {
+        $('.wrap-loading').removeClass('display-none');
         location.href = '/notify/search?page=' + pages;
     }
 
@@ -84,9 +86,9 @@
             <div class="page_nation">
                 <a class="arrow pprev">First</a>
                 <a class="arrow prev">&lt;</a>
-                <th:block th:each="num : ${#numbers.sequence(T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 1, T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10 > result.totalPages ? result.totalPages : T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10)}">
-                    <a class="active" th:if="${num == result.pageable.pageNumber + 1}" th:text="${num}"></a>
-                    <a class="pageNum" th:unless="${num == result.pageable.pageNumber + 1}" th:text="${num}"></a>
+                <th:block th:if="${result.totalPages != 0}" th:each="num : ${#numbers.sequence(T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 1, T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10 > result.totalPages ? result.totalPages : T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10)}">
+                    <a class="active" th:if="${num == result.pageable.pageNumber+1}" th:text="${num}"></a>
+                    <a class="pageNum" th:unless="${num == result.pageable.pageNumber+1}" th:text="${num}"></a>
                 </th:block>
                 <a class="arrow next">&gt;</a>
                 <a class="arrow nnext">Last</a>

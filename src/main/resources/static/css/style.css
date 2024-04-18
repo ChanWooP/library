@@ -138,6 +138,10 @@ table td {
     white-space: nowrap;
 }
 
+table tr td {
+    cursor: pointer;
+}
+
 .menu-title {
     width:100%;
     background-color:#E4EAF6;

@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface QnaRepositoryCustom {
     Page<QnaDto> searchPage(User user, String frDt, String toDt, Pageable pageable);
+    Page<QnaDto> searchPage(Pageable pageable);
 }

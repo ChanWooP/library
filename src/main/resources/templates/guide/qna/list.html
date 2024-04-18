@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta>
+    <link>
+    <style></style>
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            let pageNumber = [[${result.pageable.pageNumber}]];
+            let totalPages = [[${result.totalPages}]];
+
+            // 숫자 페이지
+            $('.pageNum').click(function(){
+                searchPage($(this).text() - 1);
+            });
+
+            // 이전 10 페이지
+            $('.prev').click(function(){
+                if(totalPages != 0) {
+                    if(pageNumber == 0) {
+                        alert('처음 페이지 입니다');
+                    } else {
+                        searchPage(pageNumber - 1);
+                    }
+                }
+            });
+
+            // 이후 10 페이지
+            $('.next').click(function(){
+                if(totalPages != 0) {
+                    if(pageNumber == totalPages - 1) {
+                        alert('마지막 페이지 입니다');
+                    } else {
+                         searchPage(pageNumber + 1);
+                    }
+                }
+            });
+
+            // 맨 처음
+            $('.pprev').click(function(){
+                if(totalPages != 0) {
+                    searchPage(0);
+                }
+            });
+
+            // 맨 끝
+            $('.nnext').click(function(){
+                if(totalPages != 0) {
+                    searchPage(totalPages - 1);
+                }
+            });
+
+            // 행 선택
+            $('table > tbody > tr').click(function(){
+                if($(this).find('.detail').css('display') == 'none') {
+                    $(this).find('.title').css('display', 'none');
+                    $(this).find('.detail').css('display', 'block');
+                } else {
+                    $(this).find('.title').css('display', 'block');
+                    $(this).find('.detail').css('display', 'none');
+                }
+            });
+
+            // 작성
+            $('#add').click(function() {
+                $('#q-div').css('display', 'block');
+                $('#save').css('display', 'inline-block');
+                $('#cancel').css('display', 'inline-block');
+                $('#add').css('display', 'none');
+            });
+
+            // 취소
+            $('#cancel').click(function() {
+                $('#q-div').css('display', 'none');
+                $('#save').css('display', 'none');
+                $('#cancel').css('display', 'none');
+                $('#add').css('display', 'inline-block');
+            });
+
+            // 저장
+            $('#save').click(function() {
+                $('.wrap-loading').removeClass('display-none');
+                $('#qnaForm').submit();
+            });
+
+            // 삭제
+            $('.delete').click(function() {
+                if(!confirm("삭제하시겠습니까?")) {
+                    return false;
+                }
+
+                let form = document.createElement('form');
+                let hiddenField1 = document.createElement('input');
+                let hiddenField2 = document.createElement('input');
+
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', '/qna/delete');
+                form.setAttribute('target', '_self');
+                document.charset = "utf-8";
+
+                hiddenField1.setAttribute('type', 'hidden');
+                hiddenField1.setAttribute('name', '_method');
+                hiddenField1.setAttribute('value', 'delete');
+
+                hiddenField2.setAttribute('type', 'hidden');
+                hiddenField2.setAttribute('name', 'id');
+                hiddenField2.setAttribute('value', $(this).parent().data('id'));
+
+                form.appendChild(hiddenField1);
+                form.appendChild(hiddenField2);
+
+                document.body.appendChild(form);
+
+                $('.wrap-loading').removeClass('display-none');
+                form.submit();
+                return false;
+            });
+        });
+
+        // 조회
+        function searchPage(pages) {
+            $('.wrap-loading').removeClass('display-none');
+            location.href = '/qna/search?page=' + pages;
+        }
+
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="menu-title">
+    <h3> | &nbsp&nbsp&nbsp 질의응답(Q&A) &nbsp&nbsp&nbsp |</h3>
+</div>
+<div class="menu-main">
+    <table class="table table-hover menu-table">
+        <thead>
+        <tr>
+            <th scope="col" width="10%">No</th>
+            <th scope="col" width="40%">질문</th>
+            <th scope="col" width="10%">작성자</th>
+            <th scope="col" width="20%">등록일</th>
+            <th scope="col" width="15%">처리상태</th>
+            <th scope="col" width="5%"></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr style="font-weight:bold;" th:each="qna, stat: ${result.content}" th:data-id="${qna.qnaId}">
+                <td style="text-align:center;" th:text="${stat.index + 1 + (10 * result.number)}"></td>
+                <td>
+                    <th:block th:text="${qna.qnaQuestion}"></th:block>
+                    <div class="detail" style="display:none; overflow:auto">
+                        <div>
+                            <br>
+                            ㄴ질문:
+                            <br>
+                            <span style="white-space:pre;" th:text="${qna.qnaQuestion}"></span>
+                        </div>
+                        <hr>
+                        <div th:if="${qna.qnaAnswerYn == 'Y'}">
+                            ㄴ답변:
+                            <br>
+                            <span style="white-space:pre;" th:text="${qna.qnaAnswer}"></span>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align:center;" th:text="|${#strings.substring(qna.user.userName, 0, 1)}***|"></td>
+                <td style="text-align:center;" th:text="|${#strings.substring(qna.qnaDate, 0, 4)}-${#strings.substring(qna.qnaDate, 4, 6)}-${#strings.substring(qna.qnaDate, 6, 8)}|"></td>
+                <td style="text-align:center;" th:text="${qna.qnaAnswerYn == 'Y' ? '답변완료' : '처리중'}"></td>
+                <td style="text-align:center; color:gray;" class="delete" th:if="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}">X</td>
+                <td style="text-align:center; color:gray;" class="delete" th:unless="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <th:block sec:authorize="isAuthenticated()">
+        <form id="qnaForm" action="/qna/save" method="post">
+            <div class="mb-3 margin-left" id="q-div" style="width:100%; display:none;">
+                <input type="hidden" name="userId" th:value="${#authentication.name}">
+                <label for="qnaQuestion">질문하기</label>
+                <textarea class="form-control" style="resize:none;" id="qnaQuestion" name="qnaQuestion" rows="5"></textarea>
+            </div>
+            <button  type="button" class="btn btn-primary inline-block" id="add">작성</button>
+            <button style="display:none;" type="button" class="btn btn-primary" id="cancel">취소</button>
+            <button style="display:none;" type="button" class="btn btn-primary" id="save">저장</button>
+        </form>
+    </th:block>
+    <div id="page">
+        <div class="page_wrap">
+            <div class="page_nation">
+                <a class="arrow pprev">First</a>
+                <a class="arrow prev">&lt;</a>
+                <th:block th:if="${result.totalPages != 0}" th:each="num : ${#numbers.sequence(T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 1, T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10 > result.totalPages ? result.totalPages : T(java.lang.Math).floor(result.pageable.pageNumber / 10) * 10 + 10)}">
+                    <a class="active" th:if="${num == result.pageable.pageNumber+1}" th:text="${num}"></a>
+                    <a class="pageNum" th:unless="${num == result.pageable.pageNumber+1}" th:text="${num}"></a>
+                </th:block>
+                <a class="arrow next">&gt;</a>
+                <a class="arrow nnext">Last</a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>
