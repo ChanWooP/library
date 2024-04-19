@@ -173,7 +173,7 @@
                 <td style="text-align:center;" th:text="|${#strings.substring(qna.user.userName, 0, 1)}***|"></td>
                 <td style="text-align:center;" th:text="|${#strings.substring(qna.qnaDate, 0, 4)}-${#strings.substring(qna.qnaDate, 4, 6)}-${#strings.substring(qna.qnaDate, 6, 8)}|"></td>
                 <td style="text-align:center;" th:text="${qna.qnaAnswerYn == 'Y' ? '답변완료' : '처리중'}"></td>
-                <td style="text-align:center; color:gray;" class="delete" >X</td><!--th:if="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}"-->
+                <td style="text-align:center; color:gray;" class="delete" th:if="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}">X</td>
                 <td style="text-align:center; color:gray;" class="delete" th:unless="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}"></td>
             </tr>
         </tbody>
