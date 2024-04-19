@@ -1,5 +1,6 @@
 package com.cwpark.library.service.guide;
 
+import com.cwpark.library.config.aop.SameUserCheck;
 import com.cwpark.library.config.file.FileStore;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.dao.guide.NotifyDao;
@@ -37,7 +38,8 @@ public class QnaService {
         return qnaDao.findById(id);
     }
 
-    public void insert(QnaFormDto dto) {
+    @SameUserCheck
+    public void insert(String userId, QnaFormDto dto) {
         dto.setUser(userDao.findById(dto.getUserId()));
         dto.setQnaDate(LocalDate.now().toString().replaceAll("-", ""));
         dto.setQnaAnswerYn("N");
@@ -49,7 +51,8 @@ public class QnaService {
         qnaDao.update(QnaDto.formToDto(dto));
     }
 
-    public void delete(Long id) {
+    @SameUserCheck
+    public void delete(String userId, Long id) {
         qnaDao.delete(id);
     }
 

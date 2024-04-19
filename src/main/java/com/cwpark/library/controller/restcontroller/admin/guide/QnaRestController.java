@@ -44,7 +44,7 @@ public class QnaRestController {
     public ResponseEntity<Map<String, Object>> delete(@RequestParam("id") Long id) {
         Map<String, Object> result = new HashMap<>();
 
-        qnaService.delete(id);
+        qnaService.delete(null, id);
 
         result.put("success", "Y");
 

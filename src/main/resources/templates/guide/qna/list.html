@@ -94,6 +94,7 @@
                 let form = document.createElement('form');
                 let hiddenField1 = document.createElement('input');
                 let hiddenField2 = document.createElement('input');
+                let hiddenField3 = document.createElement('input');
 
                 form.setAttribute('method', 'post');
                 form.setAttribute('action', '/qna/delete');
@@ -108,8 +109,13 @@
                 hiddenField2.setAttribute('name', 'id');
                 hiddenField2.setAttribute('value', $(this).parent().data('id'));
 
+                hiddenField3.setAttribute('type', 'hidden');
+                hiddenField3.setAttribute('name', 'userId');
+                hiddenField3.setAttribute('value', $(this).parent().data('userid'));
+
                 form.appendChild(hiddenField1);
                 form.appendChild(hiddenField2);
+                form.appendChild(hiddenField3);
 
                 document.body.appendChild(form);
 
@@ -145,7 +151,7 @@
         </tr>
         </thead>
         <tbody>
-            <tr style="font-weight:bold;" th:each="qna, stat: ${result.content}" th:data-id="${qna.qnaId}">
+            <tr style="font-weight:bold;" th:each="qna, stat: ${result.content}" th:data-id="${qna.qnaId}" th:data-userid="${qna.user.userId}">
                 <td style="text-align:center;" th:text="${stat.index + 1 + (10 * result.number)}"></td>
                 <td>
                     <th:block th:text="${qna.qnaQuestion}"></th:block>
@@ -167,7 +173,7 @@
                 <td style="text-align:center;" th:text="|${#strings.substring(qna.user.userName, 0, 1)}***|"></td>
                 <td style="text-align:center;" th:text="|${#strings.substring(qna.qnaDate, 0, 4)}-${#strings.substring(qna.qnaDate, 4, 6)}-${#strings.substring(qna.qnaDate, 6, 8)}|"></td>
                 <td style="text-align:center;" th:text="${qna.qnaAnswerYn == 'Y' ? '답변완료' : '처리중'}"></td>
-                <td style="text-align:center; color:gray;" class="delete" th:if="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}">X</td>
+                <td style="text-align:center; color:gray;" class="delete" >X</td><!--th:if="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}"-->
                 <td style="text-align:center; color:gray;" class="delete" th:unless="${#authentication.name == qna.user.userId && qna.qnaAnswerYn == 'N'}"></td>
             </tr>
         </tbody>

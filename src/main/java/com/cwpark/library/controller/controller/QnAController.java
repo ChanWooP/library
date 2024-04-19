@@ -27,13 +27,13 @@ public class QnAController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute QnaFormDto qnaFormDto) {
-        qnaService.insert(qnaFormDto);
+        qnaService.insert(qnaFormDto.getUserId(), qnaFormDto);
         return "redirect:/qna/search";
     }
 
     @DeleteMapping("/delete")
-    public String delete(@RequestParam("id") Long id) {
-        qnaService.delete(id);
+    public String delete(@RequestParam("userId") String userId, @RequestParam("id") Long id) {
+        qnaService.delete(userId, id);
         return "redirect:/qna/search";
     }
 }

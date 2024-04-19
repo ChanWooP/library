@@ -1,9 +1,6 @@
 package com.cwpark.library.controller;
 
-import com.cwpark.library.config.exception.RuntimeEmailException;
-import com.cwpark.library.config.exception.RuntimeIOException;
-import com.cwpark.library.config.exception.RuntimekakaoException;
-import com.cwpark.library.config.exception.RuntimeoAuthException;
+import com.cwpark.library.config.exception.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +34,14 @@ public class MainControllerAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
     public String entityNotFoundHandle(EntityNotFoundException e, Model model) {
         log.error("[entityNotFoundHandle] : {}", e);
+        model.addAttribute("message", e.getMessage());
+
+        return "error/400";
+    }
+
+    @ExceptionHandler(RuntimeNotSameUserException.class)
+    public String notSameUserHandle(RuntimeNotSameUserException e, Model model) {
+        log.error("[notSameUserHandle] : {}", e);
         model.addAttribute("message", e.getMessage());
 
         return "error/400";
