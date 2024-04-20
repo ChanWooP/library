@@ -1,5 +1,7 @@
 package com.cwpark.library.data.entity.book;
 
+import com.cwpark.library.dao.book.BookHopeDao;
+import com.cwpark.library.data.dto.book.BookHopeDto;
 import com.cwpark.library.data.dto.book.BookLoanDto;
 import com.cwpark.library.data.entity.BaseEntity;
 import com.cwpark.library.data.entity.User;
@@ -51,6 +53,19 @@ public class BookHope extends BaseEntity {
     @Column(name = "HOPE_STATUS")
     @Enumerated(EnumType.STRING)
     private BookHopeStatus hopeStatus;
+
+    public static BookHope toEntity(BookHopeDto dto) {
+        return BookHope.builder()
+                .hopeId(dto.getHopeId())
+                .user(User.selectToEntity(dto.getUser()))
+                .hopeIsbn(dto.getHopeIsbn())
+                .hopTitle(dto.getHopeTitle())
+                .hopeAuthor(dto.getHopeAuthor())
+                .hopePublisher(dto.getHopePublisher())
+                .hopeDate(dto.getHopeDate())
+                .hopeStatus(dto.getHopeStatus())
+                .build();
+    }
 
     @Override
     public boolean equals(Object object) {

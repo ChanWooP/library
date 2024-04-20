@@ -29,3 +29,7 @@ function notify() {
 function qna() {
     location.href = '/qna/search';
 }
+
+function hope() {
+    location.href = '/hope/add';
+}

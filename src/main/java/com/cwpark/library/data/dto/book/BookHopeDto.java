@@ -62,4 +62,16 @@ public class BookHopeDto {
                 .hopeStatus(bookHope.getHopeStatus())
                 .build();
     }
+
+    public static BookHopeDto formToDto(BookHopeFormDto bookHope) {
+        return BookHopeDto.builder()
+                .user(bookHope.getUser())
+                .hopeIsbn(bookHope.getHopeIsbn())
+                .hopeTitle(bookHope.getHopeTitle())
+                .hopeAuthor(bookHope.getHopeAuthor())
+                .hopePublisher(bookHope.getHopePublisher())
+                .hopeDate(bookHope.getHopeDate())
+                .hopeStatus(bookHope.getHopeStatus())
+                .build();
+    }
 }

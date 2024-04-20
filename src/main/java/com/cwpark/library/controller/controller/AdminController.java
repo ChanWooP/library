@@ -1,4 +1,4 @@
-package com.cwpark.library.controller.controller.admin;
+package com.cwpark.library.controller.controller;
 
 import com.cwpark.library.service.book.BookCategoryService;
 import lombok.RequiredArgsConstructor;

@@ -26,4 +26,8 @@ public class BookHopeDao {
         bookHope.setHopeStatus(status);
     }
 
+    public void insert(BookHopeDto bookHopeDto) {
+        bookHopeRepository.save(BookHope.toEntity(bookHopeDto));
+    }
+
 }

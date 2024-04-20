@@ -51,12 +51,12 @@
 
                 for(let i=0; i<data.result.content.length; i++) {
                     str += '<tr ';
-                    str += ' data-hopeid="' + data.result.content[i].hopeId + "'";
+                    str += ' data-hopeid="' + data.result.content[i].hopeId + '"';
                     str += '> ';
 
-                    str += '    <th scope="col"> ';
-                    str += i + 1 + (10 * data.result.number)
-                    str += '    </th> ';
+                    str += '<th scope="col"> ';
+                    str += i + 1 + (10 * data.result.number);
+                    str += '</th> ';
 
                     str += '<td>';
                     str += data.result.content[i].user.userId;
@@ -141,6 +141,8 @@
                 str2 += '    <a class="arrow nnext">Last</a> ';
                 str2 += '  </div> ';
                 str2 += '</div> ';
+
+                console.log(str);
 
                 $('table > tbody').html(str);
                 $('#page').html(str2);
@@ -287,14 +289,14 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col" width="5%">No</th>
+            <th scope="col" width="10%">No</th>
             <th scope="col" width="15%">신청자</th>
-            <th scope="col" width="15%">ISBN</th>
-            <th scope="col" width="15%">제목</th>
-            <th scope="col" width="13%">작가</th>
+            <th scope="col" width="14%">ISBN</th>
+            <th scope="col" width="14%">제목</th>
+            <th scope="col" width="12%">작가</th>
             <th scope="col" width="13%">출판사</th>
             <th scope="col" width="9%">신청일자</th>
-            <th scope="col" width="9%">신청상태</th>
+            <th scope="col" width="7%">신청상태</th>
             <th scope="col" width="6%">불가능</th>
         </tr>
         </thead>

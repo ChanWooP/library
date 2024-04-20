@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta>
+    <link>
+    <style></style>
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            $('#save').click(function() {
+
+                if(!$('#hopeIsbn').val()) {
+                    alert('ISBN을 입력해주세요');
+                    return false;
+                }
+
+                if(!$('#hopeTitle').val()) {
+                    alert('책 제목을 입력해주세요');
+                    return false;
+                }
+
+                if(!$('#hopeAuthor').val()) {
+                    alert('작가를 입력해주세요');
+                    return false;
+                }
+
+                if(!$('#hopePublisher').val()) {
+                    alert('출판사를 입력해주세요');
+                    return false;
+                }
+
+                $('.wrap-loading').removeClass('display-none');
+                $('#formData').submit();
+            });
+        });
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="menu-title">
+    <h3> | &nbsp&nbsp&nbsp 희망 도서 신청 &nbsp&nbsp&nbsp |</h3>
+</div>
+<div class="menu-main">
+    <div style="width:100%; border:solid 1px blue; padding:10px;">
+        <div class="inline-block" style="display:flex; vertical-align:middle; margin-bottom:20px;">
+            <img src="/img/alert.png" width="35" height="35" alt="">
+            <h3>이용안내</h3><br>
+        </div>
+        <div class="inline-block" style="display:flex vertical-align:middle; margin-bottom:20px;">
+            <img src="/img/arrow.png" width="20" height="20" alt="">
+            <span style="font-weight:bold;">선정 제외 도서 </span>
+        </div>
+        <ul>
+            <li>문제집, 수험서, 중고등 참고서</li>
+            <li>판타지, 로맨스소설, 무협지</li>
+            <li>웹툰, 라이트노벨 등 각종 만화류</li>
+            <li>연감, 백서, 보고서 등 참고도서류</li>
+            <li>영리목적·정치목적 자료</li>
+            <li>미풍양속이나 정서 등에 문제를 유발할 수 있는 유해자료, 19세 이상 선정적인 도서</li>
+            <li>정기간행물과 전자자료(전자책,DVD 등 비도서) ※ 필요하다고 판단되는 경우에는 별도 비도서 구입 지침에 따름)</li>
+            <li>외국도서, 특정분야 전문도서</li>
+            <li>출판된 지 5년 이상된 자료 (컴퓨터 과학 신학문 분야는 2년)</li>
+            <li>고가도서(5만원 이상), 외국도서, 3권을 초과하는 시리즈 또는 전집도서, 기타 다른 기준을 적용하기 어려운 도서</li>
+            <li>스프링 제본 또는 낱장자료(리플릿), 입체도서, 악보, 색칠공부, 필사 등 책 크기가 너무 작거나 소리가 나는 도서 등 이용과 관리가 어려운 형태 자료</li>
+            <li>소장자료나 구입중 또는 정리중 도서, 신청 또는 주문중복도서</li>
+            <li>서지불명도서나 미간행도서, 비매품, 품절이나 절판 도서</li>
+            <li>유사도서가 많이 소장되어 있는 경우</li>
+            <li>신판이 발간되었음에도 구판을 신청한 경우</li>
+            <li>개인 및 출판사의 영리를 목적으로 하는 자료로 판단되는 경우</li>
+        </ul>
+        <div class="inline-block" style="display:flex vertical-align:middle; margin-bottom:20px;">
+            <img src="/img/arrow.png" width="20" height="20" alt="">
+            <span style="font-weight:bold;">신청 상태 확인 방법</span>
+        </div>
+        <ul>
+            <li>로그인 -> 내 서재 -> 희망 도서 신청 목록</li>
+            <li>위 경로를 통하여 상태 확인이 가능합니다</li>
+        </ul>
+        <div class="inline-block" style="display:flex vertical-align:middle; margin-bottom:20px;">
+            <img src="/img/arrow.png" width="20" height="20" alt="">
+            <span style="font-weight:bold;">신청하기</span>
+        </div>
+        <form id="formData" action="/hope/add" method="post">
+            <input type="hidden" name="userId" th:value="${#authentication.name}">
+            <div class="col-md-3 mb-3">
+                <label for="hopeIsbn">ISBN</label>
+                <input type="text" class="form-control" id="hopeIsbn" name="hopeIsbn" placeholder="ISBN을 입력해주세요"
+                       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="hopeTitle">책 제목</label>
+                <input type="text" class="form-control" id="hopeTitle" name="hopeTitle" placeholder="책 제목을 입력해주세요"  required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="hopeAuthor">작가</label>
+                <input type="text" class="form-control" id="hopeAuthor" name="hopeAuthor" placeholder="작가를 입력해주세요"  required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="hopePublisher">출판사</label>
+                <input type="text" class="form-control" id="hopePublisher" name="hopePublisher" placeholder="출판사를 입력해주세요" required>
+            </div>
+            <button type="button" class="btn btn-primary" id="save">신청</button>
+        </form>
+    </div>
+</div>
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>
