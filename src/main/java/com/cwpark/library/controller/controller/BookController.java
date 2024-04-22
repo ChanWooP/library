@@ -27,8 +27,8 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public String getBook(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam("bookIsbn") String bookIsbn) {
-        //model.addAttribute("result", bookService.searchBook(category, search, pageable));
+    public String getBook(Model model, @RequestParam("bookIsbn") String bookIsbn) {
+        model.addAttribute("result", bookService.findById(bookIsbn));
         return "book/book";
     }
 }

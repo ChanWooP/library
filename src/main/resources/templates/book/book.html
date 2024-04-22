@@ -4,10 +4,30 @@
 <head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
     <meta>
     <link>
-    <style></style>
+    <style>
+        /*tab css*/
+        .tab ul,li {list-style:none;}
+        .tab{float:left; width:100%; height:100%;}
+        .tabnav{font-size:0; width:100%; border:1px solid #ddd; padding:0px;}
+        .tabnav li{display: inline-block;  height:46px; text-align:center; border-right:1px solid #ddd; }
+        .tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
+        .tabnav li a.active:before{background:#777A7C;}
+        .tabnav li a.active{border-bottom:1px solid #fff;}
+        .tabnav li a{ position:relative; display:block; color: #000; padding:0 30px; line-height:46px; text-decoration:none; font-size:16px;}
+        .tabnav li a:hover,
+        .tabnav li a.active{background:#777A7C; color:white; }
+        .tabcontent{padding: 20px; height:100%; border:1px solid #ddd; border-top:none;}
+    </style>
     <script th:inline="javascript">
-        $(document).ready(function(){
 
+        $(document).ready(function(){
+            $('.tabcontent > div').hide();
+            $('.tabnav a').click(function () {
+                $('.tabcontent > div').hide().filter(this.hash).fadeIn();
+                $('.tabnav a').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            }).filter(':eq(0)').click();
         });
     </script>
 </head>
@@ -16,25 +36,77 @@
 <div class="menu-title">
     <h3> | &nbsp&nbsp&nbsp 상세보기 &nbsp&nbsp&nbsp |</h3>
 </div>
-<div class="menu-main">
-    <!--<div id="title" style="background-color:#DCDEE0; width:100%; height:60px; padding:10px; font-weight:bold; font-size:20px;">
-        <div class="inline-block" style="width:74%; text-align:left;">
-            <span th:text="${result.notifyTitle}"></span>
+<main class="d-flex flex-nowrap" style="background-color:#F3F3F3;">
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 19%; height:100%;">
+        <img th:src="|/files/${result.bookImage}|" onerror="this.src='/img/noImage.png'" width="230px" height="350px">
+    </div>
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 79%; height:100%;">
+        <span style="font-weight:bold; font-size:30px;" th:text="${result.bookTitle}"></span>
+        <hr>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">작가&nbsp&nbsp</span>
+            <span th:text="${result.bookAuthor}"></span>
         </div>
-        <div class="inline-block" style="width:24%; text-align:right;">
-            <span th:text="|${#strings.substring(result.notifyStartDt, 0, 4)}-${#strings.substring(result.notifyStartDt, 4, 6)}-${#strings.substring(result.notifyStartDt, 6, 8)}|"></span>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">출판사&nbsp&nbsp</span>
+            <span th:text="${result.bookPublisher}"></span>
+        </div>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">출간년도&nbsp&nbsp</span>
+            <span th:text="${result.bookPublicationYear}"></span>
+        </div>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">ISBN&nbsp&nbsp</span>
+            <span th:text="${result.bookIsbn}"></span>
+        </div>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">좋아요&nbsp&nbsp</span>
+            <span th:text="${result.bookLike}"></span>
+        </div>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">유통사&nbsp&nbsp</span>
+            <span th:text="${result.bookDistributor}"></span>
+        </div>
+        <br>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">대출현황&nbsp&nbsp</span>
+            <span th:text="|${result.bookLoanCnt}/${result.bookMaxLoanCnt}|"></span>
+        </div>
+        <div style="display:flex;">
+            <span style="font-weight:bold; width:10%;">예약현황&nbsp&nbsp</span>
+            <span th:text="|${result.bookReserveCnt}/${result.bookMaxReserveCnt}|"></span>
+        </div>
+        <br>
+        <div style="display:flex;">
+            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="loan">대출</button>
+            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="reserve">예약</button>
+            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="like">좋아요</button>
         </div>
     </div>
-    <div id="content" style="padding:10px;">
-        <div th:if="${result.notifyImg != null}">
-            <img id="preview" th:src="|/files/notify/${result.notifyImg}|" onerror="this.src='/img/noImage.png'" border="1">
+</main>
+<div class="tab" style="width:100%;">
+    <ul class="tabnav">
+        <li><a href="#tab01">책 소개</a></li>
+        <li><a href="#tab02">작가 소개</a></li>
+        <li><a href="#tab03">목차</a></li>
+    </ul>
+    <div class="tabcontent">
+        <div id="tab01">
+            <h4>책 소개</h4>
+            <hr>
+            <span style="white-space:pre-wrap; font-size:17px; color:#676767;" th:text="${result.bookInt}"></span>
         </div>
-        <div style="margin-top:10px;">
-            <span style="white-space:pre;" th:text="${result.notifyText}"></span>
+        <div id="tab02">
+            <h4>작가 소개</h4>
+            <hr>
+            <span style="white-space:pre-wrap; font-size:17px; color:#676767;" th:text="${result.bookAuthorInt}"></span>
+        </div>
+        <div id="tab03">
+            <h4>목차</h4>
+            <hr>
+            <span style="white-space:pre-wrap; font-size:17px; color:#676767;" th:text="${result.bookIndex}"></span>
         </div>
     </div>
-    <hr>
-    <button type="button" class="btn btn-primary" id="list">목록으로</button> -->
 </div>
 <footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
 <div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>

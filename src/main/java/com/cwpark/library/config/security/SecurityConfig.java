@@ -66,7 +66,7 @@ public class SecurityConfig {
                                         "/", "/css/**", "/js/**", "/img/**", "/files/**",
                                         "/email/check/**", "/kakao/callback",
                                         "/sign-in/**", "/api/v1/sign-in/**",
-                                        "/notify/**", "/qna/search"
+                                        "/notify/**", "/qna/search", "/book/category", "/book/book"
                                 ).permitAll()
                                 .anyRequest().authenticated())
                 .formLogin((formLogin) ->
