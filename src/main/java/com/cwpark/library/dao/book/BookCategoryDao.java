@@ -2,6 +2,7 @@ package com.cwpark.library.dao.book;
 
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.dto.book.category.BookCategoryInsUpdDto;
+import com.cwpark.library.data.dto.book.category.BookCategorySearchDto;
 import com.cwpark.library.data.entity.book.Book;
 import com.cwpark.library.data.entity.book.BookCategory;
 import com.cwpark.library.repository.book.category.BookCategoryRepository;
@@ -26,6 +27,10 @@ public class BookCategoryDao {
 
     public Page<BookCategoryDto> searchPage(Pageable pageable) {
         return repository.searchPage(pageable);
+    }
+
+    public List<BookCategorySearchDto> searchCategory() {
+        return repository.searchCategory();
     }
 
     public void delete(BookCategoryDto dto) {

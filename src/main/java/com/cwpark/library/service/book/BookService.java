@@ -90,4 +90,8 @@ public class BookService {
     public void likeLoanReserve(BookSelectDto bookSelectDto) {
         bookDao.save(bookSelectDto);
     }
+
+    public Page<BookSelectDto> searchBook(Long category, String search, Pageable pageable) {
+        return bookDao.searchBook(category, search, pageable);
+    }
 }

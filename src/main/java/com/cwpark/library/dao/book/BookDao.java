@@ -42,4 +42,8 @@ public class BookDao {
     public BookSelectDto findById(String bookIsbn) {
         return BookSelectDto.toDto(repository.findById(bookIsbn).orElseThrow(() -> new EntityNotFoundException("책이 존재하지 않습니다")));
     }
+
+    public Page<BookSelectDto> searchBook(Long category, String search, Pageable pageable) {
+        return repository.searchBook(category, search, pageable);
+    }
 }

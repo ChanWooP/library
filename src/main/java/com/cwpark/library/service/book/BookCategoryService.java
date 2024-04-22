@@ -4,6 +4,7 @@ import com.cwpark.library.dao.book.BookCategoryDao;
 import com.cwpark.library.data.dto.book.category.BookCategoryDto;
 import com.cwpark.library.data.dto.book.category.BookCategoryFormDto;
 import com.cwpark.library.data.dto.book.category.BookCategoryInsUpdDto;
+import com.cwpark.library.data.dto.book.category.BookCategorySearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,10 @@ public class BookCategoryService {
     public void delete(Long bookCategoryId) {
         BookCategoryDto findCategory = dao.findById(bookCategoryId);
         dao.delete(findCategory);
+    }
+
+    public List<BookCategorySearchDto> searchCategory() {
+        return dao.searchCategory();
     }
 
     public List<BookCategoryDto> findAll() {

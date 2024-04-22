@@ -33,3 +33,7 @@ function qna() {
 function hope() {
     location.href = '/hope/add';
 }
+
+function book() {
+    location.href = '/book/category';
+}

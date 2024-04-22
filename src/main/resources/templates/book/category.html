@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
+    <meta>
+    <link>
+    <style></style>
+    <script th:inline="javascript">
+    $(document).ready(function(){
+         let pageNumber = [[${book.pageable.pageNumber}]];
+         let totalPages = [[${book.totalPages}]];
+
+         // 숫자 페이지
+         $('.pageNum').click(function(){
+             searchPage($(this).text() - 1);
+         });
+
+         // 이전 10 페이지
+         $('.prev').click(function(){
+             if(pageNumber == 0) {
+                 alert('처음 페이지 입니다');
+             } else {
+                 searchPage(pageNumber - 1);
+             }
+         });
+
+         // 이후 10 페이지
+         $('.next').click(function(){
+             if(pageNumber == totalPages - 1) {
+                 alert('마지막 페이지 입니다');
+             } else {
+                  searchPage(pageNumber + 1);
+             }
+         });
+
+         // 맨 처음
+         $('.pprev').click(function(){
+             searchPage(0);
+         });
+
+         // 맨 끝
+         $('.nnext').click(function(){
+             searchPage(totalPages - 1);
+         });
+
+         // 행 선택
+         $('#category-table > tbody > tr').click(function(){
+             $('.wrap-loading').removeClass('display-none');
+             location.href = '/book/category?category=' + $(this).data('id');
+         });
+
+         // 행 선택
+         $('#book-table > tbody > tr').click(function(){
+             $('.wrap-loading').removeClass('display-none');
+             location.href = '/book/book?bookIsbn=' + $(this).data('id');
+         });
+     });
+
+    // 조회
+    function searchPage(pages) {
+        $('.wrap-loading').removeClass('display-none');
+        location.href = '/book/category?page=' + pages;
+    }
+    </script>
+</head>
+<body>
+<header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
+<div class="menu-title">
+    <h3> | &nbsp&nbsp&nbsp 카테고리별 &nbsp&nbsp&nbsp |</h3>
+</div>
+<main class="d-flex flex-nowrap">
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 15%; height:100%;  overflow:auto;">
+        <table id="category-table" class="table table-hover" style="font-size:15px; font-weight:bold; color:#71737A;">
+            <thead>
+                <th scope="col">카테고리</th>
+            </thead>
+            <tbody>
+                <tr data-id="">
+                    <td>전체</td>
+                </tr>
+                <tr th:each="c : ${category}" th:data-id="${c.categoryId}">
+                    <td th:text="|${c.categoryName}(${c.categoryCount}종)|" ></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="inline-block" style="width:1%;">
+    </div>
+    <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 80%; height:100%; overflow:auto;">
+        <table id="book-table" class="table">
+            <tbody>
+                <tr th:each="b: ${book.content}" th:data-id="${b.bookIsbn}">
+                    <td width="15%">
+                        <img th:src="|/files/${b.bookImage}|" onerror="this.src='/img/noImage.png'" width="130px" height="200px">
+                    </td>
+                    <td width="85%">
+                        <span style="font-weight:bold;" th:text="${b.bookTitle}"></span>
+                        <br>
+                        <span th:text="${b.bookAuthor}"></span>
+                        &nbsp;|&nbsp;
+                        <span th:text="${b.bookPublisher}"></span>
+                        &nbsp;|&nbsp;
+                        <span th:text="${b.bookPublicationYear}"></span>
+                        <br><br>
+                        <img src="/img/heart.png" onerror="this.src='/img/noImage.png'" width="20px" height="20px">
+                        <span th:text="${b.bookLike}"></span>
+                        <br><br>
+                        <span style="font-weight:bold; color:#3CC484;">대출현황</span>
+                        &nbsp;
+                        <span th:text="|${b.bookLoanCnt}/${b.bookMaxLoanCnt}|"></span>
+                        &nbsp;|&nbsp;
+                        <span style="font-weight:bold; color:#3CC484;">예약현황</span>
+                        &nbsp;
+                        <span th:text="|${b.bookReserveCnt}/${b.bookMaxReserveCnt}|"></span>
+                        <br><br>
+                        <button type="button" class="btn btn-primary btn-sm">대출 및 예약</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="page">
+            <div class="page_wrap">
+                <div class="page_nation">
+                    <a class="arrow pprev">First</a>
+                    <a class="arrow prev">&lt;</a>
+                    <th:block th:if="${book.totalPages != 0}" th:each="num : ${#numbers.sequence(T(java.lang.Math).floor(book.pageable.pageNumber / 10) * 10 + 1, T(java.lang.Math).floor(book.pageable.pageNumber / 10) * 10 + 10 > book.totalPages ? book.totalPages : T(java.lang.Math).floor(book.pageable.pageNumber / 10) * 10 + 10)}">
+                        <a class="active" th:if="${num == book.pageable.pageNumber+1}" th:text="${num}"></a>
+                        <a class="pageNum" th:unless="${num == book.pageable.pageNumber+1}" th:text="${num}"></a>
+                    </th:block>
+                    <a class="arrow next">&gt;</a>
+                    <a class="arrow nnext">Last</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/CommonFooter :: commonFooter}"></footer>
+<div th:replace="~{fragments/CommonLoading :: commonLoading}"></div>
+</body>
+</html>
