@@ -1,6 +1,7 @@
 package com.cwpark.library.controller.controller;
 
 import com.cwpark.library.data.dto.book.BookHopeFormDto;
+import com.cwpark.library.service.UserLikeService;
 import com.cwpark.library.service.book.BookCategoryService;
 import com.cwpark.library.service.book.BookHopeService;
 import com.cwpark.library.service.book.BookService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookService bookService;
     private final BookCategoryService bookCategoryService;
+    private final UserLikeService userLikeService;
 
     @GetMapping("/category")
     public String getCategory(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(value = "category", required = false) Long category, @RequestParam(value = "search", required = false, defaultValue = "") String search) {
@@ -27,8 +29,9 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public String getBook(Model model, @RequestParam("bookIsbn") String bookIsbn) {
+    public String getBook(Model model, @RequestParam("bookIsbn") String bookIsbn, @RequestParam("userId") String userId) {
         model.addAttribute("result", bookService.findById(bookIsbn));
+        model.addAttribute("like", userLikeService.existsById(userId ,bookIsbn));
         return "book/book";
     }
 }

@@ -52,7 +52,7 @@
          // 행 선택
          $('#book-table > tbody > tr').click(function(){
              $('.wrap-loading').removeClass('display-none');
-             location.href = '/book/book?bookIsbn=' + $(this).data('id');
+             location.href = '/book/book?bookIsbn=' + $(this).data('id') + '&userId=' + [[${#authentication.name}]];
          });
      });
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/CommonHead :: commonHead(~{::meta},~{::script},~{::link},~{::style})}">
     <meta>
     <link>
@@ -21,6 +22,11 @@
     <script th:inline="javascript">
 
         $(document).ready(function(){
+
+            if([[${param.overlap}]]) {
+                alert('좋아요는 한번만 가능합니다');
+            }
+
             $('.tabcontent > div').hide();
             $('.tabnav a').click(function () {
                 $('.tabcontent > div').hide().filter(this.hash).fadeIn();
@@ -28,6 +34,24 @@
                 $(this).addClass('active');
                 return false;
             }).filter(':eq(0)').click();
+
+            $('#like').click(function() {
+                if(!confirm("좋아요를 하시겠습니까?")) {
+                    return false;
+                }
+
+                $('.wrap-loading').removeClass('display-none');
+                $('#likeData').submit();
+            });
+
+            $('#likeCancel').click(function() {
+                if(!confirm("좋아요를  취소하시겠습니까?")) {
+                    return false;
+                }
+
+                $('.wrap-loading').removeClass('display-none');
+                $('#likeCancelData').submit();
+            });
         });
     </script>
 </head>
@@ -77,11 +101,31 @@
             <span th:text="|${result.bookReserveCnt}/${result.bookMaxReserveCnt}|"></span>
         </div>
         <br>
-        <div style="display:flex;">
-            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="loan">대출</button>
-            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="reserve">예약</button>
-            <button type="button" class="btn btn-primary" style="margin-right:5px;" id="like">좋아요</button>
-        </div>
+        <th:block sec:authorize="isAuthenticated()">
+            <div style="display:flex;">
+                <form id="likeData" action="/like/save" method="post">
+                    <input type="hidden" id="bookIsbn" name="bookIsbn" th:value="${result.bookIsbn}">
+                    <input type="hidden" id="userId" name="userId" th:value="${#authentication.name}">
+                </form>
+
+                <form id="likeCancelData" action="/like/delete" method="post">
+                    <input type="hidden" id="bookIsbn" name="bookIsbn" th:value="${result.bookIsbn}">
+                    <input type="hidden" id="userId" name="userId" th:value="${#authentication.name}">
+                    <input type="hidden" id="_method" name="_method" value="DELETE" th:if="${like}">
+                </form>
+
+                <button th:if="${like}" type="button" style="margin-right:5px; border: none;" id="likeCancel">
+                    <img src="/img/like.png" width="30px" height="30px" alt="">
+                </button>
+
+                <button th:unless="${like}" type="button" style="margin-right:5px; border: none;" id="like">
+                    <img src="/img/heart.png" width="30px" height="30px" alt="">
+                </button>
+
+                <button type="button" class="btn btn-primary" style="margin-right:5px;" id="loan">대출</button>
+                <button type="button" class="btn btn-primary" style="margin-right:5px;" id="reserve">예약</button>
+            </div>
+        </th:block>
     </div>
 </main>
 <div class="tab" style="width:100%;">
