@@ -82,7 +82,7 @@ class BookRepositoryTest {
         bookRepository.save(book3);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<BookSelectDto> page = bookRepository.searchBook(null, "", pageRequest);
+        Page<BookSelectDto> page = bookRepository.searchBook(null, "isbn", pageRequest);
 
         Assertions.assertEquals(page.getContent().size(), 3);
     }

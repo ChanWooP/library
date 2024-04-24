@@ -37,7 +37,7 @@ public class BookLoanRestController {
     @PostMapping("/return")
     public ResponseEntity<Map<String, Object>> loanReturn(@RequestParam("loanId") Long loanId, @RequestParam("bookIsbn") String bookIsbn) {
         Map<String, Object> result = new HashMap<>();
-        bookLoanService.loanReturn(loanId, bookIsbn);
+        bookLoanService.loanReturn(null, loanId, bookIsbn);
 
         result.put("success", "Y");
 

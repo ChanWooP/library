@@ -42,7 +42,7 @@ class UserControllerTest {
 
         mockMvc.perform(get("/user/mypage/{userId}", "user"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/user/mypage"))
+                .andExpect(view().name("user/mypage"))
                 .andReturn();
 
         verify(userService).findById("user");

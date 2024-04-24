@@ -1,5 +1,6 @@
 package com.cwpark.library.service.book;
 
+import com.cwpark.library.config.aop.SameUserCheck;
 import com.cwpark.library.dao.SettingDao;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.dao.book.BookDao;
@@ -52,7 +53,8 @@ public class BookLoanService {
         return bookLoanList;
     }
 
-    public void loanReturn(Long id, String bookIsbn) {
+    @SameUserCheck
+    public void loanReturn(String userId, Long id, String bookIsbn) {
         bookLoanDao.loanReturn(id);
 
         BookSelectDto book = bookDao.findById(bookIsbn);
@@ -62,7 +64,7 @@ public class BookLoanService {
             reserves.get(0).setReserveStatus(BookReserveType.LOAN);
             bookReserveDao.save(reserves.get(0));
 
-            insert(book, reserves.get(0).getUser());
+            insert(book.getBookIsbn(), reserves.get(0).getUser().getUserId());
 
             book.setBookReserveCnt(book.getBookReserveCnt() - 1);
         } else {
@@ -71,15 +73,36 @@ public class BookLoanService {
         bookDao.save(book);
     }
 
-    public void insert(BookSelectDto bookSelectDto, UserSelectDto userSelectDto) {
-        bookLoanDao.save(BookLoanDto.builder()
-                .loanId(null)
-                .book(bookSelectDto)
-                .loanDate(LocalDateTime.now())
-                .loanReturnDate(null)
-                .user(userSelectDto)
-                .loanReturnYn("N")
-                .build());
+    @SameUserCheck
+    public String insert(String userId, String bookIsbn) {
+        BookSelectDto book = bookDao.findById(bookIsbn);
+        UserSelectDto user = userDao.findById(userId);
+        int loanCnt = (int) settingDao.findById("loanCnt").getTypeConversionValue();
+
+        if(findByUserAndLoanReturnYn(userId, "N").size() >= loanCnt) {
+            return "userLoanCntOver";
+        }
+
+        if(bookLoanDao.findByUserAndBookAndLoanReturnYn(user, book) != null) {
+            return "loanOverlap";
+        }
+
+        if(book.getBookReserveCnt() <= 0 && book.getBookLoanCnt() < book.getBookMaxLoanCnt()) {
+            bookLoanDao.save(BookLoanDto.builder()
+                    .loanId(null)
+                    .book(book)
+                    .loanDate(LocalDateTime.now())
+                    .loanReturnDate(null)
+                    .user(user)
+                    .loanReturnYn("N")
+                    .build());
+
+            book.setBookLoanCnt(book.getBookLoanCnt() + 1);
+            bookDao.save(book);
+            return "success";
+        } else {
+            return "bookLoanCntOver";
+        }
     }
 
     public BookLoanDto findById(Long id) {

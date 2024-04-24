@@ -68,7 +68,7 @@ class BookLoanRestControllerTest {
         BookSelectDto findBook = bookService.findById(book.getBookIsbn());
 
         // 대출
-        bookLoanService.insert(findBook, findUser);
+        bookLoanService.insert(findUser.getUserId(), findBook.getBookIsbn());
         BookLoanDto bookLoan = bookLoanService.findByUserAndLoanReturnYn(findUser.getUserId(), "N").get(bookLoanService.findByUserAndLoanReturnYn(findUser.getUserId(), "N").size() - 1);
 
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();

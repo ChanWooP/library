@@ -35,7 +35,7 @@ class UserControllerTest extends IntegratedController {
         mockMvc.perform(get("/user/mypage/{userId}", "user"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("user", findUser))
-                .andExpect(view().name("/user/mypage"))
+                .andExpect(view().name("user/mypage"))
                 .andReturn();
     }
 
@@ -72,7 +72,7 @@ class UserControllerTest extends IntegratedController {
         mockMvc.perform(get("/user/mypage/{userId}", "user"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("user", findUser))
-                .andExpect(view().name("/user/mypage"))
+                .andExpect(view().name("user/mypage"))
                 .andReturn();
     }
 }

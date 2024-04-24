@@ -37,7 +37,7 @@ class NotifyRepositoryTest {
         notifyRepository.save(notify);
 
         PageRequest pageRequest = PageRequest.of(0, 2);
-        Page<NotifyDto> notifies = notifyRepository.searchPage("", "20240415", pageRequest);
+        Page<NotifyDto> notifies = notifyRepository.searchPage("20240415", "", pageRequest);
 
         Assertions.assertEquals(notifies.getContent().size(), 1);
     }

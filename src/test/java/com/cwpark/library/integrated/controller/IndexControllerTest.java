@@ -19,7 +19,7 @@ class IndexControllerTest extends IntegratedController {
     void index() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/index"))
+                .andExpect(view().name("index"))
                 .andReturn();
     }
 }

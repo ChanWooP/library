@@ -29,7 +29,7 @@ class LoginControllerTest  extends IntegratedController {
 
         mockMvc.perform(get("/sign-in/login").params(param))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sign-in/login"))
+                .andExpect(view().name("sign-in/login"))
                 .andExpect(model().attribute("error", "error"))
                 .andExpect(model().attribute("exception", "exception"))
                 .andExpect(model().attribute("expire", "expire"))
@@ -42,7 +42,7 @@ class LoginControllerTest  extends IntegratedController {
     void joinView() throws Exception {
         mockMvc.perform(get("/sign-in/join"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sign-in/join"))
+                .andExpect(view().name("sign-in/join"))
                 .andReturn();
     }
 
@@ -69,7 +69,7 @@ class LoginControllerTest  extends IntegratedController {
     void findPasswordView() throws Exception {
         mockMvc.perform(get("/sign-in/find/password"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/sign-in/password"))
+                .andExpect(view().name("sign-in/password"))
                 .andReturn();
     }
 

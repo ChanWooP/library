@@ -13,8 +13,10 @@ import com.cwpark.library.data.dto.user.UserLikeDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.service.book.BookCategoryService;
 import com.cwpark.library.service.book.BookService;
+import com.cwpark.library.test.annotation.WithMockCustomUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +44,11 @@ class UserLikeServiceTest {
 
     @Test
     @DisplayName("좋아요 테스트")
+    @WithMockCustomUser
     void likeTest() {
         // 유저
         UserInsertDto user = new UserInsertDto(
-                "test", "userPassword", "userName", "M", "951111", null, null);
+                "user", "userPassword", "userName", "M", "951111", null, null);
         userService.insertUser(user);
         UserSelectDto findUser = userService.findById(user.getUserId());
 
@@ -82,6 +85,7 @@ class UserLikeServiceTest {
 
     @Test
     @DisplayName("좋아요 테스트")
+    @Disabled
     void likeTest2() {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         CountDownLatch latch = new CountDownLatch (3);

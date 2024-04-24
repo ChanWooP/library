@@ -32,6 +32,13 @@ public class BookLoanDao {
                 .stream().map(BookLoanDto::toDto).collect(Collectors.toList());
     }
 
+    public BookLoanDto findByUserAndBookAndLoanReturnYn(UserSelectDto user, BookSelectDto book) {
+        BookLoan bookLoan = repository.findByUserAndBookAndLoanReturnYn(User.selectToEntity(user), Book.selectToEntity(book), "N")
+                .orElse(null);
+
+        return bookLoan != null ? BookLoanDto.toDto(bookLoan) : null;
+    }
+
     public void loanReturn(Long loanId) {
         BookLoan findByLoan = repository.findById(loanId)
                 .orElseThrow(() -> new EntityNotFoundException("대출이 존재하지 않습니다"));
