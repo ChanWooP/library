@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookReserveRepository extends JpaRepository<BookReserve, Long> {
 
@@ -17,4 +18,6 @@ public interface BookReserveRepository extends JpaRepository<BookReserve, Long> 
     List<BookReserve> findByBookAndReserveStatus(Book book, BookReserveType bookReserveType);
 
     List<BookReserve> findByUserAndReserveStatus(User user, BookReserveType bookReserveType);
+
+    Optional<BookReserve> findByUserAndBookAndReserveStatus(User user, Book book, BookReserveType bookReserveType);
 }

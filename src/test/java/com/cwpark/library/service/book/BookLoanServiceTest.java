@@ -100,7 +100,7 @@ class BookLoanServiceTest {
         BookReserveDto reserve = new BookReserveDto(
                 null, findBook, LocalDateTime.now(), findUser2, BookReserveType.RESERVE
         );
-        bookReserveService.save(reserve);
+        bookReserveService.save(reserve.getUser().getUserId(), reserve.getBook().getBookIsbn());
         BookReserveDto findReserve = bookReserveService.findByReserves(findBook.getBookIsbn(), BookReserveType.RESERVE).get(bookReserveService.findByReserves(findBook.getBookIsbn(), BookReserveType.RESERVE).size() - 1);
 
         // 기존 대출 반납 후 예약 건 대출 진행

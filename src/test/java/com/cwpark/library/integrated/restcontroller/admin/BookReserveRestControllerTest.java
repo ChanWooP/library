@@ -72,7 +72,7 @@ class BookReserveRestControllerTest {
         BookReserveDto reserve = new BookReserveDto(
                 null, findBook, LocalDateTime.now(), findUser, BookReserveType.RESERVE
         );
-        bookReserveService.save(reserve);
+        bookReserveService.save(reserve.getUser().getUserId(), reserve.getBook().getBookIsbn());
         BookReserveDto findReserve = bookReserveService.findByReserves(findBook.getBookIsbn(), BookReserveType.RESERVE).get(bookReserveService.findByReserves(findBook.getBookIsbn(), BookReserveType.RESERVE).size() - 1);
 
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();

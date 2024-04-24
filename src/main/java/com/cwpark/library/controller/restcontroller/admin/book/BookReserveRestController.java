@@ -39,7 +39,7 @@ public class BookReserveRestController {
     @PostMapping("/cancel")
     public ResponseEntity<Map<String, Object>> cancel(@RequestParam("reserveId") Long reserveId) {
         Map<String, Object> result = new HashMap<>();
-        bookReserveService.cancel(reserveId);
+        bookReserveService.cancel(null, reserveId);
 
         result.put("success", "Y");
 

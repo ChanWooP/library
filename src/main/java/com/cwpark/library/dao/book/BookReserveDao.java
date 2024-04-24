@@ -6,6 +6,7 @@ import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
 import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.entity.book.Book;
+import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.data.entity.book.BookReserve;
 import com.cwpark.library.data.enums.BookReserveType;
 import com.cwpark.library.repository.book.BookLoanRepository;
@@ -30,6 +31,13 @@ public class BookReserveDao {
     public List<BookReserveDto> findByUserAndReserveStatus(UserSelectDto user, BookReserveType bookReserveType) {
         return repository.findByUserAndReserveStatus(User.selectToEntity(user), bookReserveType)
                 .stream().map(BookReserveDto::toDto).collect(Collectors.toList());
+    }
+
+    public BookReserveDto findByUserAndBookAndReserveStatus(UserSelectDto user, BookSelectDto book, BookReserveType bookReserveType) {
+        BookReserve reserve = repository.findByUserAndBookAndReserveStatus(User.selectToEntity(user), Book.selectToEntity(book), BookReserveType.RESERVE)
+                .orElse(null);
+
+        return reserve != null ? BookReserveDto.toDto(reserve) : null;
     }
 
     public void save(BookReserveDto bookReserveDto) {

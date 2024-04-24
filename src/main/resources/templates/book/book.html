@@ -30,13 +30,22 @@
             if([[${param.msg}]] == 'userLoanCntOver') {
                 alert('대출 가능 권수를 초과하셨습니다.');
             } else if([[${param.msg}]] == 'loanOverlap') {
-                alert('이미 대출 중인 책입니다.');
+                alert('이미 대출 또는 예약 중인 책입니다.');
             } else if([[${param.msg}]] == 'bookLoanCntOver') {
                 alert('대출 가능 권수가 존재하지 않습니다.');
             } else if([[${param.msg}]] == 'success'){
                 alert('대출이 완료되었습니다.');
             }
 
+            if([[${param.msg2}]] == 'reserveLoan') {
+                alert('대출을 이용해주세요.');
+            } else if([[${param.msg2}]] == 'reserveOverlap') {
+                alert('이미 대출 또는 예약 중인 책입니다.');
+            } else if([[${param.msg2}]] == 'bookReserveCntOver') {
+                alert('예약 가능 권수가 존재하지 않습니다.');
+            } else if([[${param.msg2}]] == 'success'){
+                alert('예약이 완료되었습니다.');
+            }
 
             $('.tabcontent > div').hide();
             $('.tabnav a').click(function () {
@@ -156,7 +165,7 @@
                     <input type="hidden" id="userId" name="userId" th:value="${#authentication.name}">
                 </form>
 
-                <form id="reserveData" action="/loan/save" method="post">
+                <form id="reserveData" action="/reserve/save" method="post">
                     <input type="hidden" id="bookIsbn" name="bookIsbn" th:value="${result.bookIsbn}">
                     <input type="hidden" id="userId" name="userId" th:value="${#authentication.name}">
                 </form>

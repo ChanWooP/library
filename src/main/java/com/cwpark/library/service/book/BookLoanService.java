@@ -83,7 +83,8 @@ public class BookLoanService {
             return "userLoanCntOver";
         }
 
-        if(bookLoanDao.findByUserAndBookAndLoanReturnYn(user, book) != null) {
+        if(bookLoanDao.findByUserAndBookAndLoanReturnYn(user, book) != null
+        || bookReserveDao.findByUserAndBookAndReserveStatus(user, book, BookReserveType.RESERVE) != null) {
             return "loanOverlap";
         }
 
