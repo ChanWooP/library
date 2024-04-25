@@ -33,7 +33,7 @@ public class BookHopeRestController {
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> loanReturn(@RequestParam("id") Long id, @RequestParam("status") BookHopeStatus status) {
         Map<String, Object> result = new HashMap<>();
-        bookHopeService.statusUpdate(id, status);
+        bookHopeService.statusUpdate(null, id, status);
 
         result.put("success", "Y");
 

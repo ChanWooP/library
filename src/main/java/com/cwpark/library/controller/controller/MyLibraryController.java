@@ -1,6 +1,8 @@
 package com.cwpark.library.controller.controller;
 
+import com.cwpark.library.data.enums.BookHopeStatus;
 import com.cwpark.library.data.enums.BookReserveType;
+import com.cwpark.library.service.book.BookHopeService;
 import com.cwpark.library.service.book.BookLoanService;
 import com.cwpark.library.service.book.BookReserveService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MyLibraryController {
     private final BookLoanService bookLoanService;
     private final BookReserveService bookReserveService;
+    private final BookHopeService bookHopeService;
 
     @GetMapping("/loan")
     public String loan(@RequestParam("userId") String userId, @PageableDefault(size = 10) Pageable pageable, Model model) {
@@ -47,4 +50,17 @@ public class MyLibraryController {
         bookReserveService.cancel(userId, reserveId);
         return "redirect:/my/reserve?userId=" + userId + "&page=0";
     }
+
+    @GetMapping("/hope")
+    public String hope(@RequestParam("userId") String userId, @PageableDefault(size = 10) Pageable pageable, Model model) {
+        model.addAttribute("result", bookHopeService.findByUser(userId, pageable));
+        return "my/hope";
+    }
+
+    @PostMapping("/hope/cancel")
+    public String hopeCancel(@RequestParam("userId") String userId, @RequestParam("hopeId") Long hopeId) {
+        bookHopeService.statusUpdate(userId, hopeId, BookHopeStatus.CANCEL);
+        return "redirect:/my/hope?userId=" + userId + "&page=0";
+    }
+
 }

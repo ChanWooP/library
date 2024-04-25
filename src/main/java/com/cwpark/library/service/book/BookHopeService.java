@@ -1,9 +1,12 @@
 package com.cwpark.library.service.book;
 
+import com.cwpark.library.config.aop.SameUserCheck;
 import com.cwpark.library.dao.UserDao;
 import com.cwpark.library.dao.book.BookHopeDao;
 import com.cwpark.library.data.dto.book.BookHopeDto;
 import com.cwpark.library.data.dto.book.BookHopeFormDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
+import com.cwpark.library.data.entity.book.BookHope;
 import com.cwpark.library.data.enums.BookHopeStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,8 @@ public class BookHopeService {
         return bookHopeDao.searchPage(bookHopeStatus, frDt, toDt, search, pageable);
     }
 
-    public void statusUpdate(Long id, BookHopeStatus status) {
+    @SameUserCheck
+    public void statusUpdate(String userId, Long id, BookHopeStatus status) {
         bookHopeDao.statusUpdate(id, status);
     }
 
@@ -35,5 +39,11 @@ public class BookHopeService {
         dto.setHopeStatus(BookHopeStatus.REQUEST);
 
         bookHopeDao.insert(BookHopeDto.formToDto(dto));
+    }
+
+    @SameUserCheck
+    public Page<BookHopeDto> findByUser(String userId, Pageable pageable) {
+        UserSelectDto user = userDao.findById(userId);
+        return bookHopeDao.findByUser(user, pageable);
     }
 }

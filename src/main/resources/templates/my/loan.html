@@ -58,6 +58,10 @@
 
          // 반납
          $('#return').click(function(){
+            if(!confirm("반납하시겠습니까?")) {
+                return false;
+            }
+
             let userId = [[${#authentication.name}]];
             let bookIsbn = $(this).parent().parent().parent().data('bookisbn');
             let loanId = $(this).parent().parent().parent().data('id');

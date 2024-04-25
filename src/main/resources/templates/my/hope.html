@@ -7,6 +7,7 @@
     <style></style>
     <script th:inline="javascript">
     $(document).ready(function(){
+
          let pageNumber = [[${result.pageable.pageNumber}]];
          let totalPages = [[${result.totalPages}]];
 
@@ -44,22 +45,20 @@
          });
 
          // 취소
-         $('#cancel').click(function(){
+         $('table > tbody > tr').click(function(){
             if(!confirm("취소하시겠습니까?")) {
                 return false;
             }
 
             let userId = [[${#authentication.name}]];
-            let bookIsbn = $(this).parent().parent().parent().data('bookisbn');
-            let reserveId = $(this).parent().parent().parent().data('id');
+            let hopeId = $(this).data('id');
 
             let form = document.createElement('form');
             let hiddenField1 = document.createElement('input');
             let hiddenField2 = document.createElement('input');
-            let hiddenField3 = document.createElement('input');
 
             form.setAttribute('method', 'post');
-            form.setAttribute('action', '/my/cancel');
+            form.setAttribute('action', '/my/hope/cancel');
             form.setAttribute('target', '_self');
             document.charset = "utf-8";
 
@@ -68,16 +67,11 @@
             hiddenField1.setAttribute('value', userId);
 
             hiddenField2.setAttribute('type', 'hidden');
-            hiddenField2.setAttribute('name', 'bookIsbn');
-            hiddenField2.setAttribute('value', bookIsbn);
-
-            hiddenField3.setAttribute('type', 'hidden');
-            hiddenField3.setAttribute('name', 'reserveId');
-            hiddenField3.setAttribute('value', reserveId);
+            hiddenField2.setAttribute('name', 'hopeId');
+            hiddenField2.setAttribute('value', hopeId);
 
             form.appendChild(hiddenField1);
             form.appendChild(hiddenField2);
-            form.appendChild(hiddenField3);
 
             document.body.appendChild(form);
 
@@ -125,30 +119,28 @@
     <div class="inline-block" style="width:1%;">
     </div>
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 80%; height:100%; overflow:auto;">
-        <table id="result-table" class="table">
+        <table class="table table-hover menu-table">
+            <thead>
+            <tr>
+                <th scope="col" width="8%">No</th>
+                <th scope="col" width="12%">ISBN</th>
+                <th scope="col" width="37%">제목</th>
+                <th scope="col" width="10%">작가</th>
+                <th scope="col" width="10%">출판사</th>
+                <th scope="col" width="13%">신청일자</th>
+                <th scope="col" width="10%">상태</th>
+            </tr>
+            </thead>
             <tbody>
-                <tr th:each="b: ${result.content}" th:data-bookisbn="${b.book.bookIsbn}" th:data-id="${b.reserveId}">
-                    <td width="15%">
-                        <img th:src="|/files/${b.book.bookImage}|" onerror="this.src='/img/noImage.png'" width="130px" height="200px">
-                    </td>
-                    <td width="85%">
-                        <span style="font-weight:bold;" th:text="${b.book.bookTitle}"></span>
-                        <br>
-                        <span th:text="${b.book.bookAuthor}"></span>
-                        &nbsp;|&nbsp;
-                        <span th:text="${b.book.bookPublisher}"></span>
-                        &nbsp;|&nbsp;
-                        <span th:text="${b.book.bookPublicationYear}"></span>
-                        <br><br>
-                        <span style="font-weight:bold; color:#3CC484;">예약일자</span>
-                        &nbsp;
-                        <span th:text="${b.reserveDate}"></span>
-                        <br><br>
-                        <div style="display:flex;">
-                            <button type="button" class="btn btn-primary btn-sm margin-left" id="cancel">예약 취소</button>
-                        </div>
-                    </td>
-                </tr>
+            <tr style="font-weight:bold;" th:each="hope, stat: ${result.content}" th:data-id="${hope.hopeId}">
+                <td style="text-align:center;" th:text="${stat.index + 1 + (10 * result.number)}"></td>
+                <td th:text="${hope.hopeIsbn}"></td>
+                <td th:text="${hope.hopeTitle}"></td>
+                <td th:text="${hope.hopeAuthor}"></td>
+                <td th:text="${hope.hopePublisher}"></td>
+                <td style="text-align:center;" th:text="|${#strings.substring(hope.hopeDate, 0, 4)}-${#strings.substring(hope.hopeDate, 4, 6)}-${#strings.substring(hope.hopeDate, 6, 8)}|"></td>
+                <td th:text="${hope.hopeStatus}"></td>
+            </tr>
             </tbody>
         </table>
         <div id="page">

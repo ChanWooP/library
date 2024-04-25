@@ -1,6 +1,8 @@
 package com.cwpark.library.dao.book;
 
 import com.cwpark.library.data.dto.book.BookHopeDto;
+import com.cwpark.library.data.dto.user.UserSelectDto;
+import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.entity.book.BookHope;
 import com.cwpark.library.data.enums.BookHopeStatus;
 import com.cwpark.library.repository.book.hope.BookHopeRepository;
@@ -30,4 +32,7 @@ public class BookHopeDao {
         bookHopeRepository.save(BookHope.toEntity(bookHopeDto));
     }
 
+    public Page<BookHopeDto> findByUser(UserSelectDto user, Pageable pageable) {
+        return bookHopeRepository.findByUser(User.selectToEntity(user), pageable).map(BookHopeDto::toDto);
+    }
 }
