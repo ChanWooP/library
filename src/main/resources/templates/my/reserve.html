@@ -43,24 +43,11 @@
              searchPage(totalPages - 1);
          });
 
-         // 행 선택
-         $('#category-table > tbody > tr').click(function(){
-             $('.wrap-loading').removeClass('display-none');
-             location.href = '/book/category?category=' + $(this).data('id');
-         });
-
-         // 행 선택
-         $('#result-table > tbody > tr').click(function(){
-             $('.wrap-loading').removeClass('display-none');
-             // 읽기 부분 해결해야함
-             console.log('s');
-         });
-
-         // 반납
-         $('#return').click(function(){
+         // 취소
+         $('#cancel').click(function(){
             let userId = [[${#authentication.name}]];
             let bookIsbn = $(this).parent().parent().parent().data('bookisbn');
-            let loanId = $(this).parent().parent().parent().data('id');
+            let reserveId = $(this).parent().parent().parent().data('id');
 
             let form = document.createElement('form');
             let hiddenField1 = document.createElement('input');
@@ -68,7 +55,7 @@
             let hiddenField3 = document.createElement('input');
 
             form.setAttribute('method', 'post');
-            form.setAttribute('action', '/my/return');
+            form.setAttribute('action', '/my/cancel');
             form.setAttribute('target', '_self');
             document.charset = "utf-8";
 
@@ -81,8 +68,8 @@
             hiddenField2.setAttribute('value', bookIsbn);
 
             hiddenField3.setAttribute('type', 'hidden');
-            hiddenField3.setAttribute('name', 'loanId');
-            hiddenField3.setAttribute('value', loanId);
+            hiddenField3.setAttribute('name', 'reserveId');
+            hiddenField3.setAttribute('value', reserveId);
 
             form.appendChild(hiddenField1);
             form.appendChild(hiddenField2);
@@ -99,7 +86,7 @@
     // 조회
     function searchPage(pages) {
         $('.wrap-loading').removeClass('display-none');
-        location.href = '/my/loan?userId=' + [[${#authentication.name}]] + '&page=' + pages;
+        location.href = '/my/reserve?userId=' + [[${#authentication.name}]] + '&page=' + pages;
     }
     </script>
 </head>
@@ -136,7 +123,7 @@
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 80%; height:100%; overflow:auto;">
         <table id="result-table" class="table">
             <tbody>
-                <tr th:each="b: ${result.content}" th:data-bookisbn="${b.book.bookIsbn}" th:data-id="${b.loanId}">
+                <tr th:each="b: ${result.content}" th:data-bookisbn="${b.book.bookIsbn}" th:data-id="${b.reserveId}">
                     <td width="15%">
                         <img th:src="|/files/${b.book.bookImage}|" onerror="this.src='/img/noImage.png'" width="130px" height="200px">
                     </td>
@@ -149,19 +136,13 @@
                         &nbsp;|&nbsp;
                         <span th:text="${b.book.bookPublicationYear}"></span>
                         <br><br>
-                        <span style="font-weight:bold; color:#3CC484;">대출일자</span>
+                        <span style="font-weight:bold; color:#3CC484;">예약일자</span>
                         &nbsp;
-                        <span th:text="${b.loanDate}"></span>
-                        <br>
-                        <span style="font-weight:bold; color:#3CC484;">반납일자</span>
-                        &nbsp;
-                        <span th:text="${b.loanReturnDate}"></span>
+                        <span th:text="${b.reserveDate}"></span>
                         <br><br>
                         <div style="display:flex;">
-                            <button type="button" class="btn btn-primary btn-sm" id="read">책 읽기</button>
-                            <button type="button" class="btn btn-primary btn-sm margin-left" id="return">책 반납</button>
+                            <button type="button" class="btn btn-primary btn-sm margin-left" id="cancel">예약 취소</button>
                         </div>
-
                     </td>
                 </tr>
             </tbody>

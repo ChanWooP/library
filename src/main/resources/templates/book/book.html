@@ -45,6 +45,8 @@
                 alert('예약 가능 권수가 존재하지 않습니다.');
             } else if([[${param.msg2}]] == 'success'){
                 alert('예약이 완료되었습니다.');
+            } else if([[${param.msg2}]] == 'userReserveCntOver') {
+                alert('예약 가능 권수를 초과하였습니다.');
             }
 
             $('.tabcontent > div').hide();

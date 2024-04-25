@@ -6,6 +6,8 @@ import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.data.entity.book.BookReserve;
 import com.cwpark.library.data.enums.BookReserveType;
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 
@@ -20,4 +22,5 @@ public interface BookReserveRepository extends JpaRepository<BookReserve, Long> 
     List<BookReserve> findByUserAndReserveStatus(User user, BookReserveType bookReserveType);
 
     Optional<BookReserve> findByUserAndBookAndReserveStatus(User user, Book book, BookReserveType bookReserveType);
+    Page<BookReserve> findByUserAndReserveStatus(User user, BookReserveType bookReserveType, Pageable pageable);
 }

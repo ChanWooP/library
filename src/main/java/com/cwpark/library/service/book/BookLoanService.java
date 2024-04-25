@@ -72,13 +72,21 @@ public class BookLoanService {
         bookLoanDao.loanReturn(id);
 
         BookSelectDto book = bookDao.findById(bookIsbn);
+
         List<BookReserveDto> reserves = bookReserveDao.findByBookAndLoanReturnYn(book, BookReserveType.RESERVE);
 
         if (!reserves.isEmpty()) {
             reserves.get(0).setReserveStatus(BookReserveType.LOAN);
             bookReserveDao.save(reserves.get(0));
 
-            insert(book.getBookIsbn(), reserves.get(0).getUser().getUserId());
+            bookLoanDao.save(BookLoanDto.builder()
+                    .loanId(null)
+                    .book(book)
+                    .loanDate(LocalDateTime.now())
+                    .loanReturnDate(null)
+                    .user(userDao.findById(reserves.get(0).getUser().getUserId()))
+                    .loanReturnYn("N")
+                    .build());
 
             book.setBookReserveCnt(book.getBookReserveCnt() - 1);
         } else {
@@ -93,7 +101,8 @@ public class BookLoanService {
         UserSelectDto user = userDao.findById(userId);
         int loanCnt = (int) settingDao.findById("loanCnt").getTypeConversionValue();
 
-        if(findByUserAndLoanReturnYn(userId, "N").size() >= loanCnt) {
+        if(findByUserAndLoanReturnYn(userId, "N").size() +
+                bookReserveDao.findByUserAndReserveStatus(user, BookReserveType.RESERVE).size() >= loanCnt) {
             return "userLoanCntOver";
         }
 

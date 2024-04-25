@@ -13,6 +13,8 @@ import com.cwpark.library.repository.book.BookLoanRepository;
 import com.cwpark.library.repository.book.BookReserveRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,10 @@ public class BookReserveDao {
     public List<BookReserveDto> findByUserAndReserveStatus(UserSelectDto user, BookReserveType bookReserveType) {
         return repository.findByUserAndReserveStatus(User.selectToEntity(user), bookReserveType)
                 .stream().map(BookReserveDto::toDto).collect(Collectors.toList());
+    }
+
+    public Page<BookReserveDto> findByUserAndReserveStatus(UserSelectDto user, BookReserveType bookReserveType, Pageable pageable) {
+        return repository.findByUserAndReserveStatus(User.selectToEntity(user), bookReserveType, pageable).map(BookReserveDto::toDto);
     }
 
     public BookReserveDto findByUserAndBookAndReserveStatus(UserSelectDto user, BookSelectDto book, BookReserveType bookReserveType) {
