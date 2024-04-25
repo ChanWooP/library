@@ -10,6 +10,8 @@ import com.cwpark.library.repository.book.BookLoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -60,5 +62,9 @@ public class BookLoanDao {
 
     public void delete(Long id) {
         repository.delete(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("예약이 존재하지 않습니다")));
+    }
+
+    public Page<BookLoanDto> findByUserAndLoanReturnYn(User user, String loanReturnYn, Pageable pageable) {
+        return repository.findByUserAndLoanReturnYn(user, loanReturnYn, pageable).map(BookLoanDto::toDto);
     }
 }

@@ -12,9 +12,12 @@ import com.cwpark.library.data.dto.book.BookReserveDto;
 import com.cwpark.library.data.dto.book.book.BookInsUpdDto;
 import com.cwpark.library.data.dto.book.book.BookSelectDto;
 import com.cwpark.library.data.dto.user.UserSelectDto;
+import com.cwpark.library.data.entity.User;
 import com.cwpark.library.data.entity.book.BookLoan;
 import com.cwpark.library.data.enums.BookReserveType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +54,17 @@ public class BookLoanService {
         bookLoanList.forEach(l -> l.setLoanReturnDate(l.getLoanDate().plusDays(loanDate)));
 
         return bookLoanList;
+    }
+
+    @SameUserCheck
+    public Page<BookLoanDto> findByUserAndLoanReturnYn(String userId, String loanReturnYn, Pageable pageable) {
+        UserSelectDto user = userDao.findById(userId);
+        int loanDate = (int) settingDao.findById("loanDate").getTypeConversionValue();
+
+        Page<BookLoanDto> page = bookLoanDao.findByUserAndLoanReturnYn(User.selectToEntity(user), loanReturnYn, pageable);
+        page.forEach(l -> l.setLoanReturnDate(l.getLoanDate().plusDays(loanDate)));
+
+        return page;
     }
 
     @SameUserCheck

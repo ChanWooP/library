@@ -12,7 +12,7 @@
                     <li><a class="nav-link px-2 text-white" onclick="notify()">공지사항</a></li>
                     <li><a class="nav-link px-2 text-white" onclick="qna()">질문하기</a></li>
                     <th:block sec:authorize="isAuthenticated()">
-                        <li><a class="nav-link px-2 text-white">내서재</a></li>
+                        <li><a class="nav-link px-2 text-white" th:onclick="|location.href='@{/my/loan(userId=${#authentication.name}, page=0)}'|">내서재</a></li>
                         <li><a class="nav-link px-2 text-white" onclick="hope()">희망도서신청</a></li>
                     </th:block>
                 </ul>
