@@ -51,9 +51,11 @@
 
          // 행 선택
          $('#result-table > tbody > tr').click(function(){
+            let userId = [[${#authentication.name}]];
+            let bookIsbn = $(this).data('bookisbn');
+
              $('.wrap-loading').removeClass('display-none');
-             // 읽기 부분 해결해야함
-             console.log('s');
+             location.href = '/book/pdf?userId=' + userId + '&bookIsbn=' + bookIsbn
          });
 
          // 반납

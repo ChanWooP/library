@@ -1,16 +1,12 @@
 package com.cwpark.library.controller;
 
-import com.cwpark.library.config.exception.RuntimeEmailException;
-import com.cwpark.library.config.exception.RuntimekakaoException;
-import com.cwpark.library.config.exception.RuntimeoAuthException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +33,18 @@ public class MainRestControllerAdvice {
         Map<String, Object> result = new HashMap<>();
         result.put("success", "N");
         result.put("message", e.getMessage());
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> fileNotFoundHandle(FileNotFoundException e) {
+        log.error("[fileNotFoundHandle] : {}", e);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", "N");
+        result.put("message", "파일을 찾을 수 없습니다");
 
         return ResponseEntity.ok()
                 .body(result);
