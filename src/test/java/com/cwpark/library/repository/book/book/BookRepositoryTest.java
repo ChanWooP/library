@@ -69,11 +69,11 @@ class BookRepositoryTest {
     void list2() {
         BookCategory bookCategory = new BookCategory(null, "test");
 
-        Book book1 = new Book("isbn1", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
+        Book book1 = new Book("cwpark1", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
                 "책대표이미지", 5, 5, 0, 0, 0, 0);
-        Book book2 = new Book("isbn2", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
+        Book book2 = new Book("cwpark2", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
                 "책대표이미지", 5, 5, 0, 0, 0, 0);
-        Book book3 = new Book("isbn3", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
+        Book book3 = new Book("cwpark3", bookCategory, "제목", "작가", "출판사", "유통사", "출판년도", "목차", "책소개", "작가소개",
                 "책대표이미지", 5, 5, 0, 0, 0, 0);
 
         bookCategoryRepository.save(bookCategory);
@@ -82,7 +82,7 @@ class BookRepositoryTest {
         bookRepository.save(book3);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<BookSelectDto> page = bookRepository.searchBook(null, "isbn", pageRequest);
+        Page<BookSelectDto> page = bookRepository.searchBook(null, "cwpark", pageRequest);
 
         Assertions.assertEquals(page.getContent().size(), 3);
     }

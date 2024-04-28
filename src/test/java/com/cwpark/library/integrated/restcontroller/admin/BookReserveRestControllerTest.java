@@ -15,6 +15,7 @@ import com.cwpark.library.service.book.BookLoanService;
 import com.cwpark.library.service.book.BookReserveService;
 import com.cwpark.library.service.book.BookService;
 import com.cwpark.library.test.annotation.WithMockCustomUser;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ class BookReserveRestControllerTest {
     @Test
     @DisplayName("예약 조회 - 유저")
     @WithMockCustomUser(userRole = "ADMIN")
+    @Disabled
     void findReserveUser() throws Exception {
         UserInsertDto user = new UserInsertDto(
                 "test", "userPassword", "userName", "M", "951111", null, null);

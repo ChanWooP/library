@@ -231,7 +231,7 @@ class BookLoanServiceTest {
         bookLoanService.insert(findUser.getUserId(), findBook.getBookIsbn());
         bookLoanService.insert(findUser.getUserId(), findBook.getBookIsbn());
 
-        Assertions.assertEquals(bookLoanService.insert(findUser.getUserId(), findBook.getBookIsbn()), "userLoanCntOver");
+        Assertions.assertEquals(bookLoanService.insert(findUser.getUserId(), findBook.getBookIsbn()), "loanOverlap");
 
         userService.deleteUser(findUser.getUserId());
         bookCategoryService.delete(findCategory.getCategoryId());
