@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,6 +27,10 @@ public class NotifyService {
 
     public Page<NotifyDto> searchPage(String frDt, String toDt, String search, Pageable pageable) {
         return notifyDao.searchPage(frDt, toDt, search, pageable);
+    }
+
+    public List<NotifyDto> findTop5ByOrderByNotifyStartDtDesc() {
+        return notifyDao.findTop5ByOrderByNotifyStartDtDesc();
     }
 
     public NotifyDto findById(Long id) {

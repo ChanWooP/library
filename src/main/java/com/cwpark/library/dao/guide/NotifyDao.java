@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NotifyDao {
@@ -24,6 +27,11 @@ public class NotifyDao {
 
     public Page<NotifyDto> searchPage(String frDt, String toDt, String search, Pageable pageable) {
         return notifyRepository.searchPage(frDt, toDt, search, pageable);
+    }
+
+    public List<NotifyDto> findTop5ByOrderByNotifyStartDtDesc() {
+        return notifyRepository.findTop5ByOrderByNotifyStartDtDesc().stream()
+                .map(NotifyDto::toDto).collect(Collectors.toList());
     }
 
     public NotifyDto findById(Long id) {
