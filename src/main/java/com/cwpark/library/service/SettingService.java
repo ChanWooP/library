@@ -27,6 +27,10 @@ public class SettingService {
         return settingDao.findAll();
     }
 
+    public SettingDto findById(String id) {
+        return settingDao.findById(id);
+    }
+
     public void update(String setId, String value) {
         settingDao.update(setId, value);
     }

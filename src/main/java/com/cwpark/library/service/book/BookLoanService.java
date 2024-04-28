@@ -95,6 +95,33 @@ public class BookLoanService {
         bookDao.save(book);
     }
 
+    public void loanReturnBatch(Long id, String bookIsbn) {
+        bookLoanDao.loanReturn(id);
+
+        BookSelectDto book = bookDao.findById(bookIsbn);
+
+        List<BookReserveDto> reserves = bookReserveDao.findByBookAndLoanReturnYn(book, BookReserveType.RESERVE);
+
+        if (!reserves.isEmpty()) {
+            reserves.get(0).setReserveStatus(BookReserveType.LOAN);
+            bookReserveDao.save(reserves.get(0));
+
+            bookLoanDao.save(BookLoanDto.builder()
+                    .loanId(null)
+                    .book(book)
+                    .loanDate(LocalDateTime.now())
+                    .loanReturnDate(null)
+                    .user(userDao.findById(reserves.get(0).getUser().getUserId()))
+                    .loanReturnYn("N")
+                    .build());
+
+            book.setBookReserveCnt(book.getBookReserveCnt() - 1);
+        } else {
+            book.setBookLoanCnt(book.getBookLoanCnt() - 1);
+        }
+        bookDao.save(book);
+    }
+
     @SameUserCheck
     public String insert(String userId, String bookIsbn) {
         BookSelectDto book = bookDao.findById(bookIsbn);
@@ -135,5 +162,9 @@ public class BookLoanService {
 
     public void delete(Long id) {
         bookLoanDao.delete(id);
+    }
+
+    public List<BookLoanDto> findByLoanDateLessThanEqualAndLoanReturnYn(LocalDateTime localDateTime) {
+        return bookLoanDao.findByLoanDateLessThanEqualAndLoanReturnYn(localDateTime);
     }
 }

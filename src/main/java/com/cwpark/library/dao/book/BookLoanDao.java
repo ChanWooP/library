@@ -67,4 +67,9 @@ public class BookLoanDao {
     public Page<BookLoanDto> findByUserAndLoanReturnYn(User user, String loanReturnYn, Pageable pageable) {
         return repository.findByUserAndLoanReturnYn(user, loanReturnYn, pageable).map(BookLoanDto::toDto);
     }
+
+    public List<BookLoanDto> findByLoanDateLessThanEqualAndLoanReturnYn(LocalDateTime localDateTime) {
+        return repository.findByLoanDateLessThanEqualAndLoanReturnYn(localDateTime, "N").stream()
+                .map(BookLoanDto::toDto).collect(Collectors.toList());
+    }
 }
