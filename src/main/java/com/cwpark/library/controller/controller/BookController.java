@@ -28,6 +28,13 @@ public class BookController {
         return "book/category";
     }
 
+    @GetMapping("/search")
+    public String getSearch(Model model, @PageableDefault(page = 0, size = 10) Pageable pageable, @RequestParam(value = "search", required = false, defaultValue = "") String search) {
+        model.addAttribute("book", bookService.searchBook(null, search, pageable));
+        model.addAttribute("search", search);
+        return "book/search";
+    }
+
     @GetMapping("/book")
     public String getBook(Model model, @RequestParam("bookIsbn") String bookIsbn, @RequestParam("userId") String userId) {
         model.addAttribute("result", bookService.findById(bookIsbn));

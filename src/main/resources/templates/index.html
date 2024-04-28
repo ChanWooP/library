@@ -11,8 +11,8 @@
 <body>
 <header th:replace="~{fragments/CommonHeader :: CommonHeader}"></header>
 <div style="padding-left:100px;padding-right:100px;padding-top:50px;">
-    <form class="d-flex" role="search">
-        <input style="width:90%;" class="form-control me-2" id="search" type="search" placeholder="책 이름 또는 ISBN을 입력해주세요" aria-label="Search">
+    <form class="d-flex" role="search" action="/book/search">
+        <input style="width:90%;" class="form-control me-2" id="search" name="search" type="search" placeholder="책 이름 또는 ISBN을 입력해주세요" aria-label="Search">
         <button style="width:10%;" class="btn btn-outline-success" type="submit">검색</button>
     </form>
 </div>
