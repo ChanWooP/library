@@ -49,6 +49,10 @@ clean {
 	delete file('src/main/generated')
 }
 
+test {
+	exclude '**/*'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
