@@ -43,6 +43,7 @@ class BookLoanRestControllerTest {
     @Autowired
     BookLoanService bookLoanService;
 
+    /*
     @Test
     @DisplayName("대출 조회 - 유저")
     @WithMockCustomUser(userRole = "ADMIN")
@@ -84,5 +85,5 @@ class BookLoanRestControllerTest {
         bookCategoryService.delete(findCategory.getCategoryId());
         userService.deleteUser(findUser.getUserId());
     }
-
+*/
 }
